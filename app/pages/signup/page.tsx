@@ -92,13 +92,13 @@ export default function SignupPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-4">
+    <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-background" style={{ backgroundImage: 'radial-gradient(ellipse at 60% 0%, oklch(from var(--primary) l c h / 0.08) 0%, transparent 60%)' }}>
       <Loader isLoading={showLoader} />
       <Link href="/" className="absolute top-4 left-4 text-2xl font-bold tracking-tight text-primary flex items-center">
         Zorya
       </Link>
       
-      <Card className="w-full max-w-lg bg-background/60 backdrop-blur-md border-primary/20 shadow-[0_0_40px_-15px_rgba(var(--primary),0.3)] bg-(--secondarybackground)">
+      <Card className="w-full max-w-lg bg-card/80 backdrop-blur-md border-primary/20 shadow-[0_8px_40px_-12px_oklch(from_var(--primary)_l_c_h_/_0.25)]">
         <CardHeader className="space-y-4">
           <div className="flex items-center justify-between mb-2">
             {step > 1 ? (
@@ -307,7 +307,7 @@ export default function SignupPage() {
         <CardFooter className="flex justify-between border-t border-border pt-6">
           <div className="text-sm text-muted-foreground">
             {step === 1 && (
-              <>Already have an account? <Link href="/login" className="text-primary hover:underline font-medium">Log in</Link></>
+              <>Already have an account? <Link href="/pages/login" className="text-primary hover:underline font-medium">Log in</Link></>
             )}
           </div>
           

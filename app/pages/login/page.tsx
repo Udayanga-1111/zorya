@@ -43,13 +43,13 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-4">
+    <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-background" style={{ backgroundImage: 'radial-gradient(ellipse at 60% 0%, oklch(from var(--primary) l c h / 0.08) 0%, transparent 60%)' }}>
       <Loader isLoading={showLoader} />
       <Link href="/" className="absolute top-4 left-6 text-2xl font-bold tracking-tight text-primary flex items-center">
         Zorya
       </Link>
       
-      <Card className="w-full max-w-md bg-background/60 backdrop-blur-md border-primary/20 shadow-[0_0_40px_-15px_rgba(var(--primary),0.3)] bg-(--secondarybackground)">
+      <Card className="w-full max-w-md bg-card/80 backdrop-blur-md border-primary/20 shadow-[0_8px_40px_-12px_oklch(from_var(--primary)_l_c_h_/_0.25)]">
         <CardHeader className="space-y-1 text-center pb-8">
           <div className="mx-auto w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-4">
             <Sparkles className="w-6 h-6 text-primary" />
@@ -98,12 +98,12 @@ export default function LoginPage() {
         </CardContent>
         <CardFooter className="flex flex-col items-center justify-center space-y-2 border-t border-border pt-6">
           <div className="text-sm text-muted-foreground">
-            Don't have an account?{" "}
+            Don&apos;t have an account?{" "}
             <Link href="/pages/signup" className="text-primary hover:underline font-medium">
               Sign up
             </Link>
           </div>
-        </CardFooter> 
+        </CardFooter>
       </Card>
     </div>
   );
