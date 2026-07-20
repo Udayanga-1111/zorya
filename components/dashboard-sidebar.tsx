@@ -1,15 +1,25 @@
-import Link from "next/link";
-import { Activity, Calendar, Bot, CreditCard, Sparkles } from "lucide-react";
+"use client";
 
-const navItems = [
-  { href: "#", icon: Sparkles, label: "Onboarding", symbol: "✦" },
-  { href: "#", icon: Activity, label: "Dashboard", symbol: "◉", active: true },
-  { href: "#", icon: Calendar, label: "Habits", symbol: "◈" },
-  { href: "#", icon: Bot, label: "AI Companion", symbol: "✧" },
-  { href: "#", icon: CreditCard, label: "Pricing", symbol: "⊹" },
-];
+import Link from "next/link";
+import { usePathname, useParams } from "next/navigation";
+import { Activity, Calendar, Bot, CreditCard } from "lucide-react";
 
 export function DashboardSidebar() {
+  const pathname = usePathname();
+  const params = useParams();
+  
+  // Cast userName since params is a dictionary of route parameters
+  const userName = (params.userName as string) || "user";
+  const formattedName = userName.charAt(0).toUpperCase() + userName.slice(1);
+  const initials = formattedName.substring(0, 2).toUpperCase();
+  
+  const navItems = [
+    { href: `/pages/${userName}`, icon: Activity, label: "Dashboard", symbol: "◉", exact: true },
+    { href: `/pages/${userName}/habits`, icon: Calendar, label: "Habits", symbol: "◈" },
+    { href: `/pages/${userName}/companion`, icon: Bot, label: "AI Companion", symbol: "✧" },
+    { href: `/pages/${userName}/pricing`, icon: CreditCard, label: "Pricing", symbol: "⊹" },
+  ];
+
   return (
     <aside className="flex flex-col w-64 shrink-0 overflow-y-auto border-r border-border/60 relative"
       style={{
@@ -46,40 +56,44 @@ export function DashboardSidebar() {
 
       {/* Navigation */}
       <nav className="relative flex-1 px-3 py-2 space-y-0.5">
-        {navItems.map((item) => (
-          <Link
-            key={item.label}
-            href={item.href}
-            className={`group flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition-all duration-200 relative overflow-hidden
-              ${item.active
-                ? "text-primary bg-primary/10 font-medium"
-                : "text-muted-foreground hover:text-foreground hover:bg-muted/60 font-normal"
-              }`}
-          >
-            {/* Active indicator bar */}
-            {item.active && (
-              <div className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-5 bg-primary rounded-r-full" />
-            )}
-            {/* Hover shimmer */}
-            {!item.active && (
-              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-xl"
-                style={{ background: "linear-gradient(90deg, oklch(from var(--primary) l c h / 0.03) 0%, transparent 60%)" }}
-              />
-            )}
+        {navItems.map((item) => {
+          const isActive = item.exact ? pathname === item.href : pathname.startsWith(item.href);
+          
+          return (
+            <Link
+              key={item.label}
+              href={item.href}
+              className={`group flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition-all duration-200 relative overflow-hidden
+                ${isActive
+                  ? "text-primary bg-primary/10 font-medium"
+                  : "text-muted-foreground hover:text-foreground hover:bg-muted/60 font-normal"
+                }`}
+            >
+              {/* Active indicator bar */}
+              {isActive && (
+                <div className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-5 bg-primary rounded-r-full" />
+              )}
+              {/* Hover shimmer */}
+              {!isActive && (
+                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-xl"
+                  style={{ background: "linear-gradient(90deg, oklch(from var(--primary) l c h / 0.03) 0%, transparent 60%)" }}
+                />
+              )}
 
-            {/* Symbol glyph */}
-            <span className={`text-[11px] w-4 text-center shrink-0 font-mono
-              ${item.active ? "text-primary" : "text-muted-foreground/50 group-hover:text-primary/60 transition-colors"}`}>
-              {item.symbol}
-            </span>
+              {/* Symbol glyph */}
+              <span className={`text-[11px] w-4 text-center shrink-0 font-mono
+                ${isActive ? "text-primary" : "text-muted-foreground/50 group-hover:text-primary/60 transition-colors"}`}>
+                {item.symbol}
+              </span>
 
-            {/* Icon */}
-            <item.icon className={`h-4 w-4 shrink-0 transition-colors
-              ${item.active ? "text-primary" : "text-muted-foreground group-hover:text-foreground"}`} />
+              {/* Icon */}
+              <item.icon className={`h-4 w-4 shrink-0 transition-colors
+                ${isActive ? "text-primary" : "text-muted-foreground group-hover:text-foreground"}`} />
 
-            <span className="font-celestial text-[15px] leading-none mt-px">{item.label}</span>
-          </Link>
-        ))}
+              <span className="font-celestial text-[15px] leading-none mt-px">{item.label}</span>
+            </Link>
+          );
+        })}
       </nav>
 
       {/* Divider */}
@@ -105,10 +119,10 @@ export function DashboardSidebar() {
 
           <div className="flex items-center gap-2.5 mb-1">
             <div className="h-8 w-8 rounded-full bg-primary text-primary-foreground text-xs font-semibold flex items-center justify-center shadow-sm">
-              MC
+              {initials}
             </div>
             <div>
-              <span className="text-sm font-semibold text-foreground block leading-tight">Maya Chen</span>
+              <span className="text-sm font-semibold text-foreground block leading-tight">{formattedName}</span>
               <span className="text-[10px] text-muted-foreground">March 18, 1994</span>
             </div>
           </div>
