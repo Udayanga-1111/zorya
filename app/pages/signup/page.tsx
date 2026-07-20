@@ -94,11 +94,11 @@ export default function SignupPage() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-4">
       <Loader isLoading={showLoader} />
-      <Link href="/" className="absolute top-8 left-8 text-2xl font-bold tracking-tight text-primary flex items-center">
+      <Link href="/" className="absolute top-4 left-4 text-2xl font-bold tracking-tight text-primary flex items-center">
         Zorya
       </Link>
       
-      <Card className="w-full max-w-lg bg-background/60 backdrop-blur-md border-primary/20 shadow-[0_0_40px_-15px_rgba(var(--primary),0.3)]">
+      <Card className="w-full max-w-lg bg-background/60 backdrop-blur-md border-primary/20 shadow-[0_0_40px_-15px_rgba(var(--primary),0.3)] bg-(--secondarybackground)">
         <CardHeader className="space-y-4">
           <div className="flex items-center justify-between mb-2">
             {step > 1 ? (
@@ -106,12 +106,12 @@ export default function SignupPage() {
                 <ChevronLeft className="h-5 w-5" />
               </Button>
             ) : (
-              <div className="w-9" /> // Spacer for alignment
+              <div className="w-9" />
             )}
             <div className="text-sm font-medium text-muted-foreground">
               Step {step} of {totalSteps}
             </div>
-            <div className="w-9" /> // Spacer for alignment
+            <div className="w-9" />
           </div>
           <Progress value={progressPercentage} className="h-2" />
           

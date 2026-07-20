@@ -45,16 +45,16 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-4">
       <Loader isLoading={showLoader} />
-      <Link href="/" className="absolute top-8 left-8 text-2xl font-bold tracking-tight text-primary flex items-center">
+      <Link href="/" className="absolute top-4 left-6 text-2xl font-bold tracking-tight text-primary flex items-center">
         Zorya
       </Link>
       
-      <Card className="w-full max-w-md bg-background/60 backdrop-blur-md border-primary/20 shadow-[0_0_40px_-15px_rgba(var(--primary),0.3)]">
+      <Card className="w-full max-w-md bg-background/60 backdrop-blur-md border-primary/20 shadow-[0_0_40px_-15px_rgba(var(--primary),0.3)] bg-(--secondarybackground)">
         <CardHeader className="space-y-1 text-center pb-8">
           <div className="mx-auto w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mb-4">
             <Sparkles className="w-6 h-6 text-primary" />
           </div>
-          <CardTitle className="text-2xl font-bold tracking-tight">Welcome back</CardTitle>
+          <CardTitle className="text-3xl font-bold tracking-tight">Welcome back</CardTitle>
           <CardDescription>
             Enter your details to access your wellness chart
           </CardDescription>
@@ -99,11 +99,11 @@ export default function LoginPage() {
         <CardFooter className="flex flex-col items-center justify-center space-y-2 border-t border-border pt-6">
           <div className="text-sm text-muted-foreground">
             Don't have an account?{" "}
-            <Link href="/signup" className="text-primary hover:underline font-medium">
+            <Link href="/pages/signup" className="text-primary hover:underline font-medium">
               Sign up
             </Link>
           </div>
-        </CardFooter>
+        </CardFooter> 
       </Card>
     </div>
   );
