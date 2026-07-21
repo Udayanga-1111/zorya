@@ -10,7 +10,7 @@ Establish the foundational infrastructure for Zorya. This includes isolating the
 
 ### Phase 1: Environment & Workspace Setup
 
-- [ ] **ZOR-1A:** Initialize Next.js 15 repository for the web dashboard (App Router, Tailwind CSS, shadcn/ui). Ensure strict use of `.js`/`.jsx` files (no TypeScript).
+- [x] **ZOR-1A:** Initialize Next.js 15 repository for the web dashboard (App Router, Tailwind CSS, shadcn/ui). Ensure strict use of `.js`/`.jsx` files (no TypeScript).
 - [ ] **ZOR-1B:** Initialize the mobile application repository (React Native/Expo) to pair with the web platform. Ensure standard JavaScript configuration.
 - [ ] **ZOR-4:** Set up the Python workspace, virtual environment, and dependency management (`fastmcp`, `pyswisseph`, `pydantic`, `langgraph`) for the backend.
 - [ ] **ZOR-7:** Define the base LangGraph state class (`AgentState`) and construct the initial graph topology with SQLite memory checkpointer.

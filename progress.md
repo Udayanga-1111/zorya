@@ -44,7 +44,7 @@ This document serves as the active memory log for Google Antigravity and team **
 ```text
 [x] ZOR-10: Setup Jira Board & GitHub Workflow (PM) — 1 pt
 [x] ZOR-11: Open-Source Licensing Audit (PM) — 2 pts
-[ ] ZOR-1A: Initialize Next.js 15 Web Repository (Dev 1) — 2 pts
+[x] ZOR-1A: Initialize Next.js 15 Web Repository (Dev 1) — 2 pts
 [ ] ZOR-1B: Initialize Mobile App Repository (Dev 1) — 2 pts
 [ ] ZOR-2:  Build Astronomical Onboarding Form Component (Dev 1) — 3 pts
 [ ] ZOR-3:  Build Dynamic Calendar UI & Habit Dashboard Shell (Dev 1) — 3 pts
