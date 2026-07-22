@@ -40,3 +40,10 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 /.tokensave
+
+/lib/generated/prisma
+
+/lib/generated/prisma
+/.agents
+/.claude
+/.windsurf
