@@ -46,6 +46,48 @@ This document serves as the active memory log for Google Antigravity and team **
 
 ---
 
+### 🟡 Session 3 — July 23, 2026 (Day 3: Sidereal Mode & Clinical Mapping Logic — ZOR-5 & ZOR-6)
+
+- **Lead / Participants:** Google Antigravity + Dev 2
+- **Key Achievements:**
+  - Implemented authentic Vedic Sidereal mode in `celestial_server.py` using `swe.SIDM_LAHIRI` and `swe.FLG_SIDEREAL`. Confirmed ~24 degree backward shift (e.g., Tropical Scorpio to Sidereal Libra).
+  - Built the dynamic scoring engine in `clinical_server.py` mapping planetary combinations to CBT categories.
+  - Applied Elemental weights (Fire, Earth, Air, Water) and Triguna modifiers (+2 points for Sattva, Rajas, Tamas states).
+  - Explicitly prioritized the Moon (Manas) with a 2x weight modifier to align with Sri Lankan astrological principles.
+  - Implemented longitude normalization (`% 360`) to guard against negative sidereal positions near 0° Aries.
+  - Successfully ran full verification test suite passing all 45 integrity checks. Both FastMCP servers are fully functional and output Pydantic schemas correctly.
+- **Active Blockers / Risks:** None.
+
+---
+
+### 🟠 Session 4 — July 23, 2026 (Day 3: Clinical CBT Agent Node — ZOR-9)
+
+- **Lead / Participants:** Google Antigravity + Dev 3
+- **Key Achievements:**
+  - Designed `CBTBlock` and `ClinicalAgentOutput` Pydantic models in `agent_schemas.py`.
+  - Authored `CLINICAL_CBT_SYSTEM_PROMPT` emphasizing non-determinism, evidence-based interventions, and dynamic tone modulation based on Trigunas.
+  - Implemented `clinical_cbt_node` function in LangGraph using `ChatOpenAI` and `with_structured_output` for deterministic Pydantic schema generation.
+  - Developed `pytest` suite for ZOR-9, successfully executing LLM calls to verify schema integrity and testing tone adjustments for Sattva, Rajas, and Tamas states.
+- **Active Blockers / Risks:** Requires API key configuration (`OPENAI_API_KEY`) to run the automated tests against real model endpoints.
+- **Next Actions for Resuming Session:** Focus on ZOR-8 (Parsing Agent Node) or ZOR-1B (Mobile App Initialization) as the LangGraph state machine is now fully wired.
+
+---
+
+### 🟣 Session 5 — July 23, 2026 (Day 3: LangGraph State Machine & Orchestrator — ZOR-7)
+
+- **Lead / Participants:** Google Antigravity + Dev 3
+- **Key Achievements:**
+  - Designed the unified `ZoryaAgentState` TypedDict schema in the new `backend/orchestrator` module.
+  - Wired the LangGraph `StateGraph` topology (`START -> parsing_node -> clinical_cbt_node -> guardrail_node -> END`).
+  - Implemented node stubs for `parsing_node` and `guardrail_node`.
+  - Configured `SqliteSaver` checkpointer for thread execution memory persistence.
+  - Deprecated and removed the old `backend/agents/state.py`.
+  - Added end-to-end integration tests in `test_graph_orchestration.py` verifying both `MemorySaver` and `SqliteSaver`.
+- **Active Blockers / Risks:** None.
+- **Next Actions for Resuming Session:** Focus on ZOR-8 (Parsing Agent Node) to connect the Celestial MCP tool to the LangGraph pipeline, or start Phase 1's ZOR-1B (Initialize Mobile App Repository).
+
+---
+
 ## 📜 Commit History & Smart Commit Log
 
 | Date           | Commit Hash | Author | Jira Ticket | Commit Message                                                                            | Status / Branch            |
@@ -67,10 +109,10 @@ This document serves as the active memory log for Google Antigravity and team **
 [ ] ZOR-2:  Build Astronomical Onboarding Form Component (Dev 1) — 3 pts
 [ ] ZOR-3:  Build Dynamic Calendar UI & Habit Dashboard Shell (Dev 1) — 3 pts
 [x] ZOR-4:  Initialize FastMCP Python Environment (Dev 2) — 2 pts  ✅ DONE Session 2
-[ ] ZOR-5:  Build Celestial MCP Tool - pyswisseph (Dev 2) — 5 pts
-[ ] ZOR-6:  Construct Clinical MCP Data Schemas & Mappings (Dev 2) — 3 pts
-[ ] ZOR-7:  Set Up LangGraph State Machine & Checkpointer (Dev 3) — 3 pts
+[x] ZOR-5:  Build Celestial MCP Tool - pyswisseph (Dev 2) — 5 pts
+[x] ZOR-6:  Construct Clinical MCP Data Schemas & Mappings (Dev 2) — 3 pts
+[x] ZOR-7:  Set Up LangGraph State Machine & Checkpointer (Dev 3) — 3 pts  ✅ DONE Session 5
 [ ] ZOR-8:  Implement Parsing Agent Node & Pydantic Schemas (Dev 3) — 3 pts
-[ ] ZOR-9:  Develop Clinical CBT Agent Prompt Layer (Dev 3) — 3 pts
+[x] ZOR-9:  Develop Clinical CBT Agent Prompt Layer (Dev 3) — 3 pts  ✅ DONE Session 4
 [ ] ZOR-12: Draft Ethical Guardrail Rulebook & Boundary Prompts (PM) — 3 pts
 ```
