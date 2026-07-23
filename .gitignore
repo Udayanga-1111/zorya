@@ -23,6 +23,7 @@
 # misc
 .DS_Store
 *.pem
+.tokensave/
 
 # debug
 npm-debug.log*
