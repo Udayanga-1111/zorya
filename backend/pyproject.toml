@@ -17,6 +17,7 @@ dependencies = [
     "langgraph>=0.2",
     # LangChain base primitives required by LangGraph
     "langchain-core>=0.2",
+    "langchain-openai>=0.1.0",
     # .env file loading
     "python-dotenv>=1.0",
 ]
