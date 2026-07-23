@@ -13,11 +13,35 @@ datasource db {
 }
 
 model User {
-  id             String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id             String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   name           String
-  email          String   @unique
+  email          String    @unique
   password_hash  String
   created_at     DateTime  @default(now()) @db.Timestamptz()
 
+  // Birth / natal chart data
+  birth_date     DateTime? @db.Date
+  birth_time     String?   // "HH:MM" stored as string for flexibility
+  birth_city     String?
+  birth_country  String?
+  sun_sign       String?   // e.g. "Pisces"
+  moon_sign      String?
+  rising_sign    String?
+  onboarded      Boolean   @default(false)
+
+  messages       Message[]
+
   @@map("users")
+}
+
+model Message {
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user_id    String   @db.Uuid
+  role       String   // "user" | "assistant"
+  content    String
+  created_at DateTime @default(now()) @db.Timestamptz()
+
+  user       User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@map("messages")
 }

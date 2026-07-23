@@ -14,3 +14,10 @@ export interface LoginInput {
   email: string;
   password: string;
 }
+
+export interface OnboardingInput {
+  birth_date: string;     // ISO date string "YYYY-MM-DD"
+  birth_time?: string;    // "HH:MM"
+  birth_city: string;
+  birth_country: string;
+}
