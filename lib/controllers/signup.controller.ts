@@ -7,11 +7,6 @@ const signupSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
   email: z.string().email("Invalid email address"),
   password: z.string().min(8, "Password must be at least 8 characters"),
-  date_of_birth: z.string().refine((date) => !isNaN(Date.parse(date)), {
-    message: "Invalid date format",
-  }),
-  birth_location: z.string().min(2, "Birth location is required"),
-  timezone: z.string().min(2, "Timezone is required"),
 });
 
 export async function signupController(request: Request) {
@@ -42,11 +37,21 @@ export async function signupController(request: Request) {
     // Generate JWT token
     const token = signToken({ userId: user.id, email: user.email });
 
-    return NextResponse.json({
+    const response = NextResponse.json({
       message: 'User created successfully',
       user,
       token
     }, { status: 201 });
+
+    response.cookies.set('token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      maxAge: 60 * 60 * 24 * 7, // 1 week
+      path: '/',
+    });
+
+    return response;
 
   } catch (error) {
     if (error instanceof z.ZodError) {

@@ -39,11 +39,21 @@ export async function loginController(request: Request) {
     // Remove password hash from response
     const { password_hash, ...userWithoutPassword } = user;
 
-    return NextResponse.json({
+    const response = NextResponse.json({
       message: 'Logged in successfully',
       user: userWithoutPassword,
       token
     });
+
+    response.cookies.set('token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      maxAge: 60 * 60 * 24 * 7, // 1 week
+      path: '/',
+    });
+
+    return response;
 
   } catch (error) {
     if (error instanceof z.ZodError) {

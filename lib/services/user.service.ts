@@ -1,6 +1,6 @@
 import prisma from '../db/prisma';
 import { SignupInput, UserWithoutPassword } from '../types/user';
-import { User } from '../../generated/prisma/client/client';
+import { User } from '../generated/prisma/client';
 
 export async function registerUser(input: SignupInput & { password_hash: string }): Promise<UserWithoutPassword> {
   const user = await prisma.user.create({
@@ -8,9 +8,6 @@ export async function registerUser(input: SignupInput & { password_hash: string 
       name: input.name,
       email: input.email,
       password_hash: input.password_hash,
-      date_of_birth: new Date(input.date_of_birth),
-      birth_location: input.birth_location,
-      timezone: input.timezone,
     },
   });
   

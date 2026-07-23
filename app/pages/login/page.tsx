@@ -1,6 +1,8 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -22,6 +24,7 @@ type LoginFormValues = z.infer<typeof loginSchema>;
 export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [showLoader, setShowLoader] = useState(false);
+  const router = useRouter();
 
   const {
     register,
@@ -34,12 +37,29 @@ export default function LoginPage() {
   const onSubmit = async (data: LoginFormValues) => {
     setIsLoading(true);
     setShowLoader(true);
-    // Simulate API call
-    setTimeout(() => {
+    
+    try {
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        toast.success(result.message || "Logged in successfully");
+        router.push(`/pages/${encodeURIComponent(result.user.name)}`);
+      } else {
+        toast.error(result.error || "Failed to log in");
+      }
+    } catch (error) {
+      console.error("Login failed", error);
+      toast.error("An unexpected error occurred");
+    } finally {
       setIsLoading(false);
       setShowLoader(false);
-      console.log(data);
-    }, 2000);
+    }
   };
 
   return (
