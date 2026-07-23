@@ -57,3 +57,4 @@ zorya_checkpoints.sqlite
 
 # ── Tooling / IDE ──────────────────────────────────────────────────────────────
 .tokensave/
+.agents/mcp_config.json
