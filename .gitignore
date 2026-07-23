@@ -47,3 +47,6 @@ next-env.d.ts
 /.agents
 /.claude
 /.windsurf
+
+.tokensave/
+.agents/mcp_config.json
