@@ -28,6 +28,24 @@ This document serves as the active memory log for Google Antigravity and team **
 
 ---
 
+### 🟢 Session 2 — July 22, 2026 (Day 2: Python Backend Workspace Setup — ZOR-4)
+
+- **Lead / Participants:** Dev 2 + Google Antigravity
+- **Key Achievements:**
+  - Scaffolded `backend/` Python workspace inside the monorepo with clean separation from the Next.js root.
+  - Created `backend/pyproject.toml` with all core dependencies: `fastmcp>=2.0`, `pyswisseph>=2.10`, `pydantic>=2.0`, `langgraph>=0.2`, `langchain-core>=0.2`, `python-dotenv>=1.0` plus dev extras (`ruff`, `black`, `pytest`, `httpx`).
+  - Created virtual environment using `uv venv --python 3.11` (Python 3.11.9) — no pip overhead.
+  - Successfully installed **103 packages** via `uv pip install -e ".[dev]"` including `fastmcp==3.4.4`, `pyswisseph==2.10.3.2`, `langgraph==1.2.9`, `pydantic==2.13.4`.
+  - Implemented full `mcp_servers/celestial_server.py` per `celestial-mcp-builder` skill: multi-planet ephemeris with `FLG_MOSEPH`, Pydantic I/O schemas, zodiac sign resolution, approximate Dasha derivation.
+  - Implemented `mcp_servers/clinical_server.py` stub with ethical guardrails and five CBT category block definitions (ready for ZOR-6 vector mapping).
+  - Implemented `agents/state.py` — `AgentState` TypedDict with `Annotated` reducers for safe multi-node LangGraph state writes (groundwork for ZOR-7).
+  - Updated `.gitignore` with full Python backend ignore patterns.
+  - Created `backend/.env.example` template.
+  - Import verification passed: all three modules (`celestial_server`, `clinical_server`, `AgentState`) import cleanly.
+- **Active Blockers / Risks:** None. `pyswisseph` C-extension compiled correctly against Python 3.11.9 on Windows.
+
+---
+
 ## 📜 Commit History & Smart Commit Log
 
 | Date           | Commit Hash | Author | Jira Ticket | Commit Message                                                                            | Status / Branch            |
@@ -48,7 +66,7 @@ This document serves as the active memory log for Google Antigravity and team **
 [ ] ZOR-1B: Initialize Mobile App Repository (Dev 1) — 2 pts
 [ ] ZOR-2:  Build Astronomical Onboarding Form Component (Dev 1) — 3 pts
 [ ] ZOR-3:  Build Dynamic Calendar UI & Habit Dashboard Shell (Dev 1) — 3 pts
-[ ] ZOR-4:  Initialize FastMCP Python Environment (Dev 2) — 2 pts
+[x] ZOR-4:  Initialize FastMCP Python Environment (Dev 2) — 2 pts  ✅ DONE Session 2
 [ ] ZOR-5:  Build Celestial MCP Tool - pyswisseph (Dev 2) — 5 pts
 [ ] ZOR-6:  Construct Clinical MCP Data Schemas & Mappings (Dev 2) — 3 pts
 [ ] ZOR-7:  Set Up LangGraph State Machine & Checkpointer (Dev 3) — 3 pts
