@@ -3,8 +3,9 @@ from langchain_core.messages import HumanMessage, SystemMessage
 from langchain_openai import ChatOpenAI
 from backend.schemas.agent_schemas import ClinicalAgentOutput
 from backend.agents.prompts import CLINICAL_CBT_SYSTEM_PROMPT
+from backend.orchestrator.state import ZoryaAgentState
 
-def clinical_cbt_node(state: dict) -> dict:
+def clinical_cbt_node(state: ZoryaAgentState) -> dict:
     """
     LangGraph node for the Clinical CBT Agent.
     Translates astronomical telemetry and CBT category weights into a daily CBT micro-habit plan.
@@ -16,8 +17,8 @@ def clinical_cbt_node(state: dict) -> dict:
     structured_llm = llm.with_structured_output(ClinicalAgentOutput)
     
     # Construct the input prompt using the state
-    celestial_data = state.get("celestial_data", {})
-    cbt_weights = state.get("cbt_weights", {})
+    celestial_data = state.get("celestial_context", {})
+    cbt_weights = state.get("cbt_scores", {})
     
     user_prompt = f"Planetary Data: {json.dumps(celestial_data)}\nCBT Weights: {json.dumps(cbt_weights)}"
     
