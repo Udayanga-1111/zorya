@@ -17,8 +17,8 @@ Establish the foundational infrastructure for Zorya. This includes isolating the
 
 ### Phase 2: Core MCP Infrastructure (Backend Engine)
 
-- [ ] **ZOR-5:** Wrap `pyswisseph` securely inside a FastMCP tool endpoint (Celestial MCP) to calculate planetary longitudes and transits based on coordinates and birth time.
-- [ ] **ZOR-6:** Construct the Clinical MCP Server with mock vector mapping dictionaries that translate planetary states into 5 CBT categories (Focus, Rest, Communication, Grounding, Reflection).
+- [x] **ZOR-5:** Wrap `pyswisseph` securely inside a FastMCP tool endpoint (Celestial MCP) to calculate planetary longitudes and transits based on coordinates and birth time.
+- [x] **ZOR-6:** Construct the Clinical MCP Server with mock vector mapping dictionaries that translate planetary states into 5 CBT categories (Focus, Rest, Communication, Grounding, Reflection).
 - [ ] **ZOR-X:** Expose REST or SSE endpoints from the FastMCP tools so they can be queried by the LangGraph orchestrator.
 
 ### Phase 3: Multi-Agent AI Pipeline

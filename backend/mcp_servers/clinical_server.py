@@ -1,10 +1,8 @@
 """
-Zorya — Clinical CBT MCP Server (Stub)
+Zorya — Clinical CBT MCP Server
 ========================================
 Translates raw astronomical telemetry from the Celestial MCP Server into
 evidence-based CBT time blocks and micro-habit recommendations.
-
-Current status: STUB — ZOR-6 will implement the full vector mapping logic.
 
 Five CBT Categories mapped from planetary state combinations:
   1. Focus        — Deep cognitive work, learning, analytical tasks
@@ -21,6 +19,7 @@ for clinical-grade mental health support.
 
 from fastmcp import FastMCP
 from pydantic import BaseModel, Field
+import operator
 
 # ── Server Initialization ──────────────────────────────────────────────────────
 mcp = FastMCP("Zorya-Clinical-Server")
@@ -68,9 +67,7 @@ class ClinicalResponse(BaseModel):
     )
 
 
-# ── Placeholder Vector Mappings ────────────────────────────────────────────────
-# TODO (ZOR-6): Replace with full vector mapping dictionaries keyed by
-#               planetary sign combinations.
+# ── Vedic-to-CBT Vector Mappings ────────────────────────────────────────────────
 
 _DEFAULT_BLOCKS = {
     "Focus": CBTBlock(
@@ -125,23 +122,73 @@ _DEFAULT_BLOCKS = {
     ),
 }
 
+_ELEMENT_MAPPING = {
+    "Aries": "Fire", "Leo": "Fire", "Sagittarius": "Fire",
+    "Taurus": "Earth", "Virgo": "Earth", "Capricorn": "Earth",
+    "Gemini": "Air", "Libra": "Air", "Aquarius": "Air",
+    "Cancer": "Water", "Scorpio": "Water", "Pisces": "Water",
+}
+
+_DASHA_GUNA_MAPPING = {
+    "Jupiter": "Sattva", "Sun": "Sattva", "Moon": "Sattva",
+    "Venus": "Rajas", "Mercury": "Rajas",
+    "Mars": "Tamas", "Saturn": "Tamas", "Rahu": "Tamas", "Ketu": "Tamas"
+}
+
+_ELEMENT_WEIGHTS = {
+    "Fire": {"Focus": 3, "Grounding": 2, "Communication": 1, "Rest": 0, "Reflection": 1},
+    "Earth": {"Focus": 3, "Grounding": 1, "Communication": 1, "Rest": 2, "Reflection": 1},
+    "Air": {"Focus": 2, "Grounding": 1, "Communication": 3, "Rest": 1, "Reflection": 2},
+    "Water": {"Focus": 1, "Grounding": 2, "Communication": 1, "Rest": 2, "Reflection": 3},
+}
+
+_GUNA_MODIFIERS = {
+    "Sattva": {"Reflection": 2, "Focus": 2},
+    "Rajas": {"Communication": 2, "Focus": 2},
+    "Tamas": {"Grounding": 2, "Rest": 2},
+}
+
+def _calculate_cbt_scores(sun_sign: str, moon_sign: str, dasha: str) -> list[str]:
+    scores = {"Focus": 0, "Rest": 0, "Communication": 0, "Grounding": 0, "Reflection": 0}
+    
+    sun_element = _ELEMENT_MAPPING.get(sun_sign, "Fire")
+    moon_element = _ELEMENT_MAPPING.get(moon_sign, "Fire")
+    
+    # Extract planet from dasha (e.g., "Saturn Mahadasha (approximate)" -> "Saturn")
+    dasha_lord = dasha.split(" ")[0]
+    guna = _DASHA_GUNA_MAPPING.get(dasha_lord, "Sattva")
+
+    # Moon (Manas) weighted 2x
+    for category, weight in _ELEMENT_WEIGHTS[moon_element].items():
+        scores[category] += weight * 2
+        
+    # Sun (Atma) weighted 1x
+    for category, weight in _ELEMENT_WEIGHTS[sun_element].items():
+        scores[category] += weight * 1
+        
+    # Dasha Guna Modifier (+2 points to associated categories)
+    for category, bonus in _GUNA_MODIFIERS.get(guna, {}).items():
+        scores[category] += bonus
+        
+    # Sort categories by score descending
+    sorted_categories = sorted(scores.items(), key=operator.itemgetter(1), reverse=True)
+    return [cat[0] for cat in sorted_categories]
+
 
 # ── FastMCP Tool ───────────────────────────────────────────────────────────────
 
 @mcp.tool()
 def get_cbt_day_plan(req: ClinicalRequest) -> ClinicalResponse:
     """
-    [STUB — ZOR-6] Returns a CBT day plan based on the user's active planetary
+    Returns a dynamic CBT day plan based on the user's active planetary
     transits and stated self-improvement goal.
-
-    Currently returns evidence-based defaults. Full vector mapping from planetary
-    sign combinations to CBT categories will be implemented in ZOR-6.
     """
-    # TODO (ZOR-6): Implement sign-pair → category mapping logic
+    ranked_categories = _calculate_cbt_scores(req.sun_sign, req.moon_sign, req.active_dasha)
+    
     return ClinicalResponse(
-        morning_block=_DEFAULT_BLOCKS["Focus"],
-        afternoon_block=_DEFAULT_BLOCKS["Grounding"],
-        evening_block=_DEFAULT_BLOCKS["Reflection"],
+        morning_block=_DEFAULT_BLOCKS[ranked_categories[0]],
+        afternoon_block=_DEFAULT_BLOCKS[ranked_categories[1]],
+        evening_block=_DEFAULT_BLOCKS[ranked_categories[2]],
     )
 
 

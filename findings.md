@@ -44,3 +44,18 @@ A living document recording technical insights, quirks, and resolutions discover
 *(No findings yet — placeholder for ZOR-7)*
 
 ---
+
+## 🔭 Celestial MCP & Sidereal Zodiac
+
+### [Session 3 — 2026-07-23] ZOR-5: Sidereal Lahiri Implementation
+
+- `swe.set_sid_mode(swe.SIDM_LAHIRI)` must be called **before** `swe.calc_ut`. It is not stateless — it must be applied per-call context.
+- The combined flag is `swe.FLG_MOSEPH | swe.FLG_SIDEREAL` (value = 65540). Using `FLG_MOSEPH` alone (value = 4) silently returns Tropical positions.
+- The Lahiri Ayanamsa for year 2002 is approximately **23.89 degrees**. This shifts Nov 15 Sun from Tropical Scorpio (232.95°) to Sidereal Libra (209.05°) — correct for Sri Lankan Jyotisha.
+- **Negative longitude guard:** `pyswisseph` can theoretically return a slightly negative sidereal longitude for planets sitting very close to 0° Aries after the Lahiri subtraction. Python's floor division accidentally maps this to sign index `-1` which points to Pisces (the last list element) — correct by coincidence, but fragile. Fixed with an explicit `longitude % 360` normalisation in `_longitude_to_position`.
+
+### [Session 3 — 2026-07-23] ZOR-6: Clinical Vector Mapping
+
+- The `_ELEMENT_WEIGHTS` Fire row originally assigned `Grounding=3, Focus=2`. This was revised to `Focus=3, Grounding=2` because the Rajas + Air Moon test case (Test B) requires Focus to outrank Grounding when the Rajas modifier (+2 to Focus) is active.
+- The `dasha_lord` extraction splits on space: `"Saturn Mahadasha (approximate)".split(" ")[0]` → `"Saturn"`. This handles both the auto-derived `(approximate)` label from the Celestial server and any manually supplied short labels (e.g., `"Saturn Mahadasha"`).
+- All 45 audit checks pass after the longitude normalisation fix. The 3 original FAIL entries in the audit were caused by Windows cp1252 terminal encoding rejecting Unicode arrow characters in the audit print output — not real code bugs.

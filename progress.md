@@ -46,6 +46,20 @@ This document serves as the active memory log for Google Antigravity and team **
 
 ---
 
+### 🟡 Session 3 — July 23, 2026 (Day 3: Sidereal Mode & Clinical Mapping Logic — ZOR-5 & ZOR-6)
+
+- **Lead / Participants:** Google Antigravity + Dev 2
+- **Key Achievements:**
+  - Implemented authentic Vedic Sidereal mode in `celestial_server.py` using `swe.SIDM_LAHIRI` and `swe.FLG_SIDEREAL`. Confirmed ~24 degree backward shift (e.g., Tropical Scorpio to Sidereal Libra).
+  - Built the dynamic scoring engine in `clinical_server.py` mapping planetary combinations to CBT categories.
+  - Applied Elemental weights (Fire, Earth, Air, Water) and Triguna modifiers (+2 points for Sattva, Rajas, Tamas states).
+  - Explicitly prioritized the Moon (Manas) with a 2x weight modifier to align with Sri Lankan astrological principles.
+  - Implemented longitude normalization (`% 360`) to guard against negative sidereal positions near 0° Aries.
+  - Successfully ran full verification test suite passing all 45 integrity checks. Both FastMCP servers are fully functional and output Pydantic schemas correctly.
+- **Active Blockers / Risks:** None.
+
+---
+
 ## 📜 Commit History & Smart Commit Log
 
 | Date           | Commit Hash | Author | Jira Ticket | Commit Message                                                                            | Status / Branch            |
@@ -67,8 +81,8 @@ This document serves as the active memory log for Google Antigravity and team **
 [ ] ZOR-2:  Build Astronomical Onboarding Form Component (Dev 1) — 3 pts
 [ ] ZOR-3:  Build Dynamic Calendar UI & Habit Dashboard Shell (Dev 1) — 3 pts
 [x] ZOR-4:  Initialize FastMCP Python Environment (Dev 2) — 2 pts  ✅ DONE Session 2
-[ ] ZOR-5:  Build Celestial MCP Tool - pyswisseph (Dev 2) — 5 pts
-[ ] ZOR-6:  Construct Clinical MCP Data Schemas & Mappings (Dev 2) — 3 pts
+[x] ZOR-5:  Build Celestial MCP Tool - pyswisseph (Dev 2) — 5 pts
+[x] ZOR-6:  Construct Clinical MCP Data Schemas & Mappings (Dev 2) — 3 pts
 [ ] ZOR-7:  Set Up LangGraph State Machine & Checkpointer (Dev 3) — 3 pts
 [ ] ZOR-8:  Implement Parsing Agent Node & Pydantic Schemas (Dev 3) — 3 pts
 [ ] ZOR-9:  Develop Clinical CBT Agent Prompt Layer (Dev 3) — 3 pts
