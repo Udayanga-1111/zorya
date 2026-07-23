@@ -55,3 +55,6 @@ backend/.pytest_cache/
 backend/zorya_state.db
 task_plan.md
 task_plan.md
+
+.tokensave/
+.agents/mcp_config.json
