@@ -1,6 +1,6 @@
 import json
 from langchain_core.messages import HumanMessage, SystemMessage
-from langchain_openai import ChatOpenAI
+from langchain_groq import ChatGroq
 from backend.schemas.agent_schemas import ClinicalAgentOutput
 from backend.agents.prompts import CLINICAL_CBT_SYSTEM_PROMPT
 from backend.orchestrator.state import ZoryaAgentState
@@ -11,7 +11,7 @@ def clinical_cbt_node(state: ZoryaAgentState) -> dict:
     Translates astronomical telemetry and CBT category weights into a daily CBT micro-habit plan.
     """
     # Initialize the LLM
-    llm = ChatOpenAI(model="gpt-4o-mini", temperature=0.2)
+    llm = ChatGroq(model="llama3-70b-8192", temperature=0.2)
     
     # Wrap the LLM to enforce the ClinicalAgentOutput schema
     structured_llm = llm.with_structured_output(ClinicalAgentOutput)

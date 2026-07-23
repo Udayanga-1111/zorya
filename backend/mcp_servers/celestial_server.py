@@ -149,8 +149,11 @@ def calculate_active_transits(req: TransitRequest) -> TransitResponse:
     # Compute Julian Day Number (Universal Time)
     jd = swe.julday(year, month, day, decimal_hour)
 
-    # CRITICAL: Moshier analytical flag — no binary ephemeris files needed
-    flags = swe.FLG_MOSEPH
+    # Set Lahiri Ayanamsa
+    swe.set_sid_mode(swe.SIDM_LAHIRI)
+
+    # CRITICAL: Moshier analytical flag and Sidereal mode
+    flags = swe.FLG_MOSEPH | swe.FLG_SIDEREAL
 
     # Calculate all planet positions
     positions: dict[str, PlanetaryPosition] = {}
@@ -175,6 +178,25 @@ def calculate_active_transits(req: TransitRequest) -> TransitResponse:
             f"Active period: {active_dasha}."
         ),
     )
+
+def calculate_sidereal_positions(date_str: str, time_str: str, lat: float, lon: float) -> dict:
+    """Helper function to be called by the parsing node directly."""
+    req = TransitRequest(
+        birth_date=date_str,
+        birth_time=time_str,
+        latitude=lat,
+        longitude=lon
+    )
+    res = calculate_active_transits(req)
+    
+    # Format exactly as expected by the parsing node in ZOR-8
+    return {
+        "moon_sign": res.moon.sign,
+        "sun_sign": res.sun.sign,
+        "dasha_lord": res.active_dasha.split()[0], # "Jupiter Mahadasha..." -> "Jupiter"
+        "julian_day": res.julian_day,
+        "transit_summary": res.transit_summary
+    }
 
 
 if __name__ == "__main__":

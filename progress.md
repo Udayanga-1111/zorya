@@ -88,6 +88,22 @@ This document serves as the active memory log for Google Antigravity and team **
 
 ---
 
+### 🟤 Session 6 — July 23, 2026 (Day 3: Parsing Agent Node — ZOR-8)
+
+- **Lead / Participants:** Google Antigravity + Dev 3
+- **Key Achievements:**
+  - Created `backend/schemas/celestial_schemas.py` with strict Pydantic v2 schemas (`NatalInputModel`, `CelestialContextModel`, `ElementEnum`, `GunaEnum`).
+  - Added Sri Lankan Jyotisha mapping logic (Tattvas and Trigunas) in `backend/agents/parsing_agent.py`.
+  - Implemented `parsing_node` to validate input, invoke the celestial calculations, and gracefully fall back to a safe default if parsing fails.
+  - Re-implemented the Lahiri Ayanamsa sidereal calculation in `celestial_server.py` using `swe.set_sid_mode(swe.SIDM_LAHIRI)` and `swe.FLG_SIDEREAL` (previous session changes were lost).
+  - Wired `parsing_node` into the LangGraph orchestrator in `nodes.py`.
+  - Restored missing `agent_schemas.py` and `prompts.py` so the test suite could successfully execute `test_graph_orchestration.py`.
+  - Updated graph tests to correctly expect `sun_sign` inside the new `celestial_context` schema.
+  - Configured `backend/.env` with `GROQ_API_KEY` and updated the Clinical Agent to use `ChatGroq` (`llama3-70b-8192`).
+  - Configured LangSmith tracing (`LANGCHAIN_TRACING_V2=true`) to monitor LangGraph execution.
+- **Active Blockers / Risks:** None.
+- **Next Actions for Resuming Session:** ZOR-G (Ethical Guardrail Node) or ZOR-1B (Mobile App Initialization).
+
 ## 📜 Commit History & Smart Commit Log
 
 | Date           | Commit Hash | Author | Jira Ticket | Commit Message                                                                            | Status / Branch            |
@@ -112,7 +128,7 @@ This document serves as the active memory log for Google Antigravity and team **
 [x] ZOR-5:  Build Celestial MCP Tool - pyswisseph (Dev 2) — 5 pts
 [x] ZOR-6:  Construct Clinical MCP Data Schemas & Mappings (Dev 2) — 3 pts
 [x] ZOR-7:  Set Up LangGraph State Machine & Checkpointer (Dev 3) — 3 pts  ✅ DONE Session 5
-[ ] ZOR-8:  Implement Parsing Agent Node & Pydantic Schemas (Dev 3) — 3 pts
+[x] ZOR-8:  Implement Parsing Agent Node & Pydantic Schemas (Dev 3) — 3 pts  ✅ DONE Session 6
 [x] ZOR-9:  Develop Clinical CBT Agent Prompt Layer (Dev 3) — 3 pts  ✅ DONE Session 4
 [ ] ZOR-12: Draft Ethical Guardrail Rulebook & Boundary Prompts (PM) — 3 pts
 ```

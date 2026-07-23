@@ -6,12 +6,7 @@ Defines the stubs and wrappers for the LangGraph nodes.
 from typing import Dict, Any
 from backend.orchestrator.state import ZoryaAgentState
 
-def parsing_node(state: ZoryaAgentState) -> Dict[str, Any]:
-    """
-    Stub for the Parsing Agent Node (ZOR-8).
-    Dynamically invokes the Celestial MCP tool and populates celestial_context and cbt_scores.
-    """
-    return {}
+from backend.agents.parsing_agent import parsing_node
 
 def guardrail_node(state: ZoryaAgentState) -> Dict[str, Any]:
     """

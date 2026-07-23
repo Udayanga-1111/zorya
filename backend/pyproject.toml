@@ -17,6 +17,8 @@ dependencies = [
     "langgraph>=0.2",
     # LangChain base primitives required by LangGraph
     "langchain-core>=0.2",
+    # Groq LLM integration
+    "langchain-groq",
     # .env file loading
     "python-dotenv>=1.0",
 ]
