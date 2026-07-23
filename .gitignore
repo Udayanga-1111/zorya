@@ -53,5 +53,7 @@ backend/build/
 backend/.ruff_cache/
 backend/.pytest_cache/
 backend/zorya_state.db
-task_plan.md
-task_plan.md
+zorya_checkpoints.sqlite
+
+# ── Tooling / IDE ──────────────────────────────────────────────────────────────
+.tokensave/
