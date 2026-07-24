@@ -3,19 +3,17 @@ import type { NextRequest } from 'next/server';
 
 export function proxy(request: NextRequest) {
   const token = request.cookies.get('token')?.value;
-  const isAuthPage = request.nextUrl.pathname.startsWith('/pages/login') || request.nextUrl.pathname.startsWith('/pages/signup');
+  const isAuthPage = request.nextUrl.pathname === '/login' || request.nextUrl.pathname === '/signup';
+  const isPublicPage = request.nextUrl.pathname === '/';
 
-  // If trying to access a protected page (any page under /pages except login/signup)
-  if (!token && !isAuthPage && request.nextUrl.pathname.startsWith('/pages/')) {
-    return NextResponse.redirect(new URL('/pages/login', request.url));
+  // If trying to access a protected page
+  if (!token && !isAuthPage && !isPublicPage) {
+    return NextResponse.redirect(new URL('/login', request.url));
   }
-
-  // If already logged in and trying to access auth pages, redirect to dashboard? 
-  // Let's keep it simple for now as requested.
 
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ['/pages/:path*'],
+  matcher: ['/((?!api|_next/static|_next/image|favicon.ico).*)'],
 };

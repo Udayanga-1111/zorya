@@ -23,7 +23,7 @@ export function ProfileButton({ userName }: { userName: string }) {
     try {
       await fetch('/api/auth/logout', { method: 'POST' });
       toast.success("Logged out successfully");
-      router.push("/pages/login");
+      router.push("/login");
       router.refresh(); // Clear Next.js router cache
     } catch (error) {
       console.error("Logout failed", error);

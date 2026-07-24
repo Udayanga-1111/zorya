@@ -84,7 +84,7 @@ export default function LandingPage() {
       <header className="fixed top-0 w-full px-6 py-4 flex items-center justify-between z-50 glass-nav">
         <div className="text-2xl font-bold tracking-tight text-primary font-heading">Zorya</div>
         <div className="flex items-center gap-4">
-          <Link href="/pages/login">
+          <Link href="/login">
             <Button variant="ghost" className="hidden sm:inline-flex btn-magnetic">Log In</Button>
           </Link>
           <ThemeToggle />
@@ -106,10 +106,10 @@ export default function LandingPage() {
               Zorya provides personalized CBT planning that adapts to your natural rhythm. Build habits, manage stress, and track your well-being with your intelligent celestial companion.
             </p>
             <div className="flex flex-col sm:flex-row gap-6 w-full sm:w-auto pointer-events-auto">
-              <Link href="/pages/signup" className="w-full sm:w-auto">
+              <Link href="/signup" className="w-full sm:w-auto">
                 <Button size="lg" className="w-full rounded-full btn-magnetic btn-glow h-14 px-8 text-lg">Get Started</Button>
               </Link>
-              <Link href="/pages/login" className="w-full sm:w-auto">
+              <Link href="/login" className="w-full sm:w-auto">
                 <Button size="lg" variant="outline" className="w-full rounded-full glass-card h-14 px-8 text-lg border-primary/50 hover:bg-primary/20 transition-colors">Log In</Button>
               </Link>
             </div>

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useParams } from "next/navigation";
-import { Activity, Calendar, Bot, CreditCard } from "lucide-react";
+import { LayoutDashboard, Calendar, Sparkles, Settings } from "lucide-react";
 
 export function DashboardSidebar() {
   const pathname = usePathname();
@@ -12,13 +12,13 @@ export function DashboardSidebar() {
   const userName = (params.userName as string) || "user";
   const formattedName = userName.charAt(0).toUpperCase() + userName.slice(1);
   const initials = formattedName.substring(0, 2).toUpperCase();
-  
+
   const navItems = [
-    { href: `/pages/${userName}`, icon: Activity, label: "Dashboard", symbol: "◉", exact: true },
-    { href: `/pages/${userName}/habits`, icon: Calendar, label: "Habits", symbol: "◈" },
-    { href: `/pages/${userName}/companion`, icon: Bot, label: "AI Companion", symbol: "✧" },
-    { href: `/pages/${userName}/pricing`, icon: CreditCard, label: "Pricing", symbol: "⊹" },
-  ];
+  { name: 'Dashboard', href: '/', icon: LayoutDashboard },
+  { name: 'Habit Schedule', href: '/calendar', icon: Calendar },
+  { name: 'Natal & Transit Chart', href: '/chart', icon: Sparkles },
+  { name: 'Settings', href: '/settings', icon: Settings },
+];
 
   return (
     <aside className="flex flex-col w-64 shrink-0 overflow-y-auto border-r border-border/60 relative"
@@ -57,11 +57,11 @@ export function DashboardSidebar() {
       {/* Navigation */}
       <nav className="relative flex-1 px-3 py-2 space-y-0.5">
         {navItems.map((item) => {
-          const isActive = item.exact ? pathname === item.href : pathname.startsWith(item.href);
+          const isActive = item.href === '/' ? pathname === '/' : pathname.startsWith(item.href);
           
           return (
             <Link
-              key={item.label}
+              key={item.name}
               href={item.href}
               className={`group flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition-all duration-200 relative overflow-hidden
                 ${isActive
@@ -80,17 +80,12 @@ export function DashboardSidebar() {
                 />
               )}
 
-              {/* Symbol glyph */}
-              <span className={`text-[11px] w-4 text-center shrink-0 font-mono
-                ${isActive ? "text-primary" : "text-muted-foreground/50 group-hover:text-primary/60 transition-colors"}`}>
-                {item.symbol}
-              </span>
 
               {/* Icon */}
               <item.icon className={`h-4 w-4 shrink-0 transition-colors
                 ${isActive ? "text-primary" : "text-muted-foreground group-hover:text-foreground"}`} />
 
-              <span className="font-celestial text-[15px] leading-none mt-px">{item.label}</span>
+              <span className="font-celestial text-[15px] leading-none mt-px">{item.name}</span>
             </Link>
           );
         })}

@@ -61,7 +61,7 @@ export default function SignupPage() {
         
         if (response.ok) {
           toast.success("Account created successfully!");
-          router.push(`/pages/${encodeURIComponent(result.user.name)}`);
+          router.push('/');
         } else {
           toast.error(result.error || "Failed to create account");
           setErrors({ email: result.error || "Failed to create account" });
@@ -139,7 +139,7 @@ export default function SignupPage() {
 
         <CardFooter className="flex justify-between border-t border-border pt-6">
           <div className="text-sm text-muted-foreground">
-            Already have an account? <Link href="/pages/login" className="text-primary hover:underline font-medium">Log in</Link>
+            Already have an account? <Link href="/login" className="text-primary hover:underline font-medium">Log in</Link>
           </div>
           
           <Button onClick={handleSubmit} disabled={isSubmitting}>

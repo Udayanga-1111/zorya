@@ -8,31 +8,26 @@ import { redirect } from "next/navigation";
 import { verifyToken } from "@/lib/services/auth.service";
 import { getUserById } from "@/lib/services/user.service";
 
-export default async function DashboardPage({
-  params,
-}: {
-  params: Promise<{ userName: string }>;
-}) {
-  const { userName } = await params;
-  const decodedUserName = decodeURIComponent(userName);
-  const firstName = decodedUserName.split(' ')[0];
-
+export default async function DashboardPage() {
   const cookieStore = await cookies();
   const token = cookieStore.get("token")?.value;
 
   if (!token) {
-    redirect("/pages/login");
+    redirect("/login");
   }
 
   const decoded = verifyToken(token);
   if (!decoded || !decoded.userId) {
-    redirect("/pages/login");
+    redirect("/login");
   }
 
   const user = await getUserById(decoded.userId);
-  if (!user || user.name !== decodedUserName) {
-    redirect("/pages/login");
+  if (!user) {
+    redirect("/login");
   }
+
+  const decodedUserName = decodeURIComponent(user.name);
+  const firstName = decodedUserName.split(' ')[0];
 
   return (
     <div

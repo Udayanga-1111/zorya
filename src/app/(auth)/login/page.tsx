@@ -49,7 +49,7 @@ export default function LoginPage() {
 
       if (response.ok) {
         toast.success(result.message || "Logged in successfully");
-        router.push(`/pages/${encodeURIComponent(result.user.name)}`);
+        router.push('/');
       } else {
         toast.error(result.error || "Failed to log in");
       }
@@ -119,7 +119,7 @@ export default function LoginPage() {
         <CardFooter className="flex flex-col items-center justify-center space-y-2 border-t border-border pt-6">
           <div className="text-sm text-muted-foreground">
             Don&apos;t have an account?{" "}
-            <Link href="/pages/signup" className="text-primary hover:underline font-medium">
+            <Link href="/signup" className="text-primary hover:underline font-medium">
               Sign up
             </Link>
           </div>
