@@ -61,7 +61,7 @@ export default function SignupPage() {
         
         if (response.ok) {
           toast.success("Account created successfully!");
-          router.push('/');
+          router.push('/dashboard');
         } else {
           toast.error(result.error || "Failed to create account");
           setErrors({ email: result.error || "Failed to create account" });

@@ -1,8 +1,30 @@
 import Link from "next/link";
 import { Bell } from "lucide-react";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { ProfileButton } from "@/components/dashboard/profile-button";
+import { cookies } from "next/headers";
+import { verifyToken } from "@/lib/services/auth.service";
+import { getUserById } from "@/lib/services/user.service";
 
-export function DashboardHeader() {
+export async function DashboardHeader() {
+  let firstName = "User";
+
+  try {
+    const cookieStore = await cookies();
+    const token = cookieStore.get("token")?.value;
+    if (token) {
+      const decoded = verifyToken(token);
+      if (decoded?.userId) {
+        const user = await getUserById(decoded.userId);
+        if (user?.name) {
+          firstName = decodeURIComponent(user.name).split(" ")[0];
+        }
+      }
+    }
+  } catch {
+    // silently fall back to default
+  }
+
   return (
     <header
       className="flex h-16 shrink-0 items-center justify-between px-6 z-10 relative border-b border-border/60"
@@ -33,13 +55,9 @@ export function DashboardHeader() {
         >
           <Bell className="h-4 w-4" />
         </button>
-        <button
-          className="flex h-9 w-9 items-center justify-center rounded-full bg-primary text-primary-foreground text-sm font-semibold hover:bg-primary/90 transition-colors shadow-sm"
-          aria-label="Account"
-        >
-          M
-        </button>
+        <ProfileButton userName={firstName} />
       </div>
     </header>
   );
 }
+

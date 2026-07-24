@@ -14,7 +14,7 @@ export function DashboardSidebar() {
   const initials = formattedName.substring(0, 2).toUpperCase();
 
   const navItems = [
-  { name: 'Dashboard', href: '/', icon: LayoutDashboard },
+  { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
   { name: 'Habit Schedule', href: '/calendar', icon: Calendar },
   { name: 'Natal & Transit Chart', href: '/chart', icon: Sparkles },
   { name: 'Settings', href: '/settings', icon: Settings },

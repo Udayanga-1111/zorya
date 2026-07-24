@@ -4,7 +4,7 @@ import type { NextRequest } from 'next/server';
 export function proxy(request: NextRequest) {
   const token = request.cookies.get('token')?.value;
   const isAuthPage = request.nextUrl.pathname === '/login' || request.nextUrl.pathname === '/signup';
-  const isPublicPage = request.nextUrl.pathname === '/';
+  const isPublicPage = request.nextUrl.pathname === '/' || request.nextUrl.pathname === '/welcome';
 
   // If trying to access a protected page
   if (!token && !isAuthPage && !isPublicPage) {
