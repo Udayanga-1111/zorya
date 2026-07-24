@@ -15,6 +15,7 @@ export default async function DashboardPage({
 }) {
   const { userName } = await params;
   const decodedUserName = decodeURIComponent(userName);
+  const firstName = decodedUserName.split(' ')[0];
 
   const cookieStore = await cookies();
   const token = cookieStore.get("token")?.value;
@@ -43,7 +44,7 @@ export default async function DashboardPage({
     >
       {/* Header with profile button */}
       <div className="absolute top-6 right-8 z-20">
-        <ProfileButton userName={userName} />
+        <ProfileButton userName={firstName} />
       </div>
 
       {/* Ambient decorative stars */}
@@ -56,7 +57,7 @@ export default async function DashboardPage({
       </div>
 
       <div className="relative mx-auto max-w-4xl">
-        <GreetingBanner userName={userName} />
+        <GreetingBanner userName={firstName} />
         <ZoryaNote />
         <PlanetaryInfluences />
         <DailyPlan />
