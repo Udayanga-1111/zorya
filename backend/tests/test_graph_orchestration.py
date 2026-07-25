@@ -16,7 +16,12 @@ def test_graph_memory_saver(mock_clinical_node):
     config = {"configurable": {"thread_id": "test_thread_1"}}
     initial_state = {
         "user_id": "u1",
-        "celestial_context": {"Sun Sign": "Aries"},
+        "user_profile": {
+            "birth_date": "1990-01-01",
+            "birth_time": "12:00",
+            "lat": 40.7128,
+            "lon": -74.0060
+        },
         "cbt_scores": {"Focus": 10.0}
     }
     
@@ -25,6 +30,8 @@ def test_graph_memory_saver(mock_clinical_node):
     assert final_state["guardrail_flagged"] is False
     assert "clinical_plan" in final_state
     assert final_state["user_id"] == "u1"
+    assert "natal_chart" in final_state["celestial_context"]
+    assert "transit_chart" in final_state["celestial_context"]
 
 @patch("orchestrator.graph.clinical_cbt_node")
 def test_graph_sqlite_saver(mock_clinical_node, tmp_path):
@@ -39,7 +46,12 @@ def test_graph_sqlite_saver(mock_clinical_node, tmp_path):
     config = {"configurable": {"thread_id": "test_thread_sqlite"}}
     initial_state = {
         "user_id": "u2",
-        "celestial_context": {"Sun Sign": "Taurus"}
+        "user_profile": {
+            "birth_date": "1985-06-15",
+            "birth_time": "08:30",
+            "lat": 34.0522,
+            "lon": -118.2437
+        }
     }
     
     # First run
@@ -48,4 +60,4 @@ def test_graph_sqlite_saver(mock_clinical_node, tmp_path):
     # Fetch checkpoint
     snapshot = graph.get_state(config)
     assert snapshot.values["user_id"] == "u2"
-    assert snapshot.values["celestial_context"]["Sun Sign"] == "Taurus"
+    assert "natal_chart" in snapshot.values["celestial_context"]

@@ -101,6 +101,18 @@ This document serves as the active memory log for Google Antigravity and team **
 
 ---
 
+### 🟢 Session 7 — July 26, 2026 (Parsing Agent Integration)
+
+- **Lead / Participants:** Google Antigravity
+- **Key Achievements:**
+  - Implemented the `parsing_node` in `orchestrator/nodes.py` to extract `birth_date`, `birth_time`, `lat`, and `lon` from `user_profile`.
+  - Configured the node to invoke the `calculate_active_transits` FastMCP tool natively and persist the resulting Pydantic schemas in `celestial_context`.
+  - Refactored `test_graph_orchestration.py` to pass full `user_profile` coordinates, effectively verifying local execution of the Celestial tool and propagation of `natal_chart` and `transit_chart` to the Clinical agent node.
+- **Active Blockers / Risks:** None.
+- **Next Actions for Resuming Session:** Focus on ZOR-G (Ethical Guardrail Node) or ZOR-1B (Initialize Mobile App Repository).
+
+---
+
 ## 📜 Commit History & Smart Commit Log
 
 | Date           | Commit Hash | Author | Jira Ticket | Commit Message                                                                            | Status / Branch            |
@@ -125,7 +137,7 @@ This document serves as the active memory log for Google Antigravity and team **
 [x] ZOR-5:  Build Celestial MCP Tool - pyswisseph (Dev 2) — 5 pts
 [x] ZOR-6:  Construct Clinical MCP Data Schemas & Mappings (Dev 2) — 3 pts
 [x] ZOR-7:  Set Up LangGraph State Machine & Checkpointer (Dev 3) — 3 pts  ✅ DONE Session 5
-[ ] ZOR-8:  Implement Parsing Agent Node & Pydantic Schemas (Dev 3) — 3 pts
+[x] ZOR-8:  Implement Parsing Agent Node & Pydantic Schemas (Dev 3) — 3 pts  ✅ DONE Session 7
 [x] ZOR-9:  Develop Clinical CBT Agent Prompt Layer (Dev 3) — 3 pts  ✅ DONE Session 4
 [ ] ZOR-12: Draft Ethical Guardrail Rulebook & Boundary Prompts (PM) — 3 pts
 ```
