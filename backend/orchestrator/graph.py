@@ -4,9 +4,9 @@ Zorya - State Graph Compilation
 Wires the node topology and compiles the LangGraph StateGraph.
 """
 from langgraph.graph import StateGraph, START, END
-from backend.orchestrator.state import ZoryaAgentState
-from backend.orchestrator.nodes import parsing_node, guardrail_node
-from backend.agents.clinical_cbt_agent import clinical_cbt_node
+from orchestrator.state import ZoryaAgentState
+from orchestrator.nodes import parsing_node, guardrail_node
+from agents.clinical_cbt_agent import clinical_cbt_node
 
 def create_graph():
     builder = StateGraph(ZoryaAgentState)

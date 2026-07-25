@@ -1,10 +1,10 @@
 import pytest
 import os
 from unittest.mock import patch
-from backend.orchestrator.graph import compile_graph
-from backend.orchestrator.checkpointer import get_memory_saver, get_sqlite_saver
+from orchestrator.graph import compile_graph
+from orchestrator.checkpointer import get_memory_saver, get_sqlite_saver
 
-@patch("backend.orchestrator.graph.clinical_cbt_node")
+@patch("orchestrator.graph.clinical_cbt_node")
 def test_graph_memory_saver(mock_clinical_node):
     """Test graph execution with MemorySaver."""
     # Setup mock to just return a dummy plan without hitting LLM
@@ -26,7 +26,7 @@ def test_graph_memory_saver(mock_clinical_node):
     assert "clinical_plan" in final_state
     assert final_state["user_id"] == "u1"
 
-@patch("backend.orchestrator.graph.clinical_cbt_node")
+@patch("orchestrator.graph.clinical_cbt_node")
 def test_graph_sqlite_saver(mock_clinical_node, tmp_path):
     """Test graph execution and checkpoint retrieval with SqliteSaver."""
     mock_clinical_node.return_value = {"clinical_plan": {"blocks": []}}

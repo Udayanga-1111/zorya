@@ -43,7 +43,12 @@ A living document recording technical insights, quirks, and resolutions discover
 
 ### [Session 5 — 2026-07-23] ZOR-7: SqliteSaver Initialization
 
-- `SqliteSaver.from_conn_string("...")` in newer `langgraph-checkpoint-sqlite` versions yields a context manager (`_GeneratorContextManager`), not the raw `CheckpointSaver` object. Passing it directly to `builder.compile(checkpointer=saver)` throws a `TypeError`.
 - **Fix applied:** When providing a saver directly without a context block (e.g., for simple wrappers or long-lived FastAPI instances), initialize the SQLite connection explicitly (`sqlite3.connect(..., check_same_thread=False)`) and pass it to `SqliteSaver(conn)`.
 
+### [Session 6 — 2026-07-25] Python Imports in Subdirectories
+
+- When `pyproject.toml` defines the project root inside a subdirectory (`backend/`), importing local modules prefixed with the root directory name (e.g. `from backend.orchestrator import X`) will trigger a `ModuleNotFoundError` during `pytest` execution because the Python path is anchored inside `backend/`.
+- **Fix applied:** Stripped all `backend.` prefixes across internal imports. Tests resolve correctly using `from orchestrator.X import Y`.
+
 ---
+

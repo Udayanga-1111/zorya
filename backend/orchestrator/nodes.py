@@ -4,7 +4,7 @@ Zorya - Orchestrator Nodes
 Defines the stubs and wrappers for the LangGraph nodes.
 """
 from typing import Dict, Any
-from backend.orchestrator.state import ZoryaAgentState
+from orchestrator.state import ZoryaAgentState
 
 def parsing_node(state: ZoryaAgentState) -> Dict[str, Any]:
     """

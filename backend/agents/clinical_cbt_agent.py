@@ -1,9 +1,9 @@
 import json
 from langchain_core.messages import HumanMessage, SystemMessage
 from langchain_openai import ChatOpenAI
-from backend.schemas.agent_schemas import ClinicalAgentOutput
-from backend.agents.prompts import CLINICAL_CBT_SYSTEM_PROMPT
-from backend.orchestrator.state import ZoryaAgentState
+from schemas.agent_schemas import ClinicalAgentOutput
+from agents.prompts import CLINICAL_CBT_SYSTEM_PROMPT
+from orchestrator.state import ZoryaAgentState
 
 def clinical_cbt_node(state: ZoryaAgentState) -> dict:
     """
