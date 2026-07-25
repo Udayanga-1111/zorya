@@ -39,11 +39,22 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
-/.tokensave
 
-/lib/generated/prisma
+# ── Python Backend ────────────────────────────────────────────────────────────
+backend/.venv/
+backend/__pycache__/
+backend/**/__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+backend/dist/
+backend/build/
+backend/.ruff_cache/
+backend/.pytest_cache/
+backend/zorya_state.db
+task_plan.md
+task_plan.md
 
-/lib/generated/prisma
-/.agents
-/.claude
-/.windsurf
+.tokensave/
+.agents/mcp_config.json
