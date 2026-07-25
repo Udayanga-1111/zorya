@@ -10,21 +10,13 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Loader } from "@/components/ui/Loader";
 
-// Define our form data structure
-interface SignupData {
-  name?: string;
-  email?: string;
-  password?: string;
-  confirmPassword?: string;
-}
-
 export default function SignupPage() {
-  const [data, setData] = useState<SignupData>({});
-  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [data, setData] = useState({});
+  const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
 
-  const updateData = (fields: Partial<SignupData>) => {
+  const updateData = (fields) => {
     setData((prev) => ({ ...prev, ...fields }));
     // Clear errors for fields being updated
     const newErrors = { ...errors };
@@ -33,7 +25,7 @@ export default function SignupPage() {
   };
 
   const validate = () => {
-    const newErrors: Record<string, string> = {};
+    const newErrors = {};
     if (!data.name) newErrors.name = "Name is required.";
     if (!data.email || !/^\S+@\S+\.\S+$/.test(data.email)) newErrors.email = "Valid email is required.";
     if (!data.password || data.password.length < 8) newErrors.password = "Password must be at least 8 characters.";

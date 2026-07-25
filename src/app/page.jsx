@@ -10,15 +10,14 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { HeroScene } from "@/components/3d/hero-scene";
 
-gsap.registerPlugin(ScrollTrigger);
-
 export default function LandingPage() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const heroTextRef = useRef<HTMLDivElement>(null);
-  const stepsRef = useRef<HTMLDivElement>(null);
-  const featuresRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef(null);
+  const heroTextRef = useRef(null);
+  const stepsRef = useRef(null);
+  const featuresRef = useRef(null);
 
   useEffect(() => {
+    gsap.registerPlugin(ScrollTrigger);
     // Hero Text Parallax & Fade
     if (heroTextRef.current && containerRef.current) {
       gsap.to(heroTextRef.current, {

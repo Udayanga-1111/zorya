@@ -19,8 +19,6 @@ const loginSchema = z.object({
   password: z.string().min(1, { message: "Password is required." }),
 });
 
-type LoginFormValues = z.infer<typeof loginSchema>;
-
 export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [showLoader, setShowLoader] = useState(false);
@@ -30,11 +28,11 @@ export default function LoginPage() {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<LoginFormValues>({
+  } = useForm({
     resolver: zodResolver(loginSchema),
   });
 
-  const onSubmit = async (data: LoginFormValues) => {
+  const onSubmit = async (data) => {
     setIsLoading(true);
     setShowLoader(true);
     

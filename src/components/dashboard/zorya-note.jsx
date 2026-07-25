@@ -29,7 +29,7 @@ export function ZoryaNote() {
   );
 }
 
-function HeartIcon(props: React.SVGProps<SVGSVGElement>) {
+function HeartIcon(props) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"

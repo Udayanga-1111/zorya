@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import { Inter, Manrope, Cinzel, Cormorant_Garamond } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
@@ -29,16 +28,12 @@ const cormorant = Cormorant_Garamond({
 
 import { LenisProvider } from "@/components/providers/lenis-provider";
 
-export const metadata: Metadata = {
+export const metadata = {
   title: "Zorya | AI Mental Wellness",
   description: "An AI mental wellness platform.",
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }) {
   return (
     <html
       lang="en"

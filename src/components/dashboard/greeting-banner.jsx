@@ -1,4 +1,4 @@
-export function GreetingBanner({ userName }: { userName: string }) {
+export function GreetingBanner({ userName }) {
   // Hardcoded for the demo, in a real app this would be dynamic
   const formattedName = userName.charAt(0).toUpperCase() + userName.slice(1);
   

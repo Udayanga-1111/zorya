@@ -7,17 +7,11 @@ import * as THREE from "three";
 import { ConstellationData, generateConstellationCluster } from "./constellations-data";
 import { createCircularStarTexture, createCircularNebulaTexture } from "./star-textures";
 
-interface ConstellationMeshProps {
-  data: ConstellationData;
-  position: [number, number, number];
-  index: number;
-}
-
-export function ConstellationMesh({ data, position, index }: ConstellationMeshProps) {
-  const groupRef = useRef<THREE.Group>(null);
-  const clusterRef = useRef<THREE.Points>(null);
-  const linesRef = useRef<THREE.LineSegments>(null);
-  const starsGroupRef = useRef<THREE.Group>(null);
+export function ConstellationMesh({ data, position, index }) {
+  const groupRef = useRef(null);
+  const clusterRef = useRef(null);
+  const linesRef = useRef(null);
+  const starsGroupRef = useRef(null);
 
   const [hovered, setHovered] = useState(false);
 
@@ -34,7 +28,7 @@ export function ConstellationMesh({ data, position, index }: ConstellationMeshPr
 
   // Build the line segment positions for constellation lines
   const linePositions = useMemo(() => {
-    const coords: number[] = [];
+    const coords = [];
     data.lines.forEach(([fromIdx, toIdx]) => {
       const fromStar = data.stars[fromIdx];
       const toStar = data.stars[toIdx];
@@ -73,11 +67,10 @@ export function ConstellationMesh({ data, position, index }: ConstellationMeshPr
           if (starData && starMesh instanceof THREE.Mesh) {
             const twinkle = Math.sin(time * (2.0 + (i % 3)) + phaseOffset + i) * 0.3 + 0.85;
             const targetBrightness = starData.brightness * twinkle * glowIntensity.current;
-            (starMesh.material as THREE.MeshStandardMaterial).emissiveIntensity = targetBrightness * 2.0;
+            starMesh.material.emissiveIntensity = targetBrightness * 2.0;
 
             if (haloMesh instanceof THREE.Mesh) {
-              (haloMesh.material as THREE.MeshBasicMaterial).opacity =
-                (hovered ? 0.85 : 0.4) * twinkle;
+              haloMesh.material.opacity = (hovered ? 0.85 : 0.4) * twinkle;
             }
           }
         }
@@ -86,7 +79,7 @@ export function ConstellationMesh({ data, position, index }: ConstellationMeshPr
 
     // Illuminate constellation lines on hover
     if (linesRef.current) {
-      const lineMat = linesRef.current.material as THREE.LineBasicMaterial;
+      const lineMat = linesRef.current.material;
       const targetOpacity = hovered ? 0.95 : 0.35 + Math.sin(time * 1.5 + phaseOffset) * 0.15;
       lineMat.opacity = THREE.MathUtils.lerp(lineMat.opacity, targetOpacity, 0.1);
     }

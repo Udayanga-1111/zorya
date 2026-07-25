@@ -48,7 +48,7 @@ function ShootingStars() {
       progress.current += delta * 1.8;
       if (progress.current >= 1) {
         active.current = false;
-        const positions = lineGeo.attributes.position.array as Float32Array;
+        const positions = lineGeo.attributes.position.array;
         positions[0] = 0; positions[1] = 0; positions[2] = 0;
         positions[3] = 0; positions[4] = 0; positions[5] = 0;
         lineGeo.attributes.position.needsUpdate = true;
@@ -56,7 +56,7 @@ function ShootingStars() {
         const currentHead = new THREE.Vector3().lerpVectors(startPos.current, endPos.current, progress.current);
         const currentTail = new THREE.Vector3().lerpVectors(startPos.current, endPos.current, Math.max(0, progress.current - 0.15));
 
-        const positions = lineGeo.attributes.position.array as Float32Array;
+        const positions = lineGeo.attributes.position.array;
         positions[0] = currentHead.x;
         positions[1] = currentHead.y;
         positions[2] = currentHead.z;
@@ -75,7 +75,7 @@ function ShootingStars() {
  * Hyper-realistic Circular Nebula Clouds
  */
 function NebulaClouds() {
-  const meshRef1 = useRef<THREE.Points>(null);
+  const meshRef1 = useRef(null);
   const nebulaTexture = useMemo(() => createCircularNebulaTexture(), []);
 
   const nebulaData = useMemo(() => {
@@ -130,7 +130,7 @@ function NebulaClouds() {
   );
 }
 
-export function CosmicEnvironment({ isDark }: { isDark: boolean }) {
+export function CosmicEnvironment({ isDark }) {
   return (
     <>
       {/* Dynamic Lighting */}

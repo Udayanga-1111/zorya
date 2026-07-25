@@ -5,16 +5,9 @@ import { useFrame } from "@react-three/fiber";
 import { Text, Float } from "@react-three/drei";
 import * as THREE from "three";
 
-interface ZodiacSignProps {
-  position: [number, number, number];
-  name: string;
-  symbol: string;
-  index: number;
-}
-
-export function ZodiacSign({ position, name, symbol, index }: ZodiacSignProps) {
-  const meshRef = useRef<THREE.Mesh>(null);
-  const textRef = useRef<THREE.Group>(null);
+export function ZodiacSign({ position, name, symbol, index }) {
+  const meshRef = useRef(null);
+  const textRef = useRef(null);
 
   useFrame((state, delta) => {
     if (meshRef.current) {

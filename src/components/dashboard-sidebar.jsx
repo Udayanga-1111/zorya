@@ -8,8 +8,7 @@ export function DashboardSidebar() {
   const pathname = usePathname();
   const params = useParams();
   
-  // Cast userName since params is a dictionary of route parameters
-  const userName = (params.userName as string) || "user";
+  const userName = (params.userName ? String(params.userName) : null) || "user";
   const formattedName = userName.charAt(0).toUpperCase() + userName.slice(1);
   const initials = formattedName.substring(0, 2).toUpperCase();
 

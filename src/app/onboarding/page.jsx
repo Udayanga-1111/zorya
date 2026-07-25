@@ -1,9 +1,6 @@
-export default async function OnboardingPage({
-  params,
-}: {
-  params: Promise<{ userName: string }>;
-}) {
-  const { userName } = await params;
+export default async function OnboardingPage({ params }) {
+  const resolvedParams = params ? await params : {};
+  const userName = resolvedParams.userName || "you";
   const formattedName = userName.charAt(0).toUpperCase() + userName.slice(1);
 
   return (

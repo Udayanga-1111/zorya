@@ -3,7 +3,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
 
-export function Loader({ isLoading = true }: { isLoading?: boolean }) {
+export function Loader({ isLoading = true }) {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {

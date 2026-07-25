@@ -14,7 +14,7 @@ import {
 import { toast } from "sonner";
 import { LogOut, User } from "lucide-react";
 
-export function ProfileButton({ userName }: { userName: string }) {
+export function ProfileButton({ userName }) {
   const router = useRouter();
 
   const initial = userName ? userName.charAt(0).toUpperCase() : "U";

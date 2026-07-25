@@ -14,7 +14,7 @@ import { useTheme } from "next-themes";
 // ─────────────────────────────────────────────────────────────────────────────
 // Shared ref context so children can read dayProgress without React state
 // ─────────────────────────────────────────────────────────────────────────────
-const DayProgressContext = createContext<React.MutableRefObject<number>>({ current: 0 });
+const DayProgressContext = createContext({ current: 0 });
 
 function useDayProgress() {
   return useContext(DayProgressContext);
@@ -28,7 +28,7 @@ function CameraRig() {
   const mousePos = useRef({ x: 0, y: 0 });
 
   useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
+    const handleMouseMove = (e) => {
       mousePos.current.x = (e.clientX / window.innerWidth - 0.5) * 2;
       mousePos.current.y = (e.clientY / window.innerHeight - 0.5) * 2;
     };
@@ -49,7 +49,7 @@ function CameraRig() {
 // Zodiac Constellation Ring (reads dayProgress from shared ref — no re-renders)
 // ─────────────────────────────────────────────────────────────────────────────
 function ZodiacConstellationsRing() {
-  const groupRef = useRef<THREE.Group>(null);
+  const groupRef = useRef(null);
   const dayRef = useDayProgress();
   const radius = 9.5;
 
@@ -84,9 +84,9 @@ function ZodiacConstellationsRing() {
 // Adaptive Lighting (reads dayProgress ref — no setState)
 // ─────────────────────────────────────────────────────────────────────────────
 function AdaptiveLighting() {
-  const ambRef = useRef<THREE.AmbientLight>(null);
-  const dirRef = useRef<THREE.DirectionalLight>(null);
-  const fillRef = useRef<THREE.PointLight>(null);
+  const ambRef = useRef(null);
+  const dirRef = useRef(null);
+  const fillRef = useRef(null);
   const dayRef = useDayProgress();
 
   useFrame(() => {
@@ -138,7 +138,7 @@ function AdaptiveBloom() {
 // ─────────────────────────────────────────────────────────────────────────────
 // Night / Day scene transition engine — only uses a ref, ZERO React setState
 // ─────────────────────────────────────────────────────────────────────────────
-function SceneContents({ isDark }: { isDark: boolean }) {
+function SceneContents({ isDark }) {
   const dayProgressRef = useRef(isDark ? 0.0 : 1.0);
 
   // Smooth cinematic lerp toward target — no setState, no re-renders

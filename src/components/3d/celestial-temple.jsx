@@ -5,15 +5,11 @@ import { useFrame } from "@react-three/fiber";
 import { Float, Sparkles } from "@react-three/drei";
 import * as THREE from "three";
 
-interface CelestialTempleProps {
-  dayProgress: number; // 0 = night, 1 = day
-}
-
 /**
  * Floating Lotus Petals drifting on the water surface
  */
-function LotusPetals({ dayProgress }: { dayProgress: number }) {
-  const petalsRef = useRef<THREE.InstancedMesh>(null);
+function LotusPetals({ dayProgress }) {
+  const petalsRef = useRef(null);
   const count = 50;
 
   const dummy = useMemo(() => new THREE.Object3D(), []);
@@ -41,7 +37,7 @@ function LotusPetals({ dayProgress }: { dayProgress: number }) {
       dummy.scale.setScalar(petal.scale * dayProgress);
       dummy.updateMatrix();
 
-      petalsRef.current!.setMatrixAt(i, dummy.matrix);
+      petalsRef.current.setMatrixAt(i, dummy.matrix);
     });
     petalsRef.current.instanceMatrix.needsUpdate = true;
   });
@@ -60,10 +56,10 @@ function LotusPetals({ dayProgress }: { dayProgress: number }) {
   );
 }
 
-export function CelestialTemple({ dayProgress }: CelestialTempleProps) {
-  const templeGroupRef = useRef<THREE.Group>(null);
-  const zodiacRingsRef = useRef<THREE.Group>(null);
-  const crystalsRef = useRef<THREE.Group>(null);
+export function CelestialTemple({ dayProgress }) {
+  const templeGroupRef = useRef(null);
+  const zodiacRingsRef = useRef(null);
+  const crystalsRef = useRef(null);
 
   const marbleMaterial = useMemo(
     () =>
@@ -202,7 +198,7 @@ export function CelestialTemple({ dayProgress }: CelestialTempleProps) {
           { pos: [1.5, 4.5, -6], scale: 0.9 },
         ].map((item, i) => (
           <Float key={i} speed={1.8 + i * 0.2} rotationIntensity={0.7} floatIntensity={1.2}>
-            <mesh position={item.pos as any} material={crystalMaterial} scale={item.scale}>
+            <mesh position={item.pos} material={crystalMaterial} scale={item.scale}>
               <octahedronGeometry args={[1, 0]} />
             </mesh>
           </Float>

@@ -1,11 +1,7 @@
 import { DashboardHeader } from "@/components/dashboard-header";
 import { DashboardSidebar } from "@/components/dashboard-sidebar";
 
-export default function DashboardLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function DashboardLayout({ children }) {
   return (
     <div className="h-screen flex flex-col font-sans overflow-hidden">
       <DashboardHeader />

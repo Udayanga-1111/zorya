@@ -1,11 +1,8 @@
 import { Calendar as CalendarIcon, CheckCircle2, Circle, Flame, Sparkles, TrendingUp } from "lucide-react";
 
-export default async function HabitsPage({
-  params,
-}: {
-  params: Promise<{ userName: string }>;
-}) {
-  const { userName } = await params;
+export default async function HabitsPage({ params }) {
+  const resolvedParams = params ? await params : {};
+  const userName = resolvedParams.userName || "you";
   const formattedName = userName.charAt(0).toUpperCase() + userName.slice(1);
 
   const habits = [

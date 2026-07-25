@@ -1,9 +1,9 @@
 "use client";
 
-import { ReactNode, useEffect } from "react";
+import { useEffect } from "react";
 import Lenis from "lenis";
 
-export function LenisProvider({ children }: { children: ReactNode }) {
+export function LenisProvider({ children }) {
   useEffect(() => {
     const lenis = new Lenis({
       duration: 1.2,
@@ -15,7 +15,7 @@ export function LenisProvider({ children }: { children: ReactNode }) {
       touchMultiplier: 2,
     });
 
-    function raf(time: number) {
+    function raf(time) {
       lenis.raf(time);
       requestAnimationFrame(raf);
     }

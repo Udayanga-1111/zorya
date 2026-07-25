@@ -6,17 +6,13 @@ import { Sparkles } from "@react-three/drei";
 import * as THREE from "three";
 import { CONSTELLATIONS } from "./constellations-data";
 
-interface CrystalWaterProps {
-  dayProgress: number;
-}
-
-export function CrystalWater({ dayProgress }: CrystalWaterProps) {
-  const waterMeshRef = useRef<THREE.Mesh>(null);
-  const underwaterGroupRef = useRef<THREE.Group>(null);
+export function CrystalWater({ dayProgress }) {
+  const waterMeshRef = useRef(null);
+  const underwaterGroupRef = useRef(null);
   const waveTime = useRef(0);
 
   useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
+    const handleMouseMove = (e) => {
       // used for future ripple effect – stored for frame access
     };
     window.addEventListener("mousemove", handleMouseMove);
@@ -25,7 +21,7 @@ export function CrystalWater({ dayProgress }: CrystalWaterProps) {
 
   // Underwater golden zodiac lines
   const underwaterLines = useMemo(() => {
-    const coords: number[] = [];
+    const coords = [];
     CONSTELLATIONS.forEach((constellation, idx) => {
       const offsetX = ((idx % 4) - 1.5) * 5.5;
       const offsetZ = (Math.floor(idx / 4) - 1.0) * 5.5;
@@ -43,7 +39,7 @@ export function CrystalWater({ dayProgress }: CrystalWaterProps) {
   }, []);
 
   const underwaterStars = useMemo(() => {
-    const coords: number[] = [];
+    const coords = [];
     CONSTELLATIONS.forEach((constellation, idx) => {
       const offsetX = ((idx % 4) - 1.5) * 5.5;
       const offsetZ = (Math.floor(idx / 4) - 1.0) * 5.5;
@@ -59,7 +55,7 @@ export function CrystalWater({ dayProgress }: CrystalWaterProps) {
     waveTime.current += delta;
 
     if (waterMeshRef.current) {
-      const mat = waterMeshRef.current.material as THREE.MeshPhysicalMaterial;
+      const mat = waterMeshRef.current.material;
       // Water is always visible with minimum opacity in light mode
       mat.opacity = THREE.MathUtils.lerp(0.0, 0.82, dayProgress);
 
@@ -74,11 +70,9 @@ export function CrystalWater({ dayProgress }: CrystalWaterProps) {
 
       underwaterGroupRef.current.children.forEach((child) => {
         if (child instanceof THREE.LineSegments) {
-          (child.material as THREE.LineBasicMaterial).opacity =
-            THREE.MathUtils.lerp(0.0, 0.9, dayProgress);
+          child.material.opacity = THREE.MathUtils.lerp(0.0, 0.9, dayProgress);
         } else if (child instanceof THREE.Points) {
-          (child.material as THREE.PointsMaterial).opacity =
-            THREE.MathUtils.lerp(0.0, 1.0, dayProgress);
+          child.material.opacity = THREE.MathUtils.lerp(0.0, 1.0, dayProgress);
         }
       });
     }
