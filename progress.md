@@ -9,7 +9,7 @@ This document serves as the active memory log for Google Antigravity and team **
 - **Current Status:** In Progress (Day 1)
 - **Sprint Goal:** Complete isolated MCP servers, basic agent pipeline, and frontend/mobile skeletons.
 - **Target Completion Date:** July 26, 2026
-- **Story Points Progress:** `4 / 30 Points Completed`
+- **Story Points Progress:** `7 / 30 Points Completed`
 
 ---
 
@@ -113,6 +113,20 @@ This document serves as the active memory log for Google Antigravity and team **
 
 ---
 
+### 🔴 Session 8 — July 26, 2026 (MCP Client Architecture Fix — ZOR-12)
+
+- **Lead / Participants:** Google Antigravity
+- **Key Achievements:**
+  - Identified a critical architectural bug in `orchestrator/nodes.py`: the `parsing_node` was calling `calculate_active_transits` via a direct Python import, completely bypassing the MCP protocol layer.
+  - Fixed `parsing_node` to use the FastMCP in-process `Client` with the `celestial_mcp` app object as transport. Tool calls now route through the full MCP protocol (serialized/deserialized as MCP messages) while avoiding subprocess overhead.
+  - Introduced `_call_celestial_tool` async coroutine in `nodes.py` and used `asyncio.run()` to bridge the sync LangGraph node interface with the async MCP client.
+  - Updated `test_celestial_server.py` to call the tool through the `fastmcp.Client` async interface (using `pytest-asyncio`), ensuring tests exercise the same protocol path as production. Added a Pydantic validation boundary test.
+  - Rewrote `test_graph_orchestration.py` to mock `orchestrator.nodes._call_celestial_tool` (the async MCP coroutine) instead of the removed direct function import. Added a new test verifying `ValueError` is raised for incomplete `user_profile` before the MCP client is ever reached.
+- **Active Blockers / Risks:** None.
+- **Next Actions for Resuming Session:** ZOR-G (Ethical Guardrail Node implementation) or ZOR-1B (Initialize Mobile App Repository).
+
+---
+
 ## 📜 Commit History & Smart Commit Log
 
 | Date           | Commit Hash | Author | Jira Ticket | Commit Message                                                                            | Status / Branch            |
@@ -138,6 +152,7 @@ This document serves as the active memory log for Google Antigravity and team **
 [x] ZOR-6:  Construct Clinical MCP Data Schemas & Mappings (Dev 2) — 3 pts
 [x] ZOR-7:  Set Up LangGraph State Machine & Checkpointer (Dev 3) — 3 pts  ✅ DONE Session 5
 [x] ZOR-8:  Implement Parsing Agent Node & Pydantic Schemas (Dev 3) — 3 pts  ✅ DONE Session 7
+[x] ZOR-12 (partial): MCP Client Architecture Fix — parsing_node now correctly routes through FastMCP Client  ✅ DONE Session 8
 [x] ZOR-9:  Develop Clinical CBT Agent Prompt Layer (Dev 3) — 3 pts  ✅ DONE Session 4
 [ ] ZOR-12: Draft Ethical Guardrail Rulebook & Boundary Prompts (PM) — 3 pts
 ```
