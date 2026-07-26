@@ -20,8 +20,16 @@ dependencies = [
     "langchain-core>=0.2",
     # OpenAI integration for LangChain
     "langchain-openai>=0.1",
+    # Groq integration for LangChain
+    "langchain-groq>=0.1",
     # .env file loading
     "python-dotenv>=1.0",
+    # HTTP server for SSE streaming endpoint
+    "fastapi>=0.111",
+    "uvicorn[standard]>=0.30",
+    "sse-starlette>=2.1",
+    # Async SQLite for LangGraph async streaming
+    "aiosqlite>=0.20.0",
 ]
 
 [project.optional-dependencies]

@@ -1,26 +1,57 @@
-export function DailyPlan() {
-  const planItems = [
-    {
-      time: "8:00 AM", dur: "15 min", title: "Morning Reflection",
-      tag: "Cognitive", dot: "bg-primary", ring: "ring-primary/25",
-      desc: "Identify automatic thoughts upon waking. Saturn trine supports honest self-assessment.",
-    },
-    {
-      time: "10:00 AM", dur: "10 min", title: "5-4-3-2-1 Grounding",
-      tag: "Somatic", dot: "bg-orange-500", ring: "ring-orange-400/30",
-      desc: "Mars square may heighten sensitivity — anchor with sensory awareness.",
-    },
-    {
-      time: "12:30 PM", dur: "20 min", title: "Midday Walk + Observation",
-      tag: "Behavioral", dot: "bg-teal-500", ring: "ring-teal-400/30",
-      desc: "Mercury sextile Venus: ideal window for connecting with environment.",
-    },
-    {
-      time: "3:00 PM", dur: "15 min", title: "Key Conversations",
-      tag: "Interpersonal", dot: "bg-emerald-500", ring: "ring-emerald-400/30",
-      desc: "Optimal window for difficult conversations. Mercury favors clarity.",
-    },
-  ];
+/**
+ * DailyPlan
+ *
+ * Renders the CBT habit plan streamed from the Clinical CBT Agent via the
+ * LangGraph clinical_cbt_node. Shows a skeleton loader while the agent is running.
+ *
+ * Props:
+ *   clinicalPlan — ClinicalAgentOutput shape: { blocks: CBTBlock[] } (or null)
+ *   isLoading    — Boolean: true while the SSE stream hasn't emitted clinical_cbt_node
+ *
+ * Each CBTBlock has: { category, title, description, duration_minutes, disclaimer }
+ */
+
+const CATEGORY_STYLE = {
+  Focus:         { tag: "Cognitive",    dot: "bg-primary",       ring: "ring-primary/25" },
+  Rest:          { tag: "Recovery",     dot: "bg-blue-500",      ring: "ring-blue-400/30" },
+  Communication: { tag: "Interpersonal",dot: "bg-emerald-500",   ring: "ring-emerald-400/30" },
+  Grounding:     { tag: "Somatic",      dot: "bg-teal-500",      ring: "ring-teal-400/30" },
+  Reflection:    { tag: "Reflective",   dot: "bg-orange-500",    ring: "ring-orange-400/30" },
+};
+
+// Rough time labels for up to 5 blocks starting from 8 AM
+const TIME_SLOTS = ["8:00 AM", "10:00 AM", "12:30 PM", "3:00 PM", "6:00 PM"];
+
+function SkeletonItem({ index, total }) {
+  return (
+    <div className={`relative flex gap-6 ${index < total - 1 ? "pb-9" : ""}`}>
+      {index < total - 1 && (
+        <div
+          className="absolute left-[88px] top-5 bottom-0 w-px"
+          style={{ background: "linear-gradient(to bottom, oklch(from var(--primary) l c h / 0.3), oklch(from var(--primary) l c h / 0.05))" }}
+        />
+      )}
+      <div className="w-16 shrink-0 mt-1 flex flex-col items-end gap-1.5">
+        <div className="h-4 w-14 rounded bg-muted animate-pulse" />
+        <div className="h-3 w-10 rounded bg-muted animate-pulse" />
+      </div>
+      <div className="relative z-10 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-background border border-border mt-0.5">
+        <div className="h-2.5 w-2.5 rounded-full bg-muted animate-pulse" />
+      </div>
+      <div className="flex-1 pb-1 space-y-2 mt-1">
+        <div className="h-4 w-48 rounded bg-muted animate-pulse" />
+        <div className="h-3 w-full rounded bg-muted animate-pulse" />
+        <div className="h-3 w-3/4 rounded bg-muted animate-pulse" />
+      </div>
+    </div>
+  );
+}
+
+export function DailyPlan({ clinicalPlan, isLoading }) {
+  const blocks = clinicalPlan?.blocks ?? [];
+  const skeletonCount = 3;
+
+  const totalMinutes = blocks.reduce((acc, b) => acc + (b.duration_minutes ?? 0), 0);
 
   return (
     <>
@@ -40,48 +71,85 @@ export function DailyPlan() {
         />
 
         <div className="relative">
-          <p className="font-celestial text-2xl font-light italic text-foreground mb-0.5">
-            5 gentle practices
-          </p>
-          <p className="text-xs text-muted-foreground tracking-wide mb-8">80 minutes total · aligned with your chart</p>
-
-          <div className="space-y-0">
-            {planItems.map((item, i, arr) => (
-              <div key={item.title} className={`relative flex gap-6 ${i < arr.length - 1 ? "pb-9" : ""}`}>
-                {/* Vertical constellation line */}
-                {i < arr.length - 1 && (
-                  <div
-                    className="absolute left-[88px] top-5 bottom-0 w-px"
-                    style={{ background: "linear-gradient(to bottom, oklch(from var(--primary) l c h / 0.3), oklch(from var(--primary) l c h / 0.05))" }}
-                  />
-                )}
-
-                {/* Time column */}
-                <div className="w-16 shrink-0 text-right mt-1">
-                  <div className="font-celestial text-[15px] font-medium text-foreground">{item.time}</div>
-                  <div className="text-[11px] text-muted-foreground">{item.dur}</div>
-                </div>
-
-                {/* Constellation dot */}
-                <div className="relative z-10 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-background border border-border mt-0.5">
-                  <div className={`h-2.5 w-2.5 rounded-full ${item.dot} ring-[4px] ${item.ring} shadow-sm`} />
-                </div>
-
-                {/* Content */}
-                <div className="flex-1 pb-1">
-                  <div className="flex items-center justify-between gap-2 flex-wrap">
-                    <h4 className="font-celestial text-[17px] font-semibold text-foreground leading-tight">
-                      {item.title}
-                    </h4>
-                    <span className="rounded-full bg-muted/80 border border-border/60 px-2.5 py-0.5 text-[10px] font-medium tracking-wide text-muted-foreground">
-                      {item.tag}
-                    </span>
-                  </div>
-                  <p className="mt-1.5 text-sm text-muted-foreground leading-relaxed">{item.desc}</p>
-                </div>
+          {isLoading || blocks.length === 0 ? (
+            <>
+              <div className="h-7 w-48 rounded bg-muted animate-pulse mb-1" />
+              <div className="h-4 w-64 rounded bg-muted animate-pulse mb-8" />
+              <div className="space-y-0">
+                {Array.from({ length: skeletonCount }).map((_, i) => (
+                  <SkeletonItem key={i} index={i} total={skeletonCount} />
+                ))}
               </div>
-            ))}
-          </div>
+            </>
+          ) : (
+            <>
+              <p className="font-celestial text-2xl font-light italic text-foreground mb-0.5">
+                {blocks.length} gentle practice{blocks.length !== 1 ? "s" : ""}
+              </p>
+              <p className="text-xs text-muted-foreground tracking-wide mb-8">
+                {totalMinutes} minutes total · aligned with your chart
+              </p>
+
+              <div className="space-y-0">
+                {blocks.map((block, i, arr) => {
+                  const style = CATEGORY_STYLE[block.category] ?? {
+                    tag: block.category,
+                    dot: "bg-primary",
+                    ring: "ring-primary/25",
+                  };
+                  const time = TIME_SLOTS[i] ?? "--:--";
+
+                  return (
+                    <div
+                      key={`${block.category}-${i}`}
+                      className={`relative flex gap-6 ${i < arr.length - 1 ? "pb-9" : ""}`}
+                    >
+                      {/* Vertical constellation line */}
+                      {i < arr.length - 1 && (
+                        <div
+                          className="absolute left-[88px] top-5 bottom-0 w-px"
+                          style={{ background: "linear-gradient(to bottom, oklch(from var(--primary) l c h / 0.3), oklch(from var(--primary) l c h / 0.05))" }}
+                        />
+                      )}
+
+                      {/* Time column */}
+                      <div className="w-16 shrink-0 text-right mt-1">
+                        <div className="font-celestial text-[15px] font-medium text-foreground">{time}</div>
+                        <div className="text-[11px] text-muted-foreground">{block.duration_minutes} min</div>
+                      </div>
+
+                      {/* Constellation dot */}
+                      <div className="relative z-10 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-background border border-border mt-0.5">
+                        <div className={`h-2.5 w-2.5 rounded-full ${style.dot} ring-[4px] ${style.ring} shadow-sm`} />
+                      </div>
+
+                      {/* Content */}
+                      <div className="flex-1 pb-1">
+                        <div className="flex items-center justify-between gap-2 flex-wrap">
+                          <h4 className="font-celestial text-[17px] font-semibold text-foreground leading-tight">
+                            {block.title}
+                          </h4>
+                          <span className="rounded-full bg-muted/80 border border-border/60 px-2.5 py-0.5 text-[10px] font-medium tracking-wide text-muted-foreground">
+                            {style.tag}
+                          </span>
+                        </div>
+                        <p className="mt-1.5 text-sm text-muted-foreground leading-relaxed">
+                          {block.description}
+                        </p>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* Ethical disclaimer */}
+              {blocks[0]?.disclaimer && (
+                <p className="mt-8 text-[10px] text-muted-foreground/50 leading-relaxed border-t border-border/40 pt-4">
+                  ⚕ {blocks[0].disclaimer}
+                </p>
+              )}
+            </>
+          )}
         </div>
       </div>
     </>

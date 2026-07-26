@@ -51,4 +51,7 @@ A living document recording technical insights, quirks, and resolutions discover
 - **Fix applied:** Stripped all `backend.` prefixes across internal imports. Tests resolve correctly using `from orchestrator.X import Y`.
 
 ---
+### [Session 9 — 2026-07-26] LangChain `with_structured_output` and Groq Models
 
+- **Issue:** Using `with_structured_output` on smaller Groq models (like `llama-3.1-8b-instant`) frequently throws `400 tool_use_failed` because the model generates non-standard tool prefixes (e.g. `<function=ClinicalAgentOutput> {"blocks": [...]}`).
+- **Fix applied:** For deterministic structured output using native LangChain tool calling bindings, upgrade to `llama-3.3-70b-versatile` which has highly reliable tool parsing. Alternatively, for 8B models, use `method="json_mode"` and explicitly instruct the model to return JSON in the system prompt.

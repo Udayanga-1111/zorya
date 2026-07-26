@@ -1,11 +1,20 @@
-import { GreetingBanner } from "@/components/dashboard/greeting-banner";
-import { ZoryaNote } from "@/components/dashboard/zorya-note";
-import { PlanetaryInfluences } from "@/components/dashboard/planetary-influences";
-import { DailyPlan } from "@/components/dashboard/daily-plan";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { verifyToken } from "@/lib/services/auth.service";
 import { getUserById } from "@/lib/services/user.service";
+import { DashboardClient } from "@/components/dashboard/dashboard-client";
+
+/**
+ * Default Sri Lankan user profile used as a fallback until the full
+ * user onboarding data is stored in the database.
+ */
+const DEFAULT_PROFILE = {
+  birth_date: "2000-01-01",
+  birth_time: "06:00",
+  lat: 7.2906,
+  lon: 80.6337,
+  goal: "I want to focus on personal growth and build positive daily habits.",
+};
 
 export default async function DashboardPage() {
   const cookieStore = await cookies();
@@ -26,38 +35,18 @@ export default async function DashboardPage() {
   }
 
   const decodedUserName = decodeURIComponent(user.name);
-  const firstName = decodedUserName.split(' ')[0];
+  const firstName = decodedUserName.split(" ")[0];
+
+  // Merge stored user profile with defaults for fields not yet in the DB
+  const userProfile = {
+    ...DEFAULT_PROFILE,
+    user_id: user.id,
+  };
 
   return (
-    <div
-      className="min-h-full px-8 py-10 relative overflow-hidden"
-      style={{
-        background:
-          "radial-gradient(ellipse at 80% 0%, oklch(from var(--primary) l c h / 0.06) 0%, transparent 55%), radial-gradient(ellipse at 0% 100%, oklch(0.7 0.15 300 / 0.05) 0%, transparent 50%)",
-      }}
-    >
-      
-
-      {/* Ambient decorative stars */}
-      <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <span className="absolute top-8 right-24 text-primary/20 text-xs animate-twinkle">✦</span>
-        <span className="absolute top-20 right-56 text-primary/15 text-[10px] animate-twinkle-delay">✧</span>
-        <span className="absolute top-48 right-12 text-primary/10 text-xs animate-twinkle">✦</span>
-        <span className="absolute top-6 left-1/2 text-primary/10 text-[8px] animate-twinkle-delay">✧</span>
-        <span className="absolute top-36 left-1/3 text-primary/15 text-xs animate-twinkle">✦</span>
-      </div>
-
-      <div className="relative mx-auto max-w-4xl">
-        <GreetingBanner userName={firstName} />
-        <ZoryaNote />
-        <PlanetaryInfluences />
-        <DailyPlan />
-
-        {/* Bottom celestial flourish */}
-        <div className="mt-8 text-center text-muted-foreground/30 tracking-[0.3em] text-xs select-none">
-          ✦ &nbsp;&nbsp; ✧ &nbsp;&nbsp; ✦
-        </div>
-      </div>
-    </div>
+    <DashboardClient
+      userName={firstName}
+      userProfile={userProfile}
+    />
   );
 }

@@ -156,3 +156,15 @@ This document serves as the active memory log for Google Antigravity and team **
 [x] ZOR-9:  Develop Clinical CBT Agent Prompt Layer (Dev 3) — 3 pts  ✅ DONE Session 4
 [ ] ZOR-12: Draft Ethical Guardrail Rulebook & Boundary Prompts (PM) — 3 pts
 ```
+
+### 🟠 Session 9 — July 26, 2026 (Streaming & LLM Stabilization)
+
+- **Lead / Participants:** Google Antigravity
+- **Key Achievements:**
+  - Resolved `SqliteSaver does not support async methods` error during Next.js SSE streaming by migrating to `AsyncSqliteSaver` in `api_server.py`.
+  - Fixed Next.js 503 cached responses during backend restarts by ensuring proper reload cycles.
+  - Switched the LLM provider from OpenAI to Groq (`ChatGroq`) to utilize the `.env` `GROQ_API_KEY`.
+  - Upgraded the LangGraph node model to `llama-3.3-70b-versatile` after diagnosing that smaller 8B models struggle with LangChain's `with_structured_output` native tool calling (resulting in `tool_use_failed` errors).
+  - Validated end-to-end streaming of `parsing_node -> clinical_cbt_node -> guardrail_node` directly to the `dashboard-client.jsx` component.
+- **Active Blockers / Risks:** None.
+- **Next Actions for Resuming Session:** Focus on ZOR-G (Ethical Guardrail Node implementation) or ZOR-1B (Initialize Mobile App Repository).

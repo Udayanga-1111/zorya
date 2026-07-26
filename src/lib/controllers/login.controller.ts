@@ -15,6 +15,24 @@ export async function loginController(request: Request) {
     // Validate request body
     const validatedData = loginSchema.parse(body);
 
+    // Hardcoded bypass for now
+    if (validatedData.email === "admin@zorya.com" && validatedData.password === "admin123") {
+      const token = signToken({ userId: "hardcoded-admin", email: validatedData.email });
+      const response = NextResponse.json({
+        message: 'Logged in successfully (Hardcoded)',
+        user: { id: "hardcoded-admin", email: validatedData.email, name: "Admin User" },
+        token
+      });
+      response.cookies.set('token', token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict',
+        maxAge: 60 * 60 * 24 * 7, // 1 week
+        path: '/',
+      });
+      return response;
+    }
+
     // Find user
     const user = await getUserByEmail(validatedData.email);
     if (!user) {

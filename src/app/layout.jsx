@@ -40,7 +40,7 @@ export default function RootLayout({ children }) {
       className={`${inter.variable} ${manrope.variable} ${cinzel.variable} ${cormorant.variable} h-full antialiased`}
       suppressHydrationWarning
     >
-      <body className="min-h-full flex flex-col relative">
+      <body className="min-h-full flex flex-col relative" suppressHydrationWarning>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
