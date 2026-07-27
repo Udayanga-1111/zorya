@@ -65,6 +65,14 @@ A living document recording technical insights, quirks, and resolutions discover
 
 ---
 
+### [Session 12 — 2026-07-27] ZOR-5: Vimshottari Dasha Accuracy
+
+- **Issue:** Vimshottari Dasha requires extreme precision regarding the Moon's exact Nakshatra. If tropical coordinates are passed, the Moon will be placed ~24 degrees off, triggering an entirely wrong Dasha Lord schedule.
+- **Fix applied:** Set `swe.set_sid_mode(swe.SIDM_LAHIRI)` and `swe.FLG_SIDEREAL` to guarantee all calculation outputs are strictly Vedic Sidereal.
+- **Insight:** Time progression for Vimshottari Dasha is most accurate using the standard tropical year (365.2422 days) instead of 360-day Savana years, which introduce severe cumulative drift in long-term cycle calculations.
+
+---
+
 ### [Session 13 — 2026-07-27] Ethical Guardrail Rulebook Strict Schema Adherence
 
 - **Issue:** Abstracting the 4 prohibited categories (Determinism, Diagnostics, Medical Guidance, Financial) into just two boolean fields (`violates_fatalism`, `violates_diagnostic`) in the Pydantic schema weakened the downstream parsing logic.
