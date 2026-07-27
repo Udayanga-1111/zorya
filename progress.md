@@ -141,20 +141,20 @@ This document serves as the active memory log for Google Antigravity and team **
 ## 📋 Ticket Completion Tracker (Sprint 1)
 
 ```text
-[x] ZOR-10: Setup Jira Board & GitHub Workflow (PM) — 1 pt
-[x] ZOR-11: Open-Source Licensing Audit (PM) — 2 pts
-[x] ZOR-1A: Initialize Next.js 15 Web Repository (Dev 1) — 2 pts
-[ ] ZOR-1B: Initialize Mobile App Repository (Dev 1) — 2 pts
-[ ] ZOR-2:  Build Astronomical Onboarding Form Component (Dev 1) — 3 pts
-[ ] ZOR-3:  Build Dynamic Calendar UI & Habit Dashboard Shell (Dev 1) — 3 pts
-[x] ZOR-4:  Initialize FastMCP Python Environment (Dev 2) — 2 pts  ✅ DONE Session 2
-[x] ZOR-5:  Build Celestial MCP Tool - pyswisseph (Dev 2) — 5 pts
-[x] ZOR-6:  Construct Clinical MCP Data Schemas & Mappings (Dev 2) — 3 pts
-[x] ZOR-7:  Set Up LangGraph State Machine & Checkpointer (Dev 3) — 3 pts  ✅ DONE Session 5
-[x] ZOR-8:  Implement Parsing Agent Node & Pydantic Schemas (Dev 3) — 3 pts  ✅ DONE Session 7
-[x] ZOR-12 (partial): MCP Client Architecture Fix — parsing_node now correctly routes through FastMCP Client  ✅ DONE Session 8
-[x] ZOR-9:  Develop Clinical CBT Agent Prompt Layer (Dev 3) — 3 pts  ✅ DONE Session 4
-[ ] ZOR-12: Draft Ethical Guardrail Rulebook & Boundary Prompts (PM) — 3 pts
+- [x] ZOR-10: Setup Jira Board & GitHub Workflow (PM) — 1 pt
+- [x] ZOR-11: Open-Source Licensing Audit (PM) — 2 pts
+- [x] ZOR-1A: Initialize Next.js 15 Web Repository (Dev 1) — 2 pts
+- [ ] ZOR-1B: Initialize Mobile App Repository (Dev 1) — 2 pts
+- [x] ZOR-2:  Build Astronomical Onboarding Form Component (Dev 1) — 3 pts  ✅ DONE Session 10
+- [ ] ZOR-3:  Build Dynamic Calendar UI & Habit Dashboard Shell (Dev 1) — 3 pts
+- [x] ZOR-4:  Initialize FastMCP Python Environment (Dev 2) — 2 pts  ✅ DONE Session 2
+- [x] ZOR-5:  Build Celestial MCP Tool - pyswisseph (Dev 2) — 5 pts
+- [x] ZOR-6:  Construct Clinical MCP Data Schemas & Mappings (Dev 2) — 3 pts
+- [x] ZOR-7:  Set Up LangGraph State Machine & Checkpointer (Dev 3) — 3 pts  ✅ DONE Session 5
+- [x] ZOR-8:  Implement Parsing Agent Node & Pydantic Schemas (Dev 3) — 3 pts  ✅ DONE Session 7
+- [x] ZOR-12 (partial): MCP Client Architecture Fix — parsing_node now correctly routes through FastMCP Client  ✅ DONE Session 8
+- [x] ZOR-9:  Develop Clinical CBT Agent Prompt Layer (Dev 3) — 3 pts  ✅ DONE Session 4
+- [ ] ZOR-12: Draft Ethical Guardrail Rulebook & Boundary Prompts (PM) — 3 pts
 ```
 
 ### 🟠 Session 9 — July 26, 2026 (Streaming & LLM Stabilization)
@@ -168,3 +168,17 @@ This document serves as the active memory log for Google Antigravity and team **
   - Validated end-to-end streaming of `parsing_node -> clinical_cbt_node -> guardrail_node` directly to the `dashboard-client.jsx` component.
 - **Active Blockers / Risks:** None.
 - **Next Actions for Resuming Session:** Focus on ZOR-G (Ethical Guardrail Node implementation) or ZOR-1B (Initialize Mobile App Repository).
+
+---
+
+### 🔵 Session 10 — July 27, 2026 (Onboarding Flow & Neon Database Integration — ZOR-2)
+
+- **Lead / Participants:** Google Antigravity
+- **Key Achievements:**
+  - Diagnosed and fixed the 500 Internal Server Error during signup caused by a missing PostgreSQL connection string. Configured `.env.local` with Neon PostgreSQL `DATABASE_URL`.
+  - Extended the Prisma `User` schema to include `latitude` and `longitude` fields to properly support the Python FastMCP celestial calculations.
+  - Built the `POST /api/onboarding` route secured by `withAuth` middleware to save telemetry to the PostgreSQL database.
+  - Developed the fully interactive frontend `OnboardingPage` using React Hook Form, `zod`, and `framer-motion` for a smooth 3-step animated wizard.
+  - Implemented real-time geocoding directly in the UI using the free OpenStreetMap Nominatim API, automatically deriving `lat`/`lon` from the user's city search.
+- **Active Blockers / Risks:** None.
+- **Next Actions for Resuming Session:** Focus on ZOR-3 (Build Dynamic Calendar UI) or ZOR-1B (Initialize Mobile App Repository).

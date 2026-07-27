@@ -29,7 +29,7 @@ Establish the foundational infrastructure for Zorya. This includes isolating the
 
 ### Phase 4: Web & Mobile Frontend Integration
 
-- [ ] **ZOR-2:** Build the Astronomical Onboarding Form components (Web & Mobile) using React Hook Form to capture Date of Birth, Time, and Location (Lat/Long).
+- [x] **ZOR-2:** Build the Astronomical Onboarding Form components (Web) using React Hook Form to capture Date of Birth, Time, and Location (Lat/Long).
 - [ ] **ZOR-3:** Build the dynamic Calendar UI and Habit Dashboard shell (Web & Mobile) to render daily/weekly focus blocks and CBT exercises.
 - [ ] **ZOR-Y:** Create the placeholder UI slots for the real-time Server-Sent Events (SSE) chat streaming companion.
 

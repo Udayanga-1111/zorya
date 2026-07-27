@@ -41,3 +41,41 @@ export async function getUserById(id: string): Promise<UserWithoutPassword | nul
   const { password_hash, ...userWithoutPassword } = user;
   return userWithoutPassword;
 }
+
+export async function updateUserOnboarding(
+  id: string,
+  data: {
+    birth_date: Date;
+    birth_time: string;
+    birth_city: string;
+    latitude: number;
+    longitude: number;
+  }
+): Promise<UserWithoutPassword> {
+  if (id === "hardcoded-admin") {
+    return {
+      id: "hardcoded-admin",
+      email: "admin@zorya.com",
+      name: "Admin User",
+      created_at: new Date(),
+      updated_at: new Date(),
+      onboarded: true,
+      birth_date: data.birth_date,
+      birth_time: data.birth_time,
+      birth_city: data.birth_city,
+      latitude: data.latitude,
+      longitude: data.longitude,
+    } as any;
+  }
+
+  const user = await prisma.user.update({
+    where: { id },
+    data: {
+      ...data,
+      onboarded: true,
+    },
+  });
+
+  const { password_hash, ...userWithoutPassword } = user;
+  return userWithoutPassword;
+}

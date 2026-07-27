@@ -24,6 +24,8 @@ model User {
   birth_time     String?   // "HH:MM" stored as string for flexibility
   birth_city     String?
   birth_country  String?
+  latitude       Float?
+  longitude      Float?
   sun_sign       String?   // e.g. "Pisces"
   moon_sign      String?
   rising_sign    String?

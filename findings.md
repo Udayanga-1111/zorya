@@ -55,3 +55,10 @@ A living document recording technical insights, quirks, and resolutions discover
 
 - **Issue:** Using `with_structured_output` on smaller Groq models (like `llama-3.1-8b-instant`) frequently throws `400 tool_use_failed` because the model generates non-standard tool prefixes (e.g. `<function=ClinicalAgentOutput> {"blocks": [...]}`).
 - **Fix applied:** For deterministic structured output using native LangChain tool calling bindings, upgrade to `llama-3.3-70b-versatile` which has highly reliable tool parsing. Alternatively, for 8B models, use `method="json_mode"` and explicitly instruct the model to return JSON in the system prompt.
+
+---
+
+### [Session 10 — 2026-07-27] ZOR-2: Telemetry Geocoding for Celestial Calculations
+
+- **Issue:** The Python backend (`celestial_server.py`) requires exact floating-point coordinates (`lat` and `lon`) to calculate birth charts and active Dashas. A simple string like "Kandy, Sri Lanka" will break the ephemeris calculations.
+- **Fix applied:** Integrated the free OpenStreetMap Nominatim API directly in the client component (`src/app/onboarding/page.jsx`). The user's city search is instantly geocoded on the frontend, allowing the precise latitude and longitude to be safely submitted via `POST /api/onboarding` and persisted to the Prisma `User` model.
