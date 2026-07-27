@@ -32,3 +32,9 @@ class ZoryaAgentState(TypedDict, total=False):
 
     # Error handling state
     error: Optional[str]
+    
+    # PDPA Consent state
+    session_state: Optional[Dict[str, Any]]
+    
+    # AGPLv3 Mitigation & source tracking
+    source_metadata: Optional[Dict[str, Any]]

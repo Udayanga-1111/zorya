@@ -62,3 +62,11 @@ A living document recording technical insights, quirks, and resolutions discover
 
 - **Issue:** The Python backend (`celestial_server.py`) requires exact floating-point coordinates (`lat` and `lon`) to calculate birth charts and active Dashas. A simple string like "Kandy, Sri Lanka" will break the ephemeris calculations.
 - **Fix applied:** Integrated the free OpenStreetMap Nominatim API directly in the client component (`src/app/onboarding/page.jsx`). The user's city search is instantly geocoded on the frontend, allowing the precise latitude and longitude to be safely submitted via `POST /api/onboarding` and persisted to the Prisma `User` model.
+
+---
+
+### [Session 13 — 2026-07-27] Ethical Guardrail Rulebook Strict Schema Adherence
+
+- **Issue:** Abstracting the 4 prohibited categories (Determinism, Diagnostics, Medical Guidance, Financial) into just two boolean fields (`violates_fatalism`, `violates_diagnostic`) in the Pydantic schema weakened the downstream parsing logic.
+- **Fix applied:** Always create a strictly 1-to-1 schema field mapping for every explicit prohibition in an ethical rulebook. Added `violates_medical_advice` and `violates_financial` to `GuardrailResponse`, allowing the LLM's structured output parser to distinctly isolate the violation vectors.
+- **Insight:** Verbatim system prompts (when provided by a product or legal team, such as in the Rulebook Section 4) must be used exactly as written rather than "semantically approximated" to ensure compliance liability remains covered.

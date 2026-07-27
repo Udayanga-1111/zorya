@@ -37,7 +37,6 @@ class TransitRequest(BaseModel):
         pattern=r"^\d{2}:\d{2}$",
     )
 
-
 class PlanetaryPosition(BaseModel):
     """Ecliptic longitude for a single celestial body (degrees, 0–360)."""
 
@@ -45,7 +44,6 @@ class PlanetaryPosition(BaseModel):
     longitude: float
     sign: str
     sign_degree: float  # Degrees within the sign (0–30)
-
 
 class ChartPositions(BaseModel):
     """Positions of the 7 classical planets for a given time."""
@@ -58,7 +56,6 @@ class ChartPositions(BaseModel):
     jupiter: PlanetaryPosition
     saturn: PlanetaryPosition
 
-
 class TransitResponse(BaseModel):
     """Validated output: raw astronomical telemetry for the Parsing Agent."""
 
@@ -68,7 +65,6 @@ class TransitResponse(BaseModel):
     transit_chart: ChartPositions
     active_dasha: str
     transit_summary: str
-
 
 class CBTBlock(BaseModel):
     category: str = Field(..., description="One of: Focus, Rest, Communication, Grounding, Reflection")
@@ -86,3 +82,25 @@ class CBTBlock(BaseModel):
 class ClinicalAgentOutput(BaseModel):
     """Structured output expected from the Clinical CBT Agent node."""
     blocks: list[CBTBlock] = Field(..., description="List of recommended CBT blocks for the user's day.")
+
+class GuardrailResponse(BaseModel):
+    is_safe: bool = Field(description="True if output is safe, non-deterministic, and non-diagnostic")
+    violates_fatalism: bool = Field(description="True if output predicts future events, health, finance, or destiny")
+    violates_diagnostic: bool = Field(description="True if output attempts medical diagnosis")
+    violates_medical_advice: bool = Field(description="True if output advises changes to medication or treatment")
+    violates_financial: bool = Field(description="True if output predicts financial gains or losses")
+    violation_reason: Optional[str] = Field(default=None, description="Explanation of safety violation if detected")
+
+class GuardrailStatusPayload(BaseModel):
+    flagged: bool = Field(description="True if the plan was flagged for safety violations")
+    reframed: bool = Field(description="True if the plan was reframed")
+    reason: Optional[str] = Field(default=None, description="Reason for flagging")
+    disclaimer: str = Field(default="Zorya is a self-improvement habit tool and does not provide clinical, medical, or financial advice.", description="Medical disclaimer")
+
+class SessionState(BaseModel):
+    consent_given: bool = Field(description="True if the user has explicitly consented to PDPA data processing.")
+    consent_timestamp: Optional[str] = Field(default=None, description="ISO 8601 timestamp of when consent was granted.")
+
+class NodeError(BaseModel):
+    error: str = Field(description="Description of the error that occurred.")
+    node_name: str = Field(description="Name of the node where the error occurred.")

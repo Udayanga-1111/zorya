@@ -17,6 +17,7 @@ No deterministic life predictions are made here.
 
 import os
 from datetime import datetime, timezone
+from typing import Dict
 from dotenv import load_dotenv
 from fastmcp import FastMCP
 import swisseph as swe
@@ -37,6 +38,13 @@ mcp = FastMCP("Zorya-Celestial-Server")
 # Use Moshier analytical mode — set empty path to disable binary file lookup.
 _ephe_path = os.getenv("SWE_EPHE_PATH", "")
 swe.set_ephe_path(_ephe_path)
+
+# 120-Year Vimshottari Dasha Sequence and Durations
+DASHA_ORDER = ["Ketu", "Venus", "Sun", "Moon", "Mars", "Rahu", "Jupiter", "Saturn", "Mercury"]
+DASHA_YEARS: Dict[str, float] = {
+    "Ketu": 7.0, "Venus": 20.0, "Sun": 6.0, "Moon": 10.0,
+    "Mars": 7.0, "Rahu": 18.0, "Jupiter": 16.0, "Saturn": 19.0, "Mercury": 17.0
+}
 
 
 # ── Helpers ────────────────────────────────────────────────────────────────────
@@ -69,19 +77,41 @@ def _longitude_to_position(name: str, longitude: float) -> PlanetaryPosition:
     )
 
 
-def _derive_dasha_from_moon(moon_longitude: float) -> str:
+def _derive_active_dasha(natal_sidereal_moon_lon: float, natal_jd: float, transit_jd: float) -> str:
     """
-    Approximate active Dasha from Moon's Nakshatra (27-fold lunar mansion).
-    This is a simplified placeholder — ZOR-5 will implement the full
-    Vimshottari Dasha calculation with precise birth Moon position.
+    Calculates the active Vimshottari Mahadasha Lord based on the sidereal moon 
+    longitude at birth and elapsed tropical years to transit_jd.
     """
-    nakshatra_index = int((moon_longitude / 360.0) * 27)
-    dasha_lords = [
-        "Ketu", "Venus", "Sun", "Moon", "Mars",
-        "Rahu", "Jupiter", "Saturn", "Mercury",
-    ]
-    lord = dasha_lords[nakshatra_index % 9]
-    return f"{lord} Mahadasha (approximate)"
+    # 1. Determine Nakshatra Index (0 to 26) and fraction traversed
+    nakshatra_span = 360.0 / 27.0  # 13.333333 degrees
+    nakshatra_idx = int(natal_sidereal_moon_lon / nakshatra_span) % 27
+    fraction_traversed = (natal_sidereal_moon_lon % nakshatra_span) / nakshatra_span
+    
+    # 2. Identify initial birth Dasha Lord
+    first_dasha_lord = DASHA_ORDER[nakshatra_idx % 9]
+    first_dasha_total_years = DASHA_YEARS[first_dasha_lord]
+    
+    # 3. Calculate remaining years of the first Dasha at birth
+    remaining_first_dasha_years = (1.0 - fraction_traversed) * first_dasha_total_years
+    
+    # 4. Calculate elapsed tropical years between birth and transit
+    elapsed_days = transit_jd - natal_jd
+    elapsed_years = elapsed_days / 365.2422
+    
+    # If still within the first Mahadasha
+    if elapsed_years < remaining_first_dasha_years:
+        return first_dasha_lord
+        
+    # Subtract remaining time of first Dasha
+    elapsed_years -= remaining_first_dasha_years
+    
+    # Iterate through subsequent Mahadashas
+    current_idx = (DASHA_ORDER.index(first_dasha_lord) + 1) % 9
+    while elapsed_years >= DASHA_YEARS[DASHA_ORDER[current_idx]]:
+        elapsed_years -= DASHA_YEARS[DASHA_ORDER[current_idx]]
+        current_idx = (current_idx + 1) % 9
+        
+    return DASHA_ORDER[current_idx]
 
 
 # ── FastMCP Tool ───────────────────────────────────────────────────────────────
@@ -106,8 +136,8 @@ def _calculate_chart(jd: float, flags: int) -> ChartPositions:
 @mcp.tool()
 def calculate_active_transits(req: TransitRequest) -> TransitResponse:
     """
-    Calculates real-time planetary positions and the approximate active Dasha
-    using pyswisseph Moshier analytical ephemeris.
+    Calculates real-time planetary positions and the active Vimshottari Mahadasha
+    using pyswisseph Moshier analytical ephemeris and Lahiri Ayanamsa (Sidereal).
 
     Returns raw astronomical telemetry only. No deterministic life predictions
     are made. CBT interpretation is handled by the Clinical MCP Server.
@@ -132,14 +162,16 @@ def calculate_active_transits(req: TransitRequest) -> TransitResponse:
     # Compute Transit Julian Day Number
     transit_jd = swe.julday(t_year, t_month, t_day, t_decimal_hour)
 
-    # CRITICAL: Moshier analytical flag — no binary ephemeris files needed
-    flags = swe.FLG_MOSEPH
+    # CRITICAL: Set Lahiri Ayanamsa and flags for Sidereal Moshier calculation
+    swe.set_sid_mode(swe.SIDM_LAHIRI)
+    flags = swe.FLG_MOSEPH | swe.FLG_SIDEREAL
 
-    # Calculate charts
+    # Calculate charts (Sidereal)
     natal_chart = _calculate_chart(natal_jd, flags)
     transit_chart = _calculate_chart(transit_jd, flags)
 
-    active_dasha = _derive_dasha_from_moon(natal_chart.moon.longitude)
+    active_dasha_lord = _derive_active_dasha(natal_chart.moon.longitude, natal_jd, transit_jd)
+    active_dasha = f"{active_dasha_lord} Mahadasha"
 
     return TransitResponse(
         natal_julian_day=round(natal_jd, 6),
@@ -148,7 +180,7 @@ def calculate_active_transits(req: TransitRequest) -> TransitResponse:
         transit_chart=transit_chart,
         active_dasha=active_dasha,
         transit_summary=(
-            f"Natal Sun in {natal_chart.sun.sign}, Transit Moon in {transit_chart.moon.sign}. "
+            f"Natal Moon in {natal_chart.moon.sign}, Transit Moon in {transit_chart.moon.sign}. "
             f"Active period: {active_dasha}."
         ),
     )

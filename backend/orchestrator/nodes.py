@@ -10,6 +10,7 @@ from fastmcp import Client
 from orchestrator.state import ZoryaAgentState
 from mcp_servers.celestial_server import mcp as celestial_mcp
 from schemas.agent_schemas import TransitRequest
+from agents.guardrail_agent import guardrail_node
 
 
 async def _call_celestial_tool(req_dict: dict) -> dict:
@@ -72,12 +73,4 @@ def parsing_node(state: ZoryaAgentState) -> Dict[str, Any]:
     }
 
 
-def guardrail_node(state: ZoryaAgentState) -> Dict[str, Any]:
-    """
-    Stub for the Ethical Guardrail Node (ZOR-12).
-    Inspects the clinical_plan and sets guardrail flags if needed.
-    """
-    return {
-        "guardrail_flagged": False,
-        "guardrail_reason": None
-    }
+
