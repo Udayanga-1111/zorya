@@ -154,7 +154,7 @@ This document serves as the active memory log for Google Antigravity and team **
 - [x] ZOR-7:  Set Up LangGraph State Machine & Checkpointer (Dev 3) — 3 pts  ✅ DONE Session 5
 - [x] ZOR-8:  Implement Parsing Agent Node & Pydantic Schemas (Dev 3) — 3 pts  ✅ DONE Session 7
 - [x] ZOR-12 (partial): MCP Client Architecture Fix — parsing_node now correctly routes through FastMCP Client  ✅ DONE Session 8
-- [x] ZOR-9:  Develop Clinical CBT Agent Prompt Layer (Dev 3) — 3 pts  ✅ DONE Session 4
+- [x] ZOR-9:  Develop Clinical CBT Agent Prompt Layer (Dev 3) — 3 pts  ✅ DONE Session 4 & 16
 - [x] ZOR-12: Draft Ethical Guardrail Rulebook & Boundary Prompts (PM) — 3 pts ✅ DONE Session 11
 - [x] ZOR-12: Full Ethical Guardrail Node implementation completed (Dev 3) — 5 pts ✅ DONE Session 13
 ```
@@ -256,3 +256,16 @@ This document serves as the active memory log for Google Antigravity and team **
   - Upgraded the LangGraph Pytest suite (`test_graph_orchestration.py`) to fully support `pytest-asyncio`, utilizing `get_async_sqlite_saver` and `graph.ainvoke()` to test the async multi-agent execution pipeline. All 12 tests passed successfully.
 - **Active Blockers / Risks:** None.
 - **Next Actions for Resuming Session:** Focus on ZOR-3 (Build Dynamic Calendar UI) or ZOR-1B (Initialize Mobile App Repository).
+
+---
+
+### 🟢 Session 16 — July 27, 2026 (ZOR-9: Clinical CBT Agent Prompt Enhancement)
+
+- **Lead / Participants:** Google Antigravity
+- **Key Achievements:**
+  - Enhanced `CLINICAL_CBT_SYSTEM_PROMPT` to explicitly restrict responses to evidence-based CBT habit formation.
+  - Added strict guardrails for `Cognitive Restructuring` (challenging distortions), `Behavioral Activation` (small-step micro-habits under 15 min), `Grounding & Mindfulness` (somatic grounding techniques), and `Measurability` (concrete tasks).
+  - Ensured AI translates astrological transits directly into grounded psychological action avoiding mystical jargon.
+  - Ran backend `pytest` suite ensuring all 12 LangGraph orchestration and guardrail checks still pass. ZOR-9 fully complete.
+- **Active Blockers / Risks:** None.
+- **Next Actions for Resuming Session:** ZOR-3 (Dynamic Calendar UI) or ZOR-1B (Mobile App Repo).

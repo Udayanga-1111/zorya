@@ -24,7 +24,7 @@ Establish the foundational infrastructure for Zorya. This includes isolating the
 ### Phase 3: Multi-Agent AI Pipeline
 
 - [x] **ZOR-8:** Implement the Parsing Agent node to dynamically invoke the Celestial MCP tool and validate raw outputs into strict Pydantic schemas. *(Fixed in Session 8: node now uses FastMCP in-process `Client` to route calls through the MCP protocol layer.)*
-- [ ] **ZOR-9:** Engineer the system prompt layer for the Clinical CBT Agent to restrict responses to evidence-based CBT habit formation.
+- [x] **ZOR-9:** Engineer the system prompt layer for the Clinical CBT Agent to restrict responses to evidence-based CBT habit formation.
 - [x] **ZOR-G:** Draft the Ethical Guardrail Node in LangGraph to actively intercept and block deterministic or fatalistic outputs before they reach the user interface.
 
 ### Phase 4: Web & Mobile Frontend Integration
