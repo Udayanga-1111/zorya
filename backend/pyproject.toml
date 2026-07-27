@@ -63,3 +63,8 @@ asyncio_mode = "auto"
 
 [tool.anyio]
 mode = "auto"
+
+[dependency-groups]
+dev = [
+    "pytest-asyncio>=1.4.0",
+]
