@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { verifyToken } from '../services/auth.service';
+import { cookies } from 'next/headers';
 
 type NextRouteHandler = (
   request: Request,
@@ -10,16 +11,23 @@ type NextRouteHandler = (
 export function withAuth(handler: NextRouteHandler) {
   return async (request: Request, context: any) => {
     try {
-      const authHeader = request.headers.get('authorization');
+      let token = null;
       
-      if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      const authHeader = request.headers.get('authorization');
+      if (authHeader && authHeader.startsWith('Bearer ')) {
+        token = authHeader.split(' ')[1];
+      } else {
+        const cookieStore = await cookies();
+        token = cookieStore.get('token')?.value;
+      }
+      
+      if (!token) {
         return NextResponse.json(
           { error: 'Unauthorized: No token provided' },
           { status: 401 }
         );
       }
 
-      const token = authHeader.split(' ')[1];
       const decoded = verifyToken(token);
 
       if (!decoded) {

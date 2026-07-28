@@ -7,6 +7,7 @@ const onboardingSchema = z.object({
   birth_date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Invalid date format"),
   birth_time: z.string().regex(/^\d{2}:\d{2}$/, "Invalid time format"),
   birth_city: z.string().min(2, "City is required"),
+  is_approximate_time: z.boolean().default(false),
   latitude: z.number(),
   longitude: z.number(),
 });
@@ -25,6 +26,7 @@ async function onboardingHandler(request: Request) {
       birth_date: new Date(validatedData.birth_date),
       birth_time: validatedData.birth_time,
       birth_city: validatedData.birth_city,
+      is_approximate_time: validatedData.is_approximate_time,
       latitude: validatedData.latitude,
       longitude: validatedData.longitude,
     });

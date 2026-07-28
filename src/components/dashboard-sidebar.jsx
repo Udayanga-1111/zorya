@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useParams } from "next/navigation";
-import { LayoutDashboard, Calendar, Sparkles, Settings } from "lucide-react";
+import { LayoutDashboard, Calendar, Sparkles, Settings, MessageSquare } from "lucide-react";
 
 export function DashboardSidebar() {
   const pathname = usePathname();
@@ -16,6 +16,7 @@ export function DashboardSidebar() {
   { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
   { name: 'Habit Schedule', href: '/calendar', icon: Calendar },
   { name: 'Natal & Transit Chart', href: '/chart', icon: Sparkles },
+  { name: 'AI Companion', href: '/chat', icon: MessageSquare },
   { name: 'Settings', href: '/settings', icon: Settings },
 ];
 

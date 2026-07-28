@@ -81,9 +81,12 @@ export const UserScalarFieldEnum = {
   birth_time: 'birth_time',
   birth_city: 'birth_city',
   birth_country: 'birth_country',
+  latitude: 'latitude',
+  longitude: 'longitude',
   sun_sign: 'sun_sign',
   moon_sign: 'moon_sign',
   rising_sign: 'rising_sign',
+  is_approximate_time: 'is_approximate_time',
   onboarded: 'onboarded'
 } as const
 

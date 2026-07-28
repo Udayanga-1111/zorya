@@ -615,9 +615,12 @@ export const UserScalarFieldEnum = {
   birth_time: 'birth_time',
   birth_city: 'birth_city',
   birth_country: 'birth_country',
+  latitude: 'latitude',
+  longitude: 'longitude',
   sun_sign: 'sun_sign',
   moon_sign: 'moon_sign',
   rising_sign: 'rising_sign',
+  is_approximate_time: 'is_approximate_time',
   onboarded: 'onboarded'
 } as const
 
@@ -690,6 +693,20 @@ export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel
  * Reference to a field of type 'DateTime[]'
  */
 export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>
+    
+
+
+/**
+ * Reference to a field of type 'Float'
+ */
+export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
+    
+
+
+/**
+ * Reference to a field of type 'Float[]'
+ */
+export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
     
 
 

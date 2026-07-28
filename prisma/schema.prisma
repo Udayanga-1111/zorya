@@ -5,7 +5,7 @@
 
 generator client {
   provider = "prisma-client"
-  output   = "../lib/generated/prisma"
+  output   = "../src/lib/generated/prisma"
 }
 
 datasource db {
@@ -29,6 +29,7 @@ model User {
   sun_sign       String?   // e.g. "Pisces"
   moon_sign      String?
   rising_sign    String?
+  is_approximate_time Boolean @default(false)
   onboarded      Boolean   @default(false)
 
   messages       Message[]

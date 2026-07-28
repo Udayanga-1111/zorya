@@ -51,6 +51,7 @@ export type UserMinAggregateOutputType = {
   sun_sign: string | null
   moon_sign: string | null
   rising_sign: string | null
+  is_approximate_time: boolean | null
   onboarded: boolean | null
 }
 
@@ -69,6 +70,7 @@ export type UserMaxAggregateOutputType = {
   sun_sign: string | null
   moon_sign: string | null
   rising_sign: string | null
+  is_approximate_time: boolean | null
   onboarded: boolean | null
 }
 
@@ -87,6 +89,7 @@ export type UserCountAggregateOutputType = {
   sun_sign: number
   moon_sign: number
   rising_sign: number
+  is_approximate_time: number
   onboarded: number
   _all: number
 }
@@ -117,6 +120,7 @@ export type UserMinAggregateInputType = {
   sun_sign?: true
   moon_sign?: true
   rising_sign?: true
+  is_approximate_time?: true
   onboarded?: true
 }
 
@@ -135,6 +139,7 @@ export type UserMaxAggregateInputType = {
   sun_sign?: true
   moon_sign?: true
   rising_sign?: true
+  is_approximate_time?: true
   onboarded?: true
 }
 
@@ -153,6 +158,7 @@ export type UserCountAggregateInputType = {
   sun_sign?: true
   moon_sign?: true
   rising_sign?: true
+  is_approximate_time?: true
   onboarded?: true
   _all?: true
 }
@@ -258,6 +264,7 @@ export type UserGroupByOutputType = {
   sun_sign: string | null
   moon_sign: string | null
   rising_sign: string | null
+  is_approximate_time: boolean
   onboarded: boolean
   _count: UserCountAggregateOutputType | null
   _avg: UserAvgAggregateOutputType | null
@@ -299,6 +306,7 @@ export type UserWhereInput = {
   sun_sign?: Prisma.StringNullableFilter<"User"> | string | null
   moon_sign?: Prisma.StringNullableFilter<"User"> | string | null
   rising_sign?: Prisma.StringNullableFilter<"User"> | string | null
+  is_approximate_time?: Prisma.BoolFilter<"User"> | boolean
   onboarded?: Prisma.BoolFilter<"User"> | boolean
   messages?: Prisma.MessageListRelationFilter
 }
@@ -318,6 +326,7 @@ export type UserOrderByWithRelationInput = {
   sun_sign?: Prisma.SortOrderInput | Prisma.SortOrder
   moon_sign?: Prisma.SortOrderInput | Prisma.SortOrder
   rising_sign?: Prisma.SortOrderInput | Prisma.SortOrder
+  is_approximate_time?: Prisma.SortOrder
   onboarded?: Prisma.SortOrder
   messages?: Prisma.MessageOrderByRelationAggregateInput
 }
@@ -340,6 +349,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   sun_sign?: Prisma.StringNullableFilter<"User"> | string | null
   moon_sign?: Prisma.StringNullableFilter<"User"> | string | null
   rising_sign?: Prisma.StringNullableFilter<"User"> | string | null
+  is_approximate_time?: Prisma.BoolFilter<"User"> | boolean
   onboarded?: Prisma.BoolFilter<"User"> | boolean
   messages?: Prisma.MessageListRelationFilter
 }, "id" | "email">
@@ -359,6 +369,7 @@ export type UserOrderByWithAggregationInput = {
   sun_sign?: Prisma.SortOrderInput | Prisma.SortOrder
   moon_sign?: Prisma.SortOrderInput | Prisma.SortOrder
   rising_sign?: Prisma.SortOrderInput | Prisma.SortOrder
+  is_approximate_time?: Prisma.SortOrder
   onboarded?: Prisma.SortOrder
   _count?: Prisma.UserCountOrderByAggregateInput
   _avg?: Prisma.UserAvgOrderByAggregateInput
@@ -385,6 +396,7 @@ export type UserScalarWhereWithAggregatesInput = {
   sun_sign?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   moon_sign?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   rising_sign?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  is_approximate_time?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
   onboarded?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
 }
 
@@ -403,6 +415,7 @@ export type UserCreateInput = {
   sun_sign?: string | null
   moon_sign?: string | null
   rising_sign?: string | null
+  is_approximate_time?: boolean
   onboarded?: boolean
   messages?: Prisma.MessageCreateNestedManyWithoutUserInput
 }
@@ -422,6 +435,7 @@ export type UserUncheckedCreateInput = {
   sun_sign?: string | null
   moon_sign?: string | null
   rising_sign?: string | null
+  is_approximate_time?: boolean
   onboarded?: boolean
   messages?: Prisma.MessageUncheckedCreateNestedManyWithoutUserInput
 }
@@ -441,6 +455,7 @@ export type UserUpdateInput = {
   sun_sign?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   moon_sign?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rising_sign?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  is_approximate_time?: Prisma.BoolFieldUpdateOperationsInput | boolean
   onboarded?: Prisma.BoolFieldUpdateOperationsInput | boolean
   messages?: Prisma.MessageUpdateManyWithoutUserNestedInput
 }
@@ -460,6 +475,7 @@ export type UserUncheckedUpdateInput = {
   sun_sign?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   moon_sign?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rising_sign?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  is_approximate_time?: Prisma.BoolFieldUpdateOperationsInput | boolean
   onboarded?: Prisma.BoolFieldUpdateOperationsInput | boolean
   messages?: Prisma.MessageUncheckedUpdateManyWithoutUserNestedInput
 }
@@ -479,6 +495,7 @@ export type UserCreateManyInput = {
   sun_sign?: string | null
   moon_sign?: string | null
   rising_sign?: string | null
+  is_approximate_time?: boolean
   onboarded?: boolean
 }
 
@@ -497,6 +514,7 @@ export type UserUpdateManyMutationInput = {
   sun_sign?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   moon_sign?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rising_sign?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  is_approximate_time?: Prisma.BoolFieldUpdateOperationsInput | boolean
   onboarded?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
@@ -515,6 +533,7 @@ export type UserUncheckedUpdateManyInput = {
   sun_sign?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   moon_sign?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rising_sign?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  is_approximate_time?: Prisma.BoolFieldUpdateOperationsInput | boolean
   onboarded?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
@@ -533,6 +552,7 @@ export type UserCountOrderByAggregateInput = {
   sun_sign?: Prisma.SortOrder
   moon_sign?: Prisma.SortOrder
   rising_sign?: Prisma.SortOrder
+  is_approximate_time?: Prisma.SortOrder
   onboarded?: Prisma.SortOrder
 }
 
@@ -556,6 +576,7 @@ export type UserMaxOrderByAggregateInput = {
   sun_sign?: Prisma.SortOrder
   moon_sign?: Prisma.SortOrder
   rising_sign?: Prisma.SortOrder
+  is_approximate_time?: Prisma.SortOrder
   onboarded?: Prisma.SortOrder
 }
 
@@ -574,6 +595,7 @@ export type UserMinOrderByAggregateInput = {
   sun_sign?: Prisma.SortOrder
   moon_sign?: Prisma.SortOrder
   rising_sign?: Prisma.SortOrder
+  is_approximate_time?: Prisma.SortOrder
   onboarded?: Prisma.SortOrder
 }
 
@@ -644,6 +666,7 @@ export type UserCreateWithoutMessagesInput = {
   sun_sign?: string | null
   moon_sign?: string | null
   rising_sign?: string | null
+  is_approximate_time?: boolean
   onboarded?: boolean
 }
 
@@ -662,6 +685,7 @@ export type UserUncheckedCreateWithoutMessagesInput = {
   sun_sign?: string | null
   moon_sign?: string | null
   rising_sign?: string | null
+  is_approximate_time?: boolean
   onboarded?: boolean
 }
 
@@ -696,6 +720,7 @@ export type UserUpdateWithoutMessagesInput = {
   sun_sign?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   moon_sign?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rising_sign?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  is_approximate_time?: Prisma.BoolFieldUpdateOperationsInput | boolean
   onboarded?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
@@ -714,6 +739,7 @@ export type UserUncheckedUpdateWithoutMessagesInput = {
   sun_sign?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   moon_sign?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rising_sign?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  is_approximate_time?: Prisma.BoolFieldUpdateOperationsInput | boolean
   onboarded?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
@@ -763,6 +789,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   sun_sign?: boolean
   moon_sign?: boolean
   rising_sign?: boolean
+  is_approximate_time?: boolean
   onboarded?: boolean
   messages?: boolean | Prisma.User$messagesArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
@@ -783,6 +810,7 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   sun_sign?: boolean
   moon_sign?: boolean
   rising_sign?: boolean
+  is_approximate_time?: boolean
   onboarded?: boolean
 }, ExtArgs["result"]["user"]>
 
@@ -801,6 +829,7 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   sun_sign?: boolean
   moon_sign?: boolean
   rising_sign?: boolean
+  is_approximate_time?: boolean
   onboarded?: boolean
 }, ExtArgs["result"]["user"]>
 
@@ -819,10 +848,11 @@ export type UserSelectScalar = {
   sun_sign?: boolean
   moon_sign?: boolean
   rising_sign?: boolean
+  is_approximate_time?: boolean
   onboarded?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "password_hash" | "created_at" | "birth_date" | "birth_time" | "birth_city" | "birth_country" | "latitude" | "longitude" | "sun_sign" | "moon_sign" | "rising_sign" | "onboarded", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "password_hash" | "created_at" | "birth_date" | "birth_time" | "birth_city" | "birth_country" | "latitude" | "longitude" | "sun_sign" | "moon_sign" | "rising_sign" | "is_approximate_time" | "onboarded", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   messages?: boolean | Prisma.User$messagesArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
@@ -850,6 +880,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     sun_sign: string | null
     moon_sign: string | null
     rising_sign: string | null
+    is_approximate_time: boolean
     onboarded: boolean
   }, ExtArgs["result"]["user"]>
   composites: {}
@@ -1289,6 +1320,7 @@ export interface UserFieldRefs {
   readonly sun_sign: Prisma.FieldRef<"User", 'String'>
   readonly moon_sign: Prisma.FieldRef<"User", 'String'>
   readonly rising_sign: Prisma.FieldRef<"User", 'String'>
+  readonly is_approximate_time: Prisma.FieldRef<"User", 'Boolean'>
   readonly onboarded: Prisma.FieldRef<"User", 'Boolean'>
 }
     

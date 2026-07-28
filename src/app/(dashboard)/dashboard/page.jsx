@@ -4,18 +4,6 @@ import { verifyToken } from "@/lib/services/auth.service";
 import { getUserById } from "@/lib/services/user.service";
 import { DashboardClient } from "@/components/dashboard/dashboard-client";
 
-/**
- * Default Sri Lankan user profile used as a fallback until the full
- * user onboarding data is stored in the database.
- */
-const DEFAULT_PROFILE = {
-  birth_date: "2000-01-01",
-  birth_time: "06:00",
-  lat: 7.2906,
-  lon: 80.6337,
-  goal: "I want to focus on personal growth and build positive daily habits.",
-};
-
 export default async function DashboardPage() {
   const cookieStore = await cookies();
   const token = cookieStore.get("token")?.value;
@@ -37,16 +25,23 @@ export default async function DashboardPage() {
   const decodedUserName = decodeURIComponent(user.name);
   const firstName = decodedUserName.split(" ")[0];
 
-  // Merge stored user profile with defaults for fields not yet in the DB
-  const userProfile = {
-    ...DEFAULT_PROFILE,
-    user_id: user.id,
-  };
+  let userProfile = null;
+  if (user.onboarded && user.latitude) {
+    userProfile = {
+      birth_date: new Date(user.birth_date).toISOString().split("T")[0],
+      birth_time: user.birth_time,
+      lat: user.latitude,
+      lon: user.longitude,
+      goal: "I want to focus on personal growth and build positive daily habits.", // default goal for now
+      user_id: user.id,
+    };
+  }
 
   return (
     <DashboardClient
       userName={firstName}
       userProfile={userProfile}
+      isOnboarded={user.onboarded}
     />
   );
 }

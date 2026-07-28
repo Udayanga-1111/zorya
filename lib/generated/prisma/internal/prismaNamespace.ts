@@ -620,6 +620,7 @@ export const UserScalarFieldEnum = {
   sun_sign: 'sun_sign',
   moon_sign: 'moon_sign',
   rising_sign: 'rising_sign',
+  is_approximate_time: 'is_approximate_time',
   onboarded: 'onboarded'
 } as const
 

@@ -16,6 +16,7 @@ const onboardingSchema = z.object({
   name: z.string().min(2, "Name is required"),
   birth_date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Invalid date format"),
   birth_time: z.string().regex(/^\d{2}:\d{2}$/, "Invalid time format"),
+  is_approximate_time: z.boolean().default(false),
   birth_city: z.string().min(2, "City is required"),
   latitude: z.number(),
   longitude: z.number(),
@@ -35,6 +36,7 @@ export default function OnboardingPage() {
     handleSubmit,
     setValue,
     watch,
+    trigger,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(onboardingSchema),
@@ -42,6 +44,7 @@ export default function OnboardingPage() {
       name: "",
       birth_date: "",
       birth_time: "",
+      is_approximate_time: false,
       birth_city: "",
       latitude: undefined,
       longitude: undefined,
@@ -84,10 +87,16 @@ export default function OnboardingPage() {
     setSearchResults([]);
   };
 
-  const nextStep = (e) => {
+  const nextStep = async (e) => {
     e.preventDefault();
-    if (step === 1 && formValues.name) setStep(2);
-    if (step === 2 && formValues.birth_date && formValues.birth_time) setStep(3);
+    let isValid = false;
+    if (step === 1) {
+      isValid = await trigger("name");
+      if (isValid) setStep(2);
+    } else if (step === 2) {
+      isValid = await trigger(["birth_date", "birth_time"]);
+      if (isValid) setStep(3);
+    }
   };
 
   const prevStep = () => {
@@ -180,7 +189,7 @@ export default function OnboardingPage() {
             </div>
           )}
 
-          <div className="relative min-h-[280px]">
+          <div className="w-full">
             <AnimatePresence mode="wait" initial={false} custom={1}>
               {step === 1 && (
                 <motion.div
@@ -191,7 +200,7 @@ export default function OnboardingPage() {
                   animate="center"
                   exit="exit"
                   transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                  className="absolute inset-0"
+                  className="w-full"
                 >
                   <div className="space-y-4">
                     <div className="space-y-2">
@@ -217,7 +226,7 @@ export default function OnboardingPage() {
                   animate="center"
                   exit="exit"
                   transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                  className="absolute inset-0"
+                  className="w-full"
                 >
                   <div className="space-y-6">
                     <div className="space-y-2">
@@ -237,9 +246,29 @@ export default function OnboardingPage() {
                         id="birth_time"
                         type="time"
                         className="bg-background/50 border-primary/20 focus-visible:ring-primary h-12 text-lg"
+                        disabled={formValues.is_approximate_time}
                         {...register("birth_time")}
                       />
                       {errors.birth_time && <p className="text-destructive text-sm mt-1">{errors.birth_time.message}</p>}
+                      <div className="flex items-center gap-2 mt-3">
+                        <input
+                          type="checkbox"
+                          id="is_approximate_time"
+                          className="w-4 h-4 rounded border-primary/20 bg-background/50 text-primary focus:ring-primary"
+                          {...register("is_approximate_time", {
+                            onChange: (e) => {
+                              if (e.target.checked) {
+                                setValue("birth_time", "12:00", { shouldValidate: true });
+                              } else {
+                                setValue("birth_time", "", { shouldValidate: true });
+                              }
+                            }
+                          })}
+                        />
+                        <Label htmlFor="is_approximate_time" className="text-sm font-normal text-muted-foreground">
+                          I don't know my exact birth time
+                        </Label>
+                      </div>
                       <p className="text-xs text-muted-foreground mt-2">
                         Astrological transits require precise timing.
                       </p>
@@ -257,7 +286,7 @@ export default function OnboardingPage() {
                   animate="center"
                   exit="exit"
                   transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                  className="absolute inset-0"
+                  className="w-full"
                 >
                   <div className="space-y-4">
                     <div className="space-y-2 relative">

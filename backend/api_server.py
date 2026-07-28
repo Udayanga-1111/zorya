@@ -25,6 +25,7 @@ from pydantic import BaseModel, Field
 from sse_starlette.sse import EventSourceResponse
 
 from orchestrator.graph import compile_graph
+from orchestrator.chat_graph import compile_chat_graph
 from orchestrator.checkpointer import get_async_sqlite_saver
 
 load_dotenv()
@@ -61,6 +62,10 @@ class UserProfile(BaseModel):
 
 class StreamRequest(BaseModel):
     user_profile: UserProfile
+
+class ChatRequest(BaseModel):
+    user_profile: UserProfile
+    message: str
 
 _db_path = os.getenv("ZORYA_DB_PATH", "./zorya_state.db")
 
@@ -129,6 +134,55 @@ async def stream_agent(request: StreamRequest):
     since native EventSource only supports GET requests.
     """
     return EventSourceResponse(_stream_graph(request))
+
+
+async def _stream_chat(request: ChatRequest) -> AsyncGenerator[dict, None]:
+    profile = request.user_profile
+    thread_id = f"thread-{profile.user_id}"
+    config = {"configurable": {"thread_id": thread_id}}
+    
+    try:
+        # We don't need to pass the full initial state again because we assume 
+        # the dashboard pipeline already ran and saved celestial_context etc.
+        # But we do need to append the new message to state.
+        
+        # We just pass the new message, LangGraph's add_messages will append it.
+        inputs = {"messages": [("user", request.message)]}
+        
+        async with get_async_sqlite_saver(_db_path) as checkpointer:
+            chat_graph = compile_chat_graph(checkpointer=checkpointer)
+            
+            # Use astream_events with version="v2" to get token-by-token stream
+            async for event in chat_graph.astream_events(inputs, config=config, version="v2"):
+                kind = event["event"]
+                # Only yield chat model streaming tokens
+                if kind == "on_chat_model_stream":
+                    content = event["data"]["chunk"].content
+                    if content:
+                        yield {
+                            "event": "token",
+                            "data": json.dumps({"token": content})
+                        }
+                        
+                elif kind == "on_chain_end" and event["name"] == "chat_node":
+                    # Optionally signal end of node
+                    pass
+            
+            yield {"event": "done", "data": json.dumps({"status": "chat_complete"})}
+            
+    except Exception as e:
+        yield {
+            "event": "error",
+            "data": json.dumps({"error": str(e)}),
+        }
+
+@app.post("/chat")
+async def chat_agent(request: ChatRequest):
+    """
+    POST /chat — Chat with Zorya AI Companion.
+    Streams back token-by-token using SSE.
+    """
+    return EventSourceResponse(_stream_chat(request))
 
 
 @app.get("/health")

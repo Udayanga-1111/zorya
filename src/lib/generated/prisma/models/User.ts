@@ -20,8 +20,20 @@ export type UserModel = runtime.Types.Result.DefaultSelection<Prisma.$UserPayloa
 
 export type AggregateUser = {
   _count: UserCountAggregateOutputType | null
+  _avg: UserAvgAggregateOutputType | null
+  _sum: UserSumAggregateOutputType | null
   _min: UserMinAggregateOutputType | null
   _max: UserMaxAggregateOutputType | null
+}
+
+export type UserAvgAggregateOutputType = {
+  latitude: number | null
+  longitude: number | null
+}
+
+export type UserSumAggregateOutputType = {
+  latitude: number | null
+  longitude: number | null
 }
 
 export type UserMinAggregateOutputType = {
@@ -34,9 +46,12 @@ export type UserMinAggregateOutputType = {
   birth_time: string | null
   birth_city: string | null
   birth_country: string | null
+  latitude: number | null
+  longitude: number | null
   sun_sign: string | null
   moon_sign: string | null
   rising_sign: string | null
+  is_approximate_time: boolean | null
   onboarded: boolean | null
 }
 
@@ -50,9 +65,12 @@ export type UserMaxAggregateOutputType = {
   birth_time: string | null
   birth_city: string | null
   birth_country: string | null
+  latitude: number | null
+  longitude: number | null
   sun_sign: string | null
   moon_sign: string | null
   rising_sign: string | null
+  is_approximate_time: boolean | null
   onboarded: boolean | null
 }
 
@@ -66,13 +84,26 @@ export type UserCountAggregateOutputType = {
   birth_time: number
   birth_city: number
   birth_country: number
+  latitude: number
+  longitude: number
   sun_sign: number
   moon_sign: number
   rising_sign: number
+  is_approximate_time: number
   onboarded: number
   _all: number
 }
 
+
+export type UserAvgAggregateInputType = {
+  latitude?: true
+  longitude?: true
+}
+
+export type UserSumAggregateInputType = {
+  latitude?: true
+  longitude?: true
+}
 
 export type UserMinAggregateInputType = {
   id?: true
@@ -84,9 +115,12 @@ export type UserMinAggregateInputType = {
   birth_time?: true
   birth_city?: true
   birth_country?: true
+  latitude?: true
+  longitude?: true
   sun_sign?: true
   moon_sign?: true
   rising_sign?: true
+  is_approximate_time?: true
   onboarded?: true
 }
 
@@ -100,9 +134,12 @@ export type UserMaxAggregateInputType = {
   birth_time?: true
   birth_city?: true
   birth_country?: true
+  latitude?: true
+  longitude?: true
   sun_sign?: true
   moon_sign?: true
   rising_sign?: true
+  is_approximate_time?: true
   onboarded?: true
 }
 
@@ -116,9 +153,12 @@ export type UserCountAggregateInputType = {
   birth_time?: true
   birth_city?: true
   birth_country?: true
+  latitude?: true
+  longitude?: true
   sun_sign?: true
   moon_sign?: true
   rising_sign?: true
+  is_approximate_time?: true
   onboarded?: true
   _all?: true
 }
@@ -161,6 +201,18 @@ export type UserAggregateArgs<ExtArgs extends runtime.Types.Extensions.InternalA
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
+   * Select which fields to average
+  **/
+  _avg?: UserAvgAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
+   * Select which fields to sum
+  **/
+  _sum?: UserSumAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
    * Select which fields to find the minimum value
   **/
   _min?: UserMinAggregateInputType
@@ -191,6 +243,8 @@ export type UserGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
   take?: number
   skip?: number
   _count?: UserCountAggregateInputType | true
+  _avg?: UserAvgAggregateInputType
+  _sum?: UserSumAggregateInputType
   _min?: UserMinAggregateInputType
   _max?: UserMaxAggregateInputType
 }
@@ -205,11 +259,16 @@ export type UserGroupByOutputType = {
   birth_time: string | null
   birth_city: string | null
   birth_country: string | null
+  latitude: number | null
+  longitude: number | null
   sun_sign: string | null
   moon_sign: string | null
   rising_sign: string | null
+  is_approximate_time: boolean
   onboarded: boolean
   _count: UserCountAggregateOutputType | null
+  _avg: UserAvgAggregateOutputType | null
+  _sum: UserSumAggregateOutputType | null
   _min: UserMinAggregateOutputType | null
   _max: UserMaxAggregateOutputType | null
 }
@@ -242,9 +301,12 @@ export type UserWhereInput = {
   birth_time?: Prisma.StringNullableFilter<"User"> | string | null
   birth_city?: Prisma.StringNullableFilter<"User"> | string | null
   birth_country?: Prisma.StringNullableFilter<"User"> | string | null
+  latitude?: Prisma.FloatNullableFilter<"User"> | number | null
+  longitude?: Prisma.FloatNullableFilter<"User"> | number | null
   sun_sign?: Prisma.StringNullableFilter<"User"> | string | null
   moon_sign?: Prisma.StringNullableFilter<"User"> | string | null
   rising_sign?: Prisma.StringNullableFilter<"User"> | string | null
+  is_approximate_time?: Prisma.BoolFilter<"User"> | boolean
   onboarded?: Prisma.BoolFilter<"User"> | boolean
   messages?: Prisma.MessageListRelationFilter
 }
@@ -259,9 +321,12 @@ export type UserOrderByWithRelationInput = {
   birth_time?: Prisma.SortOrderInput | Prisma.SortOrder
   birth_city?: Prisma.SortOrderInput | Prisma.SortOrder
   birth_country?: Prisma.SortOrderInput | Prisma.SortOrder
+  latitude?: Prisma.SortOrderInput | Prisma.SortOrder
+  longitude?: Prisma.SortOrderInput | Prisma.SortOrder
   sun_sign?: Prisma.SortOrderInput | Prisma.SortOrder
   moon_sign?: Prisma.SortOrderInput | Prisma.SortOrder
   rising_sign?: Prisma.SortOrderInput | Prisma.SortOrder
+  is_approximate_time?: Prisma.SortOrder
   onboarded?: Prisma.SortOrder
   messages?: Prisma.MessageOrderByRelationAggregateInput
 }
@@ -279,9 +344,12 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   birth_time?: Prisma.StringNullableFilter<"User"> | string | null
   birth_city?: Prisma.StringNullableFilter<"User"> | string | null
   birth_country?: Prisma.StringNullableFilter<"User"> | string | null
+  latitude?: Prisma.FloatNullableFilter<"User"> | number | null
+  longitude?: Prisma.FloatNullableFilter<"User"> | number | null
   sun_sign?: Prisma.StringNullableFilter<"User"> | string | null
   moon_sign?: Prisma.StringNullableFilter<"User"> | string | null
   rising_sign?: Prisma.StringNullableFilter<"User"> | string | null
+  is_approximate_time?: Prisma.BoolFilter<"User"> | boolean
   onboarded?: Prisma.BoolFilter<"User"> | boolean
   messages?: Prisma.MessageListRelationFilter
 }, "id" | "email">
@@ -296,13 +364,18 @@ export type UserOrderByWithAggregationInput = {
   birth_time?: Prisma.SortOrderInput | Prisma.SortOrder
   birth_city?: Prisma.SortOrderInput | Prisma.SortOrder
   birth_country?: Prisma.SortOrderInput | Prisma.SortOrder
+  latitude?: Prisma.SortOrderInput | Prisma.SortOrder
+  longitude?: Prisma.SortOrderInput | Prisma.SortOrder
   sun_sign?: Prisma.SortOrderInput | Prisma.SortOrder
   moon_sign?: Prisma.SortOrderInput | Prisma.SortOrder
   rising_sign?: Prisma.SortOrderInput | Prisma.SortOrder
+  is_approximate_time?: Prisma.SortOrder
   onboarded?: Prisma.SortOrder
   _count?: Prisma.UserCountOrderByAggregateInput
+  _avg?: Prisma.UserAvgOrderByAggregateInput
   _max?: Prisma.UserMaxOrderByAggregateInput
   _min?: Prisma.UserMinOrderByAggregateInput
+  _sum?: Prisma.UserSumOrderByAggregateInput
 }
 
 export type UserScalarWhereWithAggregatesInput = {
@@ -318,9 +391,12 @@ export type UserScalarWhereWithAggregatesInput = {
   birth_time?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   birth_city?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   birth_country?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  latitude?: Prisma.FloatNullableWithAggregatesFilter<"User"> | number | null
+  longitude?: Prisma.FloatNullableWithAggregatesFilter<"User"> | number | null
   sun_sign?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   moon_sign?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   rising_sign?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  is_approximate_time?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
   onboarded?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
 }
 
@@ -334,9 +410,12 @@ export type UserCreateInput = {
   birth_time?: string | null
   birth_city?: string | null
   birth_country?: string | null
+  latitude?: number | null
+  longitude?: number | null
   sun_sign?: string | null
   moon_sign?: string | null
   rising_sign?: string | null
+  is_approximate_time?: boolean
   onboarded?: boolean
   messages?: Prisma.MessageCreateNestedManyWithoutUserInput
 }
@@ -351,9 +430,12 @@ export type UserUncheckedCreateInput = {
   birth_time?: string | null
   birth_city?: string | null
   birth_country?: string | null
+  latitude?: number | null
+  longitude?: number | null
   sun_sign?: string | null
   moon_sign?: string | null
   rising_sign?: string | null
+  is_approximate_time?: boolean
   onboarded?: boolean
   messages?: Prisma.MessageUncheckedCreateNestedManyWithoutUserInput
 }
@@ -368,9 +450,12 @@ export type UserUpdateInput = {
   birth_time?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   birth_city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   birth_country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   sun_sign?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   moon_sign?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rising_sign?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  is_approximate_time?: Prisma.BoolFieldUpdateOperationsInput | boolean
   onboarded?: Prisma.BoolFieldUpdateOperationsInput | boolean
   messages?: Prisma.MessageUpdateManyWithoutUserNestedInput
 }
@@ -385,9 +470,12 @@ export type UserUncheckedUpdateInput = {
   birth_time?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   birth_city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   birth_country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   sun_sign?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   moon_sign?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rising_sign?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  is_approximate_time?: Prisma.BoolFieldUpdateOperationsInput | boolean
   onboarded?: Prisma.BoolFieldUpdateOperationsInput | boolean
   messages?: Prisma.MessageUncheckedUpdateManyWithoutUserNestedInput
 }
@@ -402,9 +490,12 @@ export type UserCreateManyInput = {
   birth_time?: string | null
   birth_city?: string | null
   birth_country?: string | null
+  latitude?: number | null
+  longitude?: number | null
   sun_sign?: string | null
   moon_sign?: string | null
   rising_sign?: string | null
+  is_approximate_time?: boolean
   onboarded?: boolean
 }
 
@@ -418,9 +509,12 @@ export type UserUpdateManyMutationInput = {
   birth_time?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   birth_city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   birth_country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   sun_sign?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   moon_sign?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rising_sign?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  is_approximate_time?: Prisma.BoolFieldUpdateOperationsInput | boolean
   onboarded?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
@@ -434,9 +528,12 @@ export type UserUncheckedUpdateManyInput = {
   birth_time?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   birth_city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   birth_country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   sun_sign?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   moon_sign?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rising_sign?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  is_approximate_time?: Prisma.BoolFieldUpdateOperationsInput | boolean
   onboarded?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
@@ -450,10 +547,18 @@ export type UserCountOrderByAggregateInput = {
   birth_time?: Prisma.SortOrder
   birth_city?: Prisma.SortOrder
   birth_country?: Prisma.SortOrder
+  latitude?: Prisma.SortOrder
+  longitude?: Prisma.SortOrder
   sun_sign?: Prisma.SortOrder
   moon_sign?: Prisma.SortOrder
   rising_sign?: Prisma.SortOrder
+  is_approximate_time?: Prisma.SortOrder
   onboarded?: Prisma.SortOrder
+}
+
+export type UserAvgOrderByAggregateInput = {
+  latitude?: Prisma.SortOrder
+  longitude?: Prisma.SortOrder
 }
 
 export type UserMaxOrderByAggregateInput = {
@@ -466,9 +571,12 @@ export type UserMaxOrderByAggregateInput = {
   birth_time?: Prisma.SortOrder
   birth_city?: Prisma.SortOrder
   birth_country?: Prisma.SortOrder
+  latitude?: Prisma.SortOrder
+  longitude?: Prisma.SortOrder
   sun_sign?: Prisma.SortOrder
   moon_sign?: Prisma.SortOrder
   rising_sign?: Prisma.SortOrder
+  is_approximate_time?: Prisma.SortOrder
   onboarded?: Prisma.SortOrder
 }
 
@@ -482,10 +590,18 @@ export type UserMinOrderByAggregateInput = {
   birth_time?: Prisma.SortOrder
   birth_city?: Prisma.SortOrder
   birth_country?: Prisma.SortOrder
+  latitude?: Prisma.SortOrder
+  longitude?: Prisma.SortOrder
   sun_sign?: Prisma.SortOrder
   moon_sign?: Prisma.SortOrder
   rising_sign?: Prisma.SortOrder
+  is_approximate_time?: Prisma.SortOrder
   onboarded?: Prisma.SortOrder
+}
+
+export type UserSumOrderByAggregateInput = {
+  latitude?: Prisma.SortOrder
+  longitude?: Prisma.SortOrder
 }
 
 export type UserScalarRelationFilter = {
@@ -507,6 +623,14 @@ export type NullableDateTimeFieldUpdateOperationsInput = {
 
 export type NullableStringFieldUpdateOperationsInput = {
   set?: string | null
+}
+
+export type NullableFloatFieldUpdateOperationsInput = {
+  set?: number | null
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
 }
 
 export type BoolFieldUpdateOperationsInput = {
@@ -537,9 +661,12 @@ export type UserCreateWithoutMessagesInput = {
   birth_time?: string | null
   birth_city?: string | null
   birth_country?: string | null
+  latitude?: number | null
+  longitude?: number | null
   sun_sign?: string | null
   moon_sign?: string | null
   rising_sign?: string | null
+  is_approximate_time?: boolean
   onboarded?: boolean
 }
 
@@ -553,9 +680,12 @@ export type UserUncheckedCreateWithoutMessagesInput = {
   birth_time?: string | null
   birth_city?: string | null
   birth_country?: string | null
+  latitude?: number | null
+  longitude?: number | null
   sun_sign?: string | null
   moon_sign?: string | null
   rising_sign?: string | null
+  is_approximate_time?: boolean
   onboarded?: boolean
 }
 
@@ -585,9 +715,12 @@ export type UserUpdateWithoutMessagesInput = {
   birth_time?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   birth_city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   birth_country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   sun_sign?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   moon_sign?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rising_sign?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  is_approximate_time?: Prisma.BoolFieldUpdateOperationsInput | boolean
   onboarded?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
@@ -601,9 +734,12 @@ export type UserUncheckedUpdateWithoutMessagesInput = {
   birth_time?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   birth_city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   birth_country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  latitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   sun_sign?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   moon_sign?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   rising_sign?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  is_approximate_time?: Prisma.BoolFieldUpdateOperationsInput | boolean
   onboarded?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
@@ -648,9 +784,12 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   birth_time?: boolean
   birth_city?: boolean
   birth_country?: boolean
+  latitude?: boolean
+  longitude?: boolean
   sun_sign?: boolean
   moon_sign?: boolean
   rising_sign?: boolean
+  is_approximate_time?: boolean
   onboarded?: boolean
   messages?: boolean | Prisma.User$messagesArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
@@ -666,9 +805,12 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   birth_time?: boolean
   birth_city?: boolean
   birth_country?: boolean
+  latitude?: boolean
+  longitude?: boolean
   sun_sign?: boolean
   moon_sign?: boolean
   rising_sign?: boolean
+  is_approximate_time?: boolean
   onboarded?: boolean
 }, ExtArgs["result"]["user"]>
 
@@ -682,9 +824,12 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   birth_time?: boolean
   birth_city?: boolean
   birth_country?: boolean
+  latitude?: boolean
+  longitude?: boolean
   sun_sign?: boolean
   moon_sign?: boolean
   rising_sign?: boolean
+  is_approximate_time?: boolean
   onboarded?: boolean
 }, ExtArgs["result"]["user"]>
 
@@ -698,13 +843,16 @@ export type UserSelectScalar = {
   birth_time?: boolean
   birth_city?: boolean
   birth_country?: boolean
+  latitude?: boolean
+  longitude?: boolean
   sun_sign?: boolean
   moon_sign?: boolean
   rising_sign?: boolean
+  is_approximate_time?: boolean
   onboarded?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "password_hash" | "created_at" | "birth_date" | "birth_time" | "birth_city" | "birth_country" | "sun_sign" | "moon_sign" | "rising_sign" | "onboarded", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "password_hash" | "created_at" | "birth_date" | "birth_time" | "birth_city" | "birth_country" | "latitude" | "longitude" | "sun_sign" | "moon_sign" | "rising_sign" | "is_approximate_time" | "onboarded", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   messages?: boolean | Prisma.User$messagesArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
@@ -727,9 +875,12 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     birth_time: string | null
     birth_city: string | null
     birth_country: string | null
+    latitude: number | null
+    longitude: number | null
     sun_sign: string | null
     moon_sign: string | null
     rising_sign: string | null
+    is_approximate_time: boolean
     onboarded: boolean
   }, ExtArgs["result"]["user"]>
   composites: {}
@@ -1164,9 +1315,12 @@ export interface UserFieldRefs {
   readonly birth_time: Prisma.FieldRef<"User", 'String'>
   readonly birth_city: Prisma.FieldRef<"User", 'String'>
   readonly birth_country: Prisma.FieldRef<"User", 'String'>
+  readonly latitude: Prisma.FieldRef<"User", 'Float'>
+  readonly longitude: Prisma.FieldRef<"User", 'Float'>
   readonly sun_sign: Prisma.FieldRef<"User", 'String'>
   readonly moon_sign: Prisma.FieldRef<"User", 'String'>
   readonly rising_sign: Prisma.FieldRef<"User", 'String'>
+  readonly is_approximate_time: Prisma.FieldRef<"User", 'Boolean'>
   readonly onboarded: Prisma.FieldRef<"User", 'Boolean'>
 }
     

@@ -30,7 +30,7 @@ export async function getUserById(id: string): Promise<UserWithoutPassword | nul
       name: "Admin User",
       created_at: new Date(),
       updated_at: new Date()
-    } as UserWithoutPassword;
+    } as any;
   }
 
   const user = await prisma.user.findUnique({
@@ -48,6 +48,7 @@ export async function updateUserOnboarding(
     birth_date: Date;
     birth_time: string;
     birth_city: string;
+    is_approximate_time: boolean;
     latitude: number;
     longitude: number;
   }
@@ -63,6 +64,7 @@ export async function updateUserOnboarding(
       birth_date: data.birth_date,
       birth_time: data.birth_time,
       birth_city: data.birth_city,
+      is_approximate_time: data.is_approximate_time,
       latitude: data.latitude,
       longitude: data.longitude,
     } as any;
