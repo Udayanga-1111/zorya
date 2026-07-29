@@ -29,8 +29,15 @@ export async function getUserById(id: string): Promise<UserWithoutPassword | nul
       email: "admin@zorya.com",
       name: "Admin User",
       created_at: new Date(),
-      updated_at: new Date()
-    } as UserWithoutPassword;
+      birth_date: null,
+      birth_time: null,
+      birth_city: null,
+      birth_country: null,
+      sun_sign: null,
+      moon_sign: null,
+      rising_sign: null,
+      onboarded: true,
+    };
   }
 
   const user = await prisma.user.findUnique({
