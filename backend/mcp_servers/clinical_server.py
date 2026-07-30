@@ -21,6 +21,7 @@ from enum import Enum
 from typing import Dict
 from fastmcp import FastMCP
 from pydantic import BaseModel, Field
+import operator
 
 # ── Server Initialization ──────────────────────────────────────────────────────
 mcp = FastMCP("Zorya-Clinical-Server")

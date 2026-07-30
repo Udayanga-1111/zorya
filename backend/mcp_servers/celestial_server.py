@@ -7,6 +7,9 @@ positions and active Dasha periods based on birth coordinates and time.
 Design constraints (from celestial-mcp-builder skill):
   - Uses `swe.FLG_MOSEPH` (Moshier analytical ephemeris) — no binary .se1
     files required in any container or deployment environment.
+  - Uses `swe.SIDM_LAHIRI` Sidereal Ayanamsa — required for authentic Sri
+    Lankan / Indian Vedic (Jyotisha) natal chart calculation. Western Tropical
+    zodiac is explicitly NOT used.
   - All inputs are validated by Pydantic before reaching the C-extension.
   - Output is a strict Pydantic model consumed by the LangGraph Parsing Agent.
 
@@ -66,7 +69,13 @@ _PLANET_IDS = {
 
 
 def _longitude_to_position(name: str, longitude: float) -> PlanetaryPosition:
-    """Convert a raw ecliptic longitude (0–360°) to a PlanetaryPosition."""
+    """Convert a raw ecliptic longitude (0–360°) to a PlanetaryPosition.
+
+    Normalises the value with % 360 to safely handle the rare edge case where
+    pyswisseph returns a slightly negative sidereal longitude (e.g., -0.5°)
+    for a planet sitting very close to 0° Aries after the Lahiri subtraction.
+    """
+    longitude = longitude % 360  # Normalise to [0, 360) — guards against negatives
     sign_index = int(longitude // 30)
     sign_degree = longitude % 30
     return PlanetaryPosition(
