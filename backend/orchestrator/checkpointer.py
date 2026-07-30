@@ -6,6 +6,7 @@ Configures the SQLite checkpointer for LangGraph state persistence.
 import os
 import sqlite3
 from langgraph.checkpoint.sqlite import SqliteSaver
+from langgraph.checkpoint.sqlite.aio import AsyncSqliteSaver
 from langgraph.checkpoint.memory import MemorySaver
 
 def get_sqlite_saver(db_path: str = None) -> SqliteSaver:
@@ -17,6 +18,17 @@ def get_sqlite_saver(db_path: str = None) -> SqliteSaver:
     
     conn = sqlite3.connect(db_path, check_same_thread=False)
     return SqliteSaver(conn)
+
+def get_async_sqlite_saver(db_path: str = None) -> AsyncSqliteSaver:
+    """
+    Initializes an AsyncSqliteSaver for async execution (like astream).
+    Requires aiosqlite.
+    """
+    if db_path is None:
+        db_path = os.getenv("CHECKPOINT_DB_PATH", "zorya_checkpoints.sqlite")
+    
+    # from_conn_string handles the async connection
+    return AsyncSqliteSaver.from_conn_string(db_path)
 
 def get_memory_saver() -> MemorySaver:
     """

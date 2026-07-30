@@ -15,10 +15,21 @@ dependencies = [
     "pydantic>=2.0",
     # Multi-agent cyclical state machine
     "langgraph>=0.2",
+    "langgraph-checkpoint-sqlite>=2.0",
     # LangChain base primitives required by LangGraph
     "langchain-core>=0.2",
+    # OpenAI integration for LangChain
+    "langchain-openai>=0.1",
+    # Groq integration for LangChain
+    "langchain-groq>=0.1",
     # .env file loading
     "python-dotenv>=1.0",
+    # HTTP server for SSE streaming endpoint
+    "fastapi>=0.111",
+    "uvicorn[standard]>=0.30",
+    "sse-starlette>=2.1",
+    # Async SQLite for LangGraph async streaming
+    "aiosqlite>=0.20.0",
 ]
 
 [project.optional-dependencies]
@@ -26,6 +37,7 @@ dev = [
     "ruff>=0.4",
     "black>=24.0",
     "pytest>=8.0",
+    "pytest-asyncio>=0.23", # For asyncio testing
     "httpx>=0.27",   # For async MCP tool testing
 ]
 
@@ -48,3 +60,11 @@ packages = ["mcp_servers", "agents", "orchestrator", "schemas"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 asyncio_mode = "auto"
+
+[tool.anyio]
+mode = "auto"
+
+[dependency-groups]
+dev = [
+    "pytest-asyncio>=1.4.0",
+]

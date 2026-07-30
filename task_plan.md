@@ -17,26 +17,26 @@ Establish the foundational infrastructure for Zorya. This includes isolating the
 
 ### Phase 2: Core MCP Infrastructure (Backend Engine)
 
-- [ ] **ZOR-5:** Wrap `pyswisseph` securely inside a FastMCP tool endpoint (Celestial MCP) to calculate planetary longitudes and transits based on coordinates and birth time.
-- [ ] **ZOR-6:** Construct the Clinical MCP Server with mock vector mapping dictionaries that translate planetary states into 5 CBT categories (Focus, Rest, Communication, Grounding, Reflection).
-- [ ] **ZOR-X:** Expose REST or SSE endpoints from the FastMCP tools so they can be queried by the LangGraph orchestrator.
+- [x] **ZOR-5:** Wrap `pyswisseph` securely inside a FastMCP tool endpoint (Celestial MCP) to calculate planetary longitudes and transits based on coordinates and birth time.
+- [x] **ZOR-6:** Construct the Clinical MCP Server with mock vector mapping dictionaries that translate planetary states into 5 CBT categories (Focus, Rest, Communication, Grounding, Reflection).
+- [x] **ZOR-X:** Use the FastMCP `Client` inside LangGraph nodes instead of exposing REST/SSE endpoints.
 
 ### Phase 3: Multi-Agent AI Pipeline
 
-- [ ] **ZOR-8:** Implement the Parsing Agent node to dynamically invoke the Celestial MCP tool and validate raw outputs into strict Pydantic schemas.
-- [ ] **ZOR-9:** Engineer the system prompt layer for the Clinical CBT Agent to restrict responses to evidence-based CBT habit formation.
-- [ ] **ZOR-G:** Draft the Ethical Guardrail Node in LangGraph to actively intercept and block deterministic or fatalistic outputs before they reach the user interface.
+- [x] **ZOR-8:** Implement the Parsing Agent node to dynamically invoke the Celestial MCP tool and validate raw outputs into strict Pydantic schemas. *(Fixed in Session 8: node now uses FastMCP in-process `Client` to route calls through the MCP protocol layer.)*
+- [x] **ZOR-9:** Engineer the system prompt layer for the Clinical CBT Agent to restrict responses to evidence-based CBT habit formation.
+- [x] **ZOR-G:** Draft the Ethical Guardrail Node in LangGraph to actively intercept and block deterministic or fatalistic outputs before they reach the user interface.
 
 ### Phase 4: Web & Mobile Frontend Integration
 
-- [ ] **ZOR-2:** Build the Astronomical Onboarding Form components (Web & Mobile) using React Hook Form to capture Date of Birth, Time, and Location (Lat/Long).
+- [x] **ZOR-2:** Build the Astronomical Onboarding Form components (Web) using React Hook Form to capture Date of Birth, Time, and Location (Lat/Long).
 - [ ] **ZOR-3:** Build the dynamic Calendar UI and Habit Dashboard shell (Web & Mobile) to render daily/weekly focus blocks and CBT exercises.
 - [ ] **ZOR-Y:** Create the placeholder UI slots for the real-time Server-Sent Events (SSE) chat streaming companion.
 
 ### Phase 5: Product, Legal & Strategy
 
 - [ ] **ZOR-11:** Conduct the open-source licensing audit (confirming GPLv2 compliance path for `pyswisseph`).
-- [ ] **ZOR-12:** Finalize the Ethical Guardrail Rulebook, defining prohibited phrases and mapping them to positive CBT reframing for the AI prompt layer.
+- [x] **ZOR-12:** Finalize the Ethical Guardrail Rulebook, defining prohibited phrases and mapping them to positive CBT reframing for the AI prompt layer.
 - [ ] **ZOR-Z:** Draft standard CBT habit templates for the Clinical MCP mock data mappings.
 
 ---

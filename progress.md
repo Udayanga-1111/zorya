@@ -9,7 +9,7 @@ This document serves as the active memory log for Google Antigravity and team **
 - **Current Status:** In Progress (Day 1)
 - **Sprint Goal:** Complete isolated MCP servers, basic agent pipeline, and frontend/mobile skeletons.
 - **Target Completion Date:** July 26, 2026
-- **Story Points Progress:** `4 / 30 Points Completed`
+- **Story Points Progress:** `7 / 30 Points Completed`
 
 ---
 
@@ -88,6 +88,45 @@ This document serves as the active memory log for Google Antigravity and team **
 
 ---
 
+### ⚪ Session 6 — July 25, 2026 (Backend Stabilization & Test Fixes)
+
+- **Lead / Participants:** Google Antigravity
+- **Key Achievements:**
+  - Resolved `ModuleNotFoundError: No module named 'backend'` across the Python codebase by refactoring all internal relative imports from `backend.module` to `module`.
+  - Created missing `backend/schemas/agent_schemas.py` and implemented `ClinicalAgentOutput` Pydantic model for LangChain `with_structured_output`.
+  - Created missing `backend/agents/prompts.py` and authored `CLINICAL_CBT_SYSTEM_PROMPT` emphasizing non-determinism.
+  - Successfully executed `pytest` test suite, verifying graph execution and `SqliteSaver` checkpointer persistence without errors.
+- **Active Blockers / Risks:** None.
+- **Next Actions for Resuming Session:** Proceed to implement the Parsing Agent Node (ZOR-8) and integrate the Celestial MCP tool.
+
+---
+
+### 🟢 Session 7 — July 26, 2026 (Parsing Agent Integration)
+
+- **Lead / Participants:** Google Antigravity
+- **Key Achievements:**
+  - Implemented the `parsing_node` in `orchestrator/nodes.py` to extract `birth_date`, `birth_time`, `lat`, and `lon` from `user_profile`.
+  - Configured the node to invoke the `calculate_active_transits` FastMCP tool natively and persist the resulting Pydantic schemas in `celestial_context`.
+  - Refactored `test_graph_orchestration.py` to pass full `user_profile` coordinates, effectively verifying local execution of the Celestial tool and propagation of `natal_chart` and `transit_chart` to the Clinical agent node.
+- **Active Blockers / Risks:** None.
+- **Next Actions for Resuming Session:** Focus on ZOR-G (Ethical Guardrail Node) or ZOR-1B (Initialize Mobile App Repository).
+
+---
+
+### 🔴 Session 8 — July 26, 2026 (MCP Client Architecture Fix — ZOR-12)
+
+- **Lead / Participants:** Google Antigravity
+- **Key Achievements:**
+  - Identified a critical architectural bug in `orchestrator/nodes.py`: the `parsing_node` was calling `calculate_active_transits` via a direct Python import, completely bypassing the MCP protocol layer.
+  - Fixed `parsing_node` to use the FastMCP in-process `Client` with the `celestial_mcp` app object as transport. Tool calls now route through the full MCP protocol (serialized/deserialized as MCP messages) while avoiding subprocess overhead.
+  - Introduced `_call_celestial_tool` async coroutine in `nodes.py` and used `asyncio.run()` to bridge the sync LangGraph node interface with the async MCP client.
+  - Updated `test_celestial_server.py` to call the tool through the `fastmcp.Client` async interface (using `pytest-asyncio`), ensuring tests exercise the same protocol path as production. Added a Pydantic validation boundary test.
+  - Rewrote `test_graph_orchestration.py` to mock `orchestrator.nodes._call_celestial_tool` (the async MCP coroutine) instead of the removed direct function import. Added a new test verifying `ValueError` is raised for incomplete `user_profile` before the MCP client is ever reached.
+- **Active Blockers / Risks:** None.
+- **Next Actions for Resuming Session:** ZOR-G (Ethical Guardrail Node implementation) or ZOR-1B (Initialize Mobile App Repository).
+
+---
+
 ## 📜 Commit History & Smart Commit Log
 
 | Date           | Commit Hash | Author | Jira Ticket | Commit Message                                                                            | Status / Branch            |
@@ -102,17 +141,131 @@ This document serves as the active memory log for Google Antigravity and team **
 ## 📋 Ticket Completion Tracker (Sprint 1)
 
 ```text
-[x] ZOR-10: Setup Jira Board & GitHub Workflow (PM) — 1 pt
-[x] ZOR-11: Open-Source Licensing Audit (PM) — 2 pts
-[x] ZOR-1A: Initialize Next.js 15 Web Repository (Dev 1) — 2 pts
-[ ] ZOR-1B: Initialize Mobile App Repository (Dev 1) — 2 pts
-[ ] ZOR-2:  Build Astronomical Onboarding Form Component (Dev 1) — 3 pts
-[ ] ZOR-3:  Build Dynamic Calendar UI & Habit Dashboard Shell (Dev 1) — 3 pts
-[x] ZOR-4:  Initialize FastMCP Python Environment (Dev 2) — 2 pts  ✅ DONE Session 2
-[x] ZOR-5:  Build Celestial MCP Tool - pyswisseph (Dev 2) — 5 pts
-[x] ZOR-6:  Construct Clinical MCP Data Schemas & Mappings (Dev 2) — 3 pts
-[x] ZOR-7:  Set Up LangGraph State Machine & Checkpointer (Dev 3) — 3 pts  ✅ DONE Session 5
-[ ] ZOR-8:  Implement Parsing Agent Node & Pydantic Schemas (Dev 3) — 3 pts
-[x] ZOR-9:  Develop Clinical CBT Agent Prompt Layer (Dev 3) — 3 pts  ✅ DONE Session 4
-[ ] ZOR-12: Draft Ethical Guardrail Rulebook & Boundary Prompts (PM) — 3 pts
+- [x] ZOR-10: Setup Jira Board & GitHub Workflow (PM) — 1 pt
+- [x] ZOR-11: Open-Source Licensing Audit (PM) — 2 pts
+- [x] ZOR-1A: Initialize Next.js 15 Web Repository (Dev 1) — 2 pts
+- [ ] ZOR-1B: Initialize Mobile App Repository (Dev 1) — 2 pts
+- [x] ZOR-2:  Build Astronomical Onboarding Form Component (Dev 1) — 3 pts  ✅ DONE Session 10
+- [ ] ZOR-3:  Build Dynamic Calendar UI & Habit Dashboard Shell (Dev 1) — 3 pts
+- [x] ZOR-4:  Initialize FastMCP Python Environment (Dev 2) — 2 pts  ✅ DONE Session 2
+- [x] ZOR-5:  Build Celestial MCP Tool - pyswisseph (Dev 2) — 5 pts  ✅ DONE Session 12
+- [x] ZOR-6:  Construct Clinical MCP Data Schemas & Mappings (Dev 2) — 3 pts  ✅ DONE Session 14
+- [x] ZOR-X:  Integrate FastMCP Tool Endpoints using in-process Client (Dev 2) — 2 pts  ✅ DONE Session 15
+- [x] ZOR-7:  Set Up LangGraph State Machine & Checkpointer (Dev 3) — 3 pts  ✅ DONE Session 5
+- [x] ZOR-8:  Implement Parsing Agent Node & Pydantic Schemas (Dev 3) — 3 pts  ✅ DONE Session 7
+- [x] ZOR-12 (partial): MCP Client Architecture Fix — parsing_node now correctly routes through FastMCP Client  ✅ DONE Session 8
+- [x] ZOR-9:  Develop Clinical CBT Agent Prompt Layer (Dev 3) — 3 pts  ✅ DONE Session 4 & 16
+- [x] ZOR-12: Draft Ethical Guardrail Rulebook & Boundary Prompts (PM) — 3 pts ✅ DONE Session 11
+- [x] ZOR-12: Full Ethical Guardrail Node implementation completed (Dev 3) — 5 pts ✅ DONE Session 13
 ```
+
+### 🟠 Session 9 — July 26, 2026 (Streaming & LLM Stabilization)
+
+- **Lead / Participants:** Google Antigravity
+- **Key Achievements:**
+  - Resolved `SqliteSaver does not support async methods` error during Next.js SSE streaming by migrating to `AsyncSqliteSaver` in `api_server.py`.
+  - Fixed Next.js 503 cached responses during backend restarts by ensuring proper reload cycles.
+  - Switched the LLM provider from OpenAI to Groq (`ChatGroq`) to utilize the `.env` `GROQ_API_KEY`.
+  - Upgraded the LangGraph node model to `llama-3.3-70b-versatile` after diagnosing that smaller 8B models struggle with LangChain's `with_structured_output` native tool calling (resulting in `tool_use_failed` errors).
+  - Validated end-to-end streaming of `parsing_node -> clinical_cbt_node -> guardrail_node` directly to the `dashboard-client.jsx` component.
+- **Active Blockers / Risks:** None.
+- **Next Actions for Resuming Session:** Focus on ZOR-G (Ethical Guardrail Node implementation) or ZOR-1B (Initialize Mobile App Repository).
+
+---
+
+### 🔵 Session 10 — July 27, 2026 (Onboarding Flow & Neon Database Integration — ZOR-2)
+
+- **Lead / Participants:** Google Antigravity
+- **Key Achievements:**
+  - Diagnosed and fixed the 500 Internal Server Error during signup caused by a missing PostgreSQL connection string. Configured `.env.local` with Neon PostgreSQL `DATABASE_URL`.
+  - Extended the Prisma `User` schema to include `latitude` and `longitude` fields to properly support the Python FastMCP celestial calculations.
+  - Built the `POST /api/onboarding` route secured by `withAuth` middleware to save telemetry to the PostgreSQL database.
+  - Developed the fully interactive frontend `OnboardingPage` using React Hook Form, `zod`, and `framer-motion` for a smooth 3-step animated wizard.
+  - Implemented real-time geocoding directly in the UI using the free OpenStreetMap Nominatim API, automatically deriving `lat`/`lon` from the user's city search.
+- **Active Blockers / Risks:** None.
+- **Next Actions for Resuming Session:** Focus on ZOR-3 (Build Dynamic Calendar UI) or ZOR-1B (Initialize Mobile App Repository).
+
+---
+
+### 🟡 Session 11 — July 27, 2026 (Ethical Guardrail Node Implementation — ZOR-12 & ZOR-G)
+
+- **Lead / Participants:** Google Antigravity
+- **Key Achievements:**
+  - Created `GuardrailEvaluationResult` and `GuardrailStatusPayload` Pydantic models for structured output evaluation.
+  - Authored evaluation and reframing prompts (`GUARDRAIL_EVALUATOR_PROMPT`, `GUARDRAIL_REFRAME_PROMPT`) and the `SRI_LANKA_CRISIS_RESPONSE` dictionary for handling severe mental health diagnostic attempts.
+  - Implemented the `guardrail_node` (ZOR-G) in `backend/agents/guardrail_agent.py` to evaluate outputs from `clinical_cbt_node`. It successfully checks for fatalistic predictions and diagnostic attempts, and handles them by reframing or falling back to the crisis response.
+  - Attached medical disclaimers universally to all approved CBT blocks.
+  - Integrated `guardrail_node` back into the main `orchestrator/nodes.py`.
+  - Built a comprehensive unit test suite in `tests/test_guardrail_agent.py` achieving 100% pass rate using mocked LLMs for clean, fatalistic, and diagnostic scenarios.
+- **Active Blockers / Risks:** None.
+- **Next Actions for Resuming Session:** Focus on ZOR-3 (Build Dynamic Calendar UI) or ZOR-1B (Initialize Mobile App Repository).
+
+---
+
+### 🟣 Session 12 — July 27, 2026 (Celestial FastMCP Server & Vimshottari Dasha — ZOR-5)
+
+- **Lead / Participants:** Google Antigravity
+- **Key Achievements:**
+  - Implemented accurate Vimshottari Mahadasha calculations in `backend/mcp_servers/celestial_server.py`.
+  - Configured `pyswisseph` to use `swe.SIDM_LAHIRI` and `swe.FLG_SIDEREAL` to compute sidereal charts correctly (essential for assigning accurate Nakshatras and preventing large degree drifts).
+  - Calculated exact fraction traversed in the starting Nakshatra based on Sidereal Moon Longitude to identify the remaining duration of the first Mahadasha.
+  - Rolled over tropical elapsed years (using 365.2422 day year) to determine the exact current Mahadasha based on transit time.
+  - Built and successfully verified test coverage against known case (1998-05-15 moving from Jupiter $\rightarrow$ Saturn $\rightarrow$ Mercury in 2026).
+- **Active Blockers / Risks:** None.
+- **Next Actions for Resuming Session:** Focus on ZOR-6 (Clinical CBT Category Mapping) or ZOR-3 (Build Dynamic Calendar UI).
+
+---
+
+### 🟤 Session 13 — July 27, 2026 (Ethical Guardrail Rulebook Audit & 100% Compliance Fixes)
+
+- **Lead / Participants:** Google Antigravity
+- **Key Achievements:**
+  - Audited the full Zorya Guardrail implementation (`guardrail_agent.py`, `agent_schemas.py`, `prompts.py`) against the definitive *Zorya Ethical Guardrail Rulebook .md* and identified 5 minor compliance gaps (90% initial compliance).
+  - Added dedicated boolean fields for `violates_medical_advice` and `violates_financial` to `GuardrailResponse` (closing the SaMD and financial liability loop).
+  - Integrated the exact, verbatim Section 4 Guardrail System Prompt and explicitly numbered the 4 prohibited criteria in the evaluator prompt.
+  - Expanded the Sri Lankan emergency crisis keyword list to better cover edge-case self-harm indicators.
+  - Added a `test_session_state_validation` unit test; entire test suite successfully passes with 100% compliance.
+- **Active Blockers / Risks:** None.
+- **Next Actions for Resuming Session:** Focus on ZOR-3 (Build Dynamic Calendar UI) or ZOR-1B (Initialize Mobile App Repository).
+
+---
+
+### 🟢 Session 14 — July 27, 2026 (Clinical Server Vector Mappings — ZOR-6)
+
+- **Lead / Participants:** Google Antigravity
+- **Key Achievements:**
+  - Implemented the Element and Triguna scoring engine in `clinical_server.py`.
+  - Mapped signs to elements (Fire, Earth, Air, Water) and distributed appropriate baseline scores to 5 CBT categories.
+  - Implemented a 2x weight modifier for the Moon (Manas) to prioritize lunar cognitive tendencies.
+  - Applied the active Dasha Triguna (Sattva, Rajas, Tamas) as a +2 point modifier to relevant CBT categories.
+  - Implemented elegant tie-breaking logic based on **Circadian Cognitive Rhythms** (Morning prioritizes executive function/Focus, Afternoon prioritizes social/Communication, Evening prioritizes processing/Reflection).
+  - Executed a test run proving the scoring correctly breaks ties for optimal block assignment.
+- **Active Blockers / Risks:** None.
+- **Next Actions for Resuming Session:** Focus on ZOR-3 (Build Dynamic Calendar UI) or ZOR-1B (Initialize Mobile App Repository).
+
+---
+
+### 🟢 Session 15 — July 27, 2026 (ZOR-X: FastMCP Client Integration)
+
+- **Lead / Participants:** Google Antigravity
+- **Key Achievements:**
+  - Deprecated the need for a separate REST/SSE server for FastMCP tools in favor of FastMCP's high-performance native `Client`.
+  - Refactored `clinical_cbt_agent.py`'s `clinical_cbt_node` into an `async` function.
+  - Implemented `_call_clinical_tool` to securely route celestial context parameters into the `clinical_server`'s FastMCP endpoints.
+  - Successfully integrated the `scored_cbt_plan` directly into the LLM system prompt via `structured_llm.ainvoke`.
+  - Upgraded the LangGraph Pytest suite (`test_graph_orchestration.py`) to fully support `pytest-asyncio`, utilizing `get_async_sqlite_saver` and `graph.ainvoke()` to test the async multi-agent execution pipeline. All 12 tests passed successfully.
+- **Active Blockers / Risks:** None.
+- **Next Actions for Resuming Session:** Focus on ZOR-3 (Build Dynamic Calendar UI) or ZOR-1B (Initialize Mobile App Repository).
+
+---
+
+### 🟢 Session 16 — July 27, 2026 (ZOR-9: Clinical CBT Agent Prompt Enhancement)
+
+- **Lead / Participants:** Google Antigravity
+- **Key Achievements:**
+  - Enhanced `CLINICAL_CBT_SYSTEM_PROMPT` to explicitly restrict responses to evidence-based CBT habit formation.
+  - Added strict guardrails for `Cognitive Restructuring` (challenging distortions), `Behavioral Activation` (small-step micro-habits under 15 min), `Grounding & Mindfulness` (somatic grounding techniques), and `Measurability` (concrete tasks).
+  - Ensured AI translates astrological transits directly into grounded psychological action avoiding mystical jargon.
+  - Ran backend `pytest` suite ensuring all 12 LangGraph orchestration and guardrail checks still pass. ZOR-9 fully complete.
+- **Active Blockers / Risks:** None.
+- **Next Actions for Resuming Session:** ZOR-3 (Dynamic Calendar UI) or ZOR-1B (Mobile App Repo).
