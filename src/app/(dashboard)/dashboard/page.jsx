@@ -25,23 +25,6 @@ export default async function DashboardPage() {
   const decodedUserName = decodeURIComponent(user.name);
   const firstName = decodedUserName.split(" ")[0];
 
-  let userProfile = null;
-  if (user.onboarded && user.latitude) {
-    userProfile = {
-      birth_date: new Date(user.birth_date).toISOString().split("T")[0],
-      birth_time: user.birth_time,
-      lat: user.latitude,
-      lon: user.longitude,
-      goal: "I want to focus on personal growth and build positive daily habits.", // default goal for now
-      user_id: user.id,
-    };
-  }
-
-  return (
-    <DashboardClient
-      userName={firstName}
-      userProfile={userProfile}
-      isOnboarded={user.onboarded}
-    />
-  );
+  // userProfile and isOnboarded are now provided via StreamProvider in layout.jsx
+  return <DashboardClient userName={firstName} />;
 }

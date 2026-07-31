@@ -30,8 +30,8 @@ Establish the foundational infrastructure for Zorya. This includes isolating the
 ### Phase 4: Web & Mobile Frontend Integration
 
 - [x] **ZOR-2:** Build the Astronomical Onboarding Form components (Web) using React Hook Form to capture Date of Birth, Time, and Location (Lat/Long).
-- [ ] **ZOR-3:** Build the dynamic Calendar UI and Habit Dashboard shell (Web & Mobile) to render daily/weekly focus blocks and CBT exercises.
-- [ ] **ZOR-Y:** Create the placeholder UI slots for the real-time Server-Sent Events (SSE) chat streaming companion.
+- [x] **ZOR-3:** Build the dynamic Calendar UI and Habit Dashboard shell (Web & Mobile) to render daily/weekly focus blocks and CBT exercises.
+- [x] **ZOR-Y:** Create the placeholder UI slots for the real-time Server-Sent Events (SSE) chat streaming companion.
 
 ### Phase 5: Product, Legal & Strategy
 
@@ -145,8 +145,8 @@ Establish the foundational infrastructure for Zorya. This includes isolating the
 
 ## 🛑 Blockers & Risk Tracking
 
-- **Risk 1 (Licensing):** Ensuring the open-source declaration is visible in the repo to satisfy `pyswisseph` GPLv2 requirements for the competition.
-- **Risk 2 (Time constraints):** Managing the dual-platform frontend development (Web + Mobile App) within the 13-day hackathon window. Ensure shared UI logic where possible.
+- **Risk 1 (Licensing):** ✅ RESOLVED — GPLv2 open-source declaration added in Session 18.
+- **Risk 2 (Time constraints):** ✅ RESOLVED — Mobile decided as responsive web (not separate app). Full mobile responsiveness implemented Session 26.
 - **Risk 3 (Agent Latency):** Multi-agent orchestrations can be slow. Next.js SSE implementation must be bulletproof to avoid user timeout on the frontend.
 
 ## 📝 Usage Instructions for AI Agents

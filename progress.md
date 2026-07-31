@@ -418,3 +418,37 @@ This document serves as the active memory log for Google Antigravity and team **
 - **Active Blockers / Risks:** None.
 - **Next Actions for Resuming Session:** Epic 4: ZOR-20 (LangSmith Observability Proof & Demo Video Prep).
 
+---
+
+### 🟢 Session 26 — July 31, 2026 (ZOR-3 & ZOR-Y: Dynamic Calendar UI, SSE Chat Companion, Mobile Responsiveness)
+
+- **Lead / Participants:** Google Antigravity
+- **Key Achievements:**
+  - **ZOR-3: Dynamic Calendar UI & Habit Dashboard Shell** — Fully rebuilt `calendar/page.jsx` as a `"use client"` component:
+    - Consumes `useStream()` context for live CBT blocks without redundant backend calls.
+    - `WeekDayPicker` component with 7-day week navigation; only today renders live AI habits.
+    - Interactive habit checkboxes with per-day completion tracking via `checkedMap` local state.
+    - Stats Row: completed count, total focus minutes, completion percentage — computed dynamically.
+    - Category-colored habit block cards (Focus, Rest, Communication, Grounding, Reflection) with icons, timeline connectors, duration labels, and time slots.
+    - Skeleton loaders during SSE streaming, empty states for non-onboarded users, active Dasha pill, CBT legend.
+  - **Shared SSE Stream Context** — Created `stream-provider.jsx`:
+    - All SSE lifecycle management lifted from `dashboard-client.jsx` into a shared React Context.
+    - `layout.jsx` made `async`, fetches user data server-side, wraps all dashboard routes with `<StreamProvider>`.
+    - Both `DashboardClient` and `CalendarPage` use `useStream()` — zero redundant backend calls.
+    - `dashboard-client.jsx` refactored to pure presentation; `dashboard/page.jsx` simplified.
+  - **ZOR-Y: SSE Chat Companion UI Overhaul** — Rewrote `chat-client.jsx`:
+    - `ConnectionBanner`: live SSE status (streaming / error) with animated WiFi icon.
+    - `TypingDots`: 3-dot bounce animation for empty in-progress AI messages.
+    - `StreamingCursor`: pulsing cursor at end of streaming text.
+    - `SuggestedPrompts`: 4-question grid shown on welcome state only.
+    - SSE slot indicator below input bar when streaming; medical disclaimer in header.
+    - `CrisisCard` and `SafetyModal` refined with glassmorphism and mobile bottom-sheet layout.
+  - **Full Mobile Responsiveness**:
+    - `DashboardSidebar`: hamburger button (fixed, top-left) triggers slide-in drawer; `MobileBottomNav` 4-tab bottom bar for mobile; drawer auto-closes on route change.
+    - `DashboardHeader`: `pl-14` left padding on mobile; logo hidden on mobile (drawer has brand).
+    - `PlanetaryInfluences`: `grid-cols-1 sm:grid-cols-2` for single-column phones.
+    - `globals.css`: `.scrollbar-hide`, mobile `pb-64px` for content above bottom nav, `bounce-dot` keyframes.
+  - **Build**: ✅ `npm run build` — 0 errors, 16/16 pages generated in 7.3s.
+  - Marked **ZOR-3** and **ZOR-Y** as ✅ DONE. Resolved Risk 1 (Licensing) and Risk 2 (Mobile) in blockers.
+- **Active Blockers / Risks:** None.
+- **Next Actions for Resuming Session:** ZOR-20 (LangSmith Observability Proof & Demo Video Prep).

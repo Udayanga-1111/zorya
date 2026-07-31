@@ -27,14 +27,14 @@ export async function DashboardHeader() {
 
   return (
     <header
-      className="flex h-16 shrink-0 items-center justify-between px-6 z-10 relative border-b border-border/60"
+      className="flex h-16 shrink-0 items-center justify-between pl-14 pr-4 sm:px-6 z-10 relative border-b border-border/60"
       style={{
         background:
           "linear-gradient(90deg, oklch(from var(--background) l c h) 0%, oklch(from var(--primary) l c h / 0.03) 50%, oklch(from var(--background) l c h) 100%)",
       }}
     >
-      {/* Logo */}
-      <Link href="/" className="flex items-center gap-2.5 group">
+      {/* Logo — hidden on mobile since sidebar has its own brand */}
+      <Link href="/" className="hidden sm:flex items-center gap-2.5 group">
         <span className="text-lg text-primary opacity-70 group-hover:opacity-100 transition-opacity">☽</span>
         <span className="font-celestial text-2xl font-semibold italic text-primary tracking-wide leading-none">
           Zorya

@@ -56,7 +56,7 @@ export function PlanetaryInfluences({ transitChart, activeDasha, isLoading }) {
         <span className="text-primary/50 text-xs">⊹</span>
       </div>
 
-      <div className="grid grid-cols-2 gap-4 mb-10">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-10">
         {isLoading || !transitChart
           ? DISPLAY_PLANETS.map((p) => <SkeletonCard key={p} />)
           : DISPLAY_PLANETS.map((planetKey) => {
