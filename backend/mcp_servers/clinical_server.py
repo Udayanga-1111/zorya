@@ -21,6 +21,7 @@ from enum import Enum
 from typing import Dict
 from fastmcp import FastMCP
 from pydantic import BaseModel, Field
+from schemas.agent_schemas import CBTBlock
 import operator
 import random
 
@@ -41,18 +42,7 @@ class ClinicalRequest(BaseModel):
         max_length=500,
     )
 
-class CBTBlock(BaseModel):
-    """A single recommended CBT habit block for a time window."""
-
-    category: str = Field(..., description="One of: Focus, Rest, Communication, Grounding, Reflection")
-    title: str
-    description: str
-    duration_minutes: int
-    disclaimer: str = (
-        "This suggestion is for self-improvement purposes only and does not "
-        "constitute medical or clinical advice. Please consult a licensed "
-        "mental health professional for clinical support."
-    )
+# CBTBlock is imported from schemas.agent_schemas — single source of truth.
 
 class ClinicalResponse(BaseModel):
     """Validated output: a prioritized list of CBT blocks for the day."""
