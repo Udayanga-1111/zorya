@@ -1,18 +1,31 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useRef, useEffect } from "react";
 import { MessageSquare, ArrowUp, AlertTriangle, PhoneCall } from "lucide-react";
+import { useChat } from "@/components/providers/chat-provider";
 
 export function ChatClient({ firstName, userProfile }) {
-  const [messages, setMessages] = useState([
-    {
-      role: "assistant",
-      content: `Greetings, ${firstName}. I am observing the transits. How are you feeling today?`,
-    },
-  ]);
-  const [inputMessage, setInputMessage] = useState("");
-  const [isStreaming, setIsStreaming] = useState(false);
-  const [showSafetyModal, setShowSafetyModal] = useState(false);
+  const {
+    messages,
+    setMessages,
+    inputMessage,
+    setInputMessage,
+    isStreaming,
+    setIsStreaming,
+    showSafetyModal,
+    setShowSafetyModal,
+  } = useChat();
+
+  useEffect(() => {
+    if (messages.length === 0 && firstName) {
+      setMessages([
+        {
+          role: "assistant",
+          content: `Greetings, ${firstName}. I am observing the transits. How are you feeling today?`,
+        },
+      ]);
+    }
+  }, [firstName, messages.length, setMessages]);
   const messagesEndRef = useRef(null);
 
   const scrollToBottom = () => {
