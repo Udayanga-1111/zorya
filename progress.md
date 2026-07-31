@@ -157,6 +157,7 @@ This document serves as the active memory log for Google Antigravity and team **
 - [x] ZOR-9:  Develop Clinical CBT Agent Prompt Layer (Dev 3) — 3 pts  ✅ DONE Session 4 & 16
 - [x] ZOR-12: Draft Ethical Guardrail Rulebook & Boundary Prompts (PM) — 3 pts ✅ DONE Session 11
 - [x] ZOR-12: Full Ethical Guardrail Node implementation completed (Dev 3) — 5 pts ✅ DONE Session 13
+- [x] ZOR-Z:  Draft standard CBT habit templates for the Clinical MCP mock data mappings — 2 pts ✅ DONE Session 17
 ```
 
 ### 🟠 Session 9 — July 26, 2026 (Streaming & LLM Stabilization)
@@ -269,3 +270,30 @@ This document serves as the active memory log for Google Antigravity and team **
   - Ran backend `pytest` suite ensuring all 12 LangGraph orchestration and guardrail checks still pass. ZOR-9 fully complete.
 - **Active Blockers / Risks:** None.
 - **Next Actions for Resuming Session:** ZOR-3 (Dynamic Calendar UI) or ZOR-1B (Mobile App Repo).
+
+---
+
+### 🔵 Session 17 — July 31, 2026 (ZOR-Z: CBT Habit Templates)
+
+- **Lead / Participants:** Google Antigravity
+- **Key Achievements:**
+  - Updated `_DEFAULT_BLOCKS` in `clinical_server.py` to `_CBT_TEMPLATES`, holding multiple diverse evidence-based CBT habit blocks per category (Focus, Rest, Communication, Grounding, Reflection).
+  - Modified `get_cbt_day_plan` to dynamically randomize selection from the available templates, creating a more realistic and non-repetitive mock data mapping.
+  - Refined the CBT exercises with exact durations and techniques (e.g., Box Breathing, Pomodoro, 5-4-3-2-1 Sensory Grounding).
+  - Successfully marked ZOR-Z as complete.
+- **Active Blockers / Risks:** None.
+- **Next Actions for Resuming Session:** ZOR-3 (Dynamic Calendar UI) or ZOR-1B (Mobile App Repo).
+
+---
+
+### 🟢 Session 18 — July 31, 2026 (ZOR-11: Open-Source Licensing Audit)
+
+- **Lead / Participants:** Google Antigravity
+- **Key Achievements:**
+  - Conducted the open-source licensing audit for `pyswisseph` and confirmed the GPLv2 compliance path for the Zorya project.
+  - Fetched and added the official `GPL-2.0-only.txt` as `LICENSE` to the root of the repository.
+  - Added a formal **License** section to the `README.md` explicitly declaring that Zorya is open-sourced under GPLv2 to fulfill the `pyswisseph` static linking requirements.
+  - Successfully marked ZOR-11 as complete in `task_plan.md`, eliminating Risk 1 (Licensing).
+- **Active Blockers / Risks:** Risk 1 (Licensing) resolved.
+- **Next Actions for Resuming Session:** ZOR-3 (Dynamic Calendar UI) or ZOR-1B (Mobile App Repo).
+

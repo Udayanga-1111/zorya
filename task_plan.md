@@ -35,9 +35,9 @@ Establish the foundational infrastructure for Zorya. This includes isolating the
 
 ### Phase 5: Product, Legal & Strategy
 
-- [ ] **ZOR-11:** Conduct the open-source licensing audit (confirming GPLv2 compliance path for `pyswisseph`).
+- [x] **ZOR-11:** Conduct the open-source licensing audit (confirming GPLv2 compliance path for `pyswisseph`).
 - [x] **ZOR-12:** Finalize the Ethical Guardrail Rulebook, defining prohibited phrases and mapping them to positive CBT reframing for the AI prompt layer.
-- [ ] **ZOR-Z:** Draft standard CBT habit templates for the Clinical MCP mock data mappings.
+- [x] **ZOR-Z:** Draft standard CBT habit templates for the Clinical MCP mock data mappings.
 
 ---
 
