@@ -43,8 +43,15 @@ export function DashboardClient({ userName, userProfile, isOnboarded }) {
       });
 
       if (!response.ok || !response.body) {
-        const err = await response.json().catch(() => ({ error: "Unknown error" }));
-        throw new Error(err.error || `HTTP ${response.status}`);
+        const text = await response.text();
+        let errorMsg = `HTTP ${response.status}: `;
+        try {
+          const json = JSON.parse(text);
+          errorMsg += json.error || JSON.stringify(json);
+        } catch {
+          errorMsg += text.substring(0, 100);
+        }
+        throw new Error(errorMsg);
       }
 
       const reader = response.body.getReader();
@@ -119,7 +126,7 @@ export function DashboardClient({ userName, userProfile, isOnboarded }) {
   if (!isOnboarded) {
     return (
       <div
-        className="min-h-full px-8 py-10 relative overflow-hidden flex items-center justify-center"
+        className="min-h-full px-8 py-10 relative flex items-center justify-center"
         style={{
           background:
             "radial-gradient(ellipse at 80% 0%, oklch(from var(--primary) l c h / 0.06) 0%, transparent 55%), radial-gradient(ellipse at 0% 100%, oklch(0.7 0.15 300 / 0.05) 0%, transparent 50%)",
@@ -153,7 +160,7 @@ export function DashboardClient({ userName, userProfile, isOnboarded }) {
 
   return (
     <div
-      className="min-h-full px-8 py-10 relative overflow-hidden"
+      className="min-h-full px-8 py-10 relative"
       style={{
         background:
           "radial-gradient(ellipse at 80% 0%, oklch(from var(--primary) l c h / 0.06) 0%, transparent 55%), radial-gradient(ellipse at 0% 100%, oklch(0.7 0.15 300 / 0.05) 0%, transparent 50%)",

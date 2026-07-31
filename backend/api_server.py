@@ -16,7 +16,11 @@ Usage (development):
 import json
 import os
 import asyncio
+import traceback
+import logging
 from typing import AsyncGenerator
+
+logger = logging.getLogger(__name__)
 
 from dotenv import load_dotenv
 from fastapi import FastAPI
@@ -27,6 +31,8 @@ from sse_starlette.sse import EventSourceResponse
 from orchestrator.graph import compile_graph
 from orchestrator.chat_graph import compile_chat_graph
 from orchestrator.checkpointer import get_async_sqlite_saver
+from schemas.agent_schemas import ReplanRequest
+from agents.replan_agent import replan_node
 
 load_dotenv()
 
@@ -117,6 +123,7 @@ async def _stream_graph(request: StreamRequest) -> AsyncGenerator[dict, None]:
         yield {"event": "done", "data": json.dumps({"status": "pipeline_complete"})}
 
     except Exception as e:
+        logger.error("Unhandled pipeline exception:\n" + traceback.format_exc())
         yield {
             "event": "error",
             "data": json.dumps({"error": str(e)}),
@@ -164,13 +171,20 @@ async def _stream_chat(request: ChatRequest) -> AsyncGenerator[dict, None]:
                             "data": json.dumps({"token": content})
                         }
                         
-                elif kind == "on_chain_end" and event["name"] == "chat_node":
-                    # Optionally signal end of node
-                    pass
+                elif kind == "on_chain_end" and event["name"] == "chat_guardrail_node":
+                    # Check if guardrail blocked the request
+                    node_output = event["data"].get("output", {})
+                    if node_output and isinstance(node_output, dict) and node_output.get("guardrail_flagged"):
+                        yield {
+                            "event": "guardrail_block",
+                            "data": json.dumps({"reason": node_output.get("guardrail_reason", "unknown")})
+                        }
+                        # Graph will terminate early since conditional edge routes to END
             
             yield {"event": "done", "data": json.dumps({"status": "chat_complete"})}
             
     except Exception as e:
+        logger.error("Unhandled pipeline exception:\n" + traceback.format_exc())
         yield {
             "event": "error",
             "data": json.dumps({"error": str(e)}),
@@ -189,3 +203,31 @@ async def chat_agent(request: ChatRequest):
 async def health():
     """Simple health check for the FastAPI server."""
     return {"status": "ok", "service": "zorya-agent-api"}
+
+async def _stream_replan(request: ReplanRequest) -> AsyncGenerator[dict, None]:
+    """
+    Runs the lightweight replan node to reduce task friction and yields the updated block via SSE.
+    """
+    try:
+        # We don't need a full LangGraph state machine here, just a targeted LLM call
+        reframed_block = await replan_node(request.block)
+        
+        yield {
+            "event": "replan_complete",
+            "data": json.dumps(reframed_block.model_dump()),
+        }
+        
+    except Exception as e:
+        logger.error("Unhandled replan exception:\n" + traceback.format_exc())
+        yield {
+            "event": "error",
+            "data": json.dumps({"error": str(e)}),
+        }
+
+@app.post("/replan")
+async def replan_agent(request: ReplanRequest):
+    """
+    POST /replan — Modifies an overwhelming CBT block to lower friction (Fogg B=MAP).
+    Streams back the updated block via SSE.
+    """
+    return EventSourceResponse(_stream_replan(request))

@@ -41,6 +41,108 @@ Establish the foundational infrastructure for Zorya. This includes isolating the
 
 ---
 
+## 🚀 Sprint 2 Backlog: Full-Stack Integration & Pitch Polish
+
+### EPIC 1: Full-Stack SSE Stream Wiring
+
+**Task: ZOR-13 — FastAPI Gateway & Next.js BFF SSE Proxy**
+- **Issue Type:** Task
+- **Story Points:** 5
+- **Priority:** High
+- **Assignee:** Backend Lead / Dev 2
+- **Description:** Expose the LangGraph pipeline via `POST /stream` in `api_server.py` and create a Next.js Backend-for-Frontend (BFF) proxy at `src/app/api/agent/stream/route.js` to avoid CORS issues and secure backend execution.
+- **Acceptance Criteria:**
+  - [x] `api_server.py` runs on port 8000 using uvicorn.
+  - [x] `POST /stream` yields LangGraph node updates via `astream(..., stream_mode="updates")`.
+  - [x] Next.js `route.js` uses `export const dynamic = 'force-dynamic'` and proxies stream chunks cleanly with `Content-Type: text/event-stream`.
+
+**Task: ZOR-14 — Dashboard Dynamic UI Hydration**
+- **Issue Type:** Task
+- **Story Points:** 5
+- **Priority:** High
+- **Assignee:** Frontend Lead / Dev 1
+- **Description:** Convert `dashboard-client.jsx` to fetch live SSE streams from `/api/agent/stream` and dynamically populate `<PlanetaryInfluences/>` and `<DailyPlan/>` components, removing all hardcoded fallback arrays.
+- **Acceptance Criteria:**
+  - [x] `dashboard-client.jsx` manages `isStreaming`, `celestialContext`, and `clinicalPlan` state.
+  - [x] `<PlanetaryInfluences/>` maps raw planetary longitudes into active transit badges.
+  - [x] `<DailyPlan/>` renders the generated CBT blocks (Morning, Afternoon, Evening) progressively as SSE chunks arrive.
+
+### EPIC 2: Onboarding Data Flow & State Management
+
+**Task: ZOR-15 — Database Schema & Onboarding API Integration**
+- **Issue Type:** Task
+- **Story Points:** 3
+- **Priority:** High
+- **Assignee:** Full-Stack / Dev 1
+- **Description:** Update Prisma schema with celestial fields (`birthDate`, `birthTime`, `latitude`, `longitude`, `onboarded`, `isApproximateTime`). Wire `POST /api/onboarding` to save telemetry and update user status.
+- **Acceptance Criteria:**
+  - [x] `prisma/schema.prisma` contains updated User fields and migrations pass (`npx prisma db push`).
+  - [x] Client component uses OpenStreetMap Nominatim for free city-to-coordinate geocoding.
+  - [x] Checking "I don't know my exact birth time" sets `birthTime = "12:00"` and `isApproximateTime = true`.
+  - [x] Successful submission updates the user record, sets `onboarded = true`, and redirects to `/dashboard`.
+
+**Task: ZOR-16 — Dashboard Empty State Guard**
+- **Issue Type:** Task
+- **Story Points:** 2
+- **Priority:** Medium
+- **Assignee:** Frontend Lead / Dev 1
+- **Description:** Check user onboarding status on `/dashboard`. If `onboarded === false` or birth coordinates are missing, display an inviting Empty State Hero Banner instead of broken/mocked plans.
+- **Acceptance Criteria:**
+  - [x] Server component reads user profile state and passes it to `dashboard-client.jsx`.
+  - [x] Non-onboarded users see a glassmorphism CTA card: "Complete Your Natal Setup to Unlock Personalized Habit Plans".
+  - [x] CTA button routes directly to `/onboarding`.
+
+### EPIC 3: Real-Time AI Companion Chat (ZOR-Y)
+
+**Task: ZOR-17 — Conversational Agent Node & Isolated Chat Graph**
+- **Issue Type:** Task
+- **Story Points:** 5
+- **Priority:** High
+- **Assignee:** AI / Agent Developer
+- **Description:** Implement `backend/agents/chat_agent.py` and construct `compile_chat_graph()`. The agent must read conversation history via LangGraph's SqliteSaver (`thread_id`) and integrate today's CBT schedule context.
+- **Acceptance Criteria:**
+  - [x] `chat_node` uses `ChatGroq(model="llama-3.3-70b-versatile")`.
+  - [x] System prompt enforces concise micro-coaching (under 3 sentences per turn) and CBT reframing.
+  - [x] Multi-turn conversation memory works smoothly using `thread_id` state checkpointer.
+
+**Task: ZOR-18 — Token-by-Token Streaming Chat UI (/chat)**
+- **Issue Type:** Task
+- **Story Points:** 5
+- **Priority:** High
+- **Assignee:** Full-Stack / Dev 1 & Dev 2
+- **Description:** Build the `/chat` page UI in `src/app/(dashboard)/chat/page.jsx`, add "AI Companion" to `sidebar.jsx`, and connect `chat-client.jsx` to `POST /api/agent/chat` using `astream_events`.
+- **Acceptance Criteria:**
+  - [x] `POST /chat` endpoint in `api_server.py` streams tokens using `astream_events(..., version="v2")`.
+  - [x] Next.js BFF route (`/api/agent/chat`) streams tokens directly to frontend.
+  - [x] `chat-client.jsx` parses incoming stream using `response.body.getReader()` for a fluid typing animation.
+
+### EPIC 4: Safety, Compliance & Pitch Deliverables
+
+**Task: ZOR-19 — Guardrail Interception UI & Crisis Handoff**
+- **Issue Type:** Task
+- **Story Points:** 3
+- **Priority:** High
+- **Assignee:** Frontend / AI Dev
+- **Description:** If `guardrail_agent` intercepts a fatalistic prompt or crisis intent, the backend will yield a specific `guardrail_block` event. Update the frontend UI to parse this event and render a specific "Safety Modal" overriding the standard chat stream.
+- **Acceptance Criteria:**
+  - [x] Test prompt: "When will I die based on my chart?"
+  - [x] `backend/agents/guardrail_agent.py` intercepts this and sets `is_safe = False`.
+  - [x] UI renders an un-dismissible modal: "Zorya focuses strictly on personal growth. For medical or psychiatric emergencies, please contact [Resources]."
+  - [x] If crisis keywords trigger `guardrail_node`, UI overrides normal response with a high-visibility support card featuring 1926 NIMH Helpline and Sri Lanka Sumithrayo contacts.
+
+**Task: ZOR-20 — LangSmith Observability Proof & Demo Video Prep**
+- **Issue Type:** Task
+- **Story Points:** 2
+- **Priority:** High
+- **Assignee:** All Hands
+- **Description:** Verify end-to-end LangSmith tracing in the Zorya-Hackathon project, capture visual graph execution proofs for the pitch deck, and record the final 3-minute video submission.
+- **Acceptance Criteria:**
+  - [ ] `smith.langchain.com` records complete execution trees showing `parsing_node -> clinical_cbt_node -> guardrail_node` latencies.
+  - [ ] High-resolution screenshots of the multi-agent execution tree are saved for pitch slides.
+  - [ ] 3-minute demo video recorded highlighting onboarding, live dashboard streaming, AI chat memory, and active guardrail interception.
+
+---
+
 ## 🛑 Blockers & Risk Tracking
 
 - **Risk 1 (Licensing):** Ensuring the open-source declaration is visible in the repo to satisfy `pyswisseph` GPLv2 requirements for the competition.

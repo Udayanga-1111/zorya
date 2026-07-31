@@ -12,7 +12,7 @@ const onboardingSchema = z.object({
   longitude: z.number(),
 });
 
-async function onboardingHandler(request: Request) {
+async function onboardingHandler(request) {
   try {
     const userId = request.headers.get('x-user-id');
     if (!userId) {

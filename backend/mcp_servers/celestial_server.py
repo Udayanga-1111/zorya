@@ -206,10 +206,10 @@ def calculate_sidereal_positions(date_str: str, time_str: str, lat: float, lon: 
     
     # Format exactly as expected by the parsing node in ZOR-8
     return {
-        "moon_sign": res.moon.sign,
-        "sun_sign": res.sun.sign,
+        "moon_sign": res.transit_chart.moon.sign,
+        "sun_sign": res.natal_chart.sun.sign,
         "dasha_lord": res.active_dasha.split()[0], # "Jupiter Mahadasha..." -> "Jupiter"
-        "julian_day": res.julian_day,
+        "julian_day": res.transit_julian_day,
         "transit_summary": res.transit_summary
     }
 

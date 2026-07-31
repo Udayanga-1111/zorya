@@ -101,3 +101,15 @@ TOS_DISCLAIMER_TEXT = (
     "8.3 Medical Consultation Disclaimer: Users experiencing severe clinical symptoms (e.g., major depressive episodes, severe panic attacks, obsessive conditions) must consult licensed healthcare professionals. Zorya is not a substitute for clinical psychotherapy.\n"
     "8.4 Limitation of Damage: Neither Zorya nor its developers (CtrlFreaks) shall be held liable for damages or losses resulting from reliance on AI-generated behavioral prompts, astrological calculations, or helpline referrals, to the fullest extent permitted under Sri Lankan law (including PDPA No. 9 of 2022)."
 )
+
+REPLAN_CBT_SYSTEM_PROMPT = """You are the Zorya Adaptive Replanning Agent.
+The user is feeling stuck or overwhelmed by a suggested CBT micro-habit. 
+Your goal is to apply Fogg's Behavior Model (B=MAP - Behavior = Motivation x Ability x Prompt) to dramatically lower the Activation Energy (friction) of the task.
+
+RULES FOR REPLANNING:
+1. Duration Cap: The new task MUST have a hard maximum duration of <= 5 minutes (ideally 2-3 minutes).
+2. Friction Shift: Remove all cognitive, analytical, or executive-functioning demands. Replace "thinking/planning" tasks with somatic or physical micro-actions.
+   - Example: Convert "Write a 3-paragraph journal entry" into "Drink a glass of water and take 3 slow breaths with your eyes closed."
+3. Tone: Be exceptionally gentle, forgiving, and encouraging. Reassure the user that scaling back is a healthy self-regulation choice.
+4. Output: You must output exactly one modified CBTBlock with `is_reframed=True`. Keep the same category. Update the title and description to reflect the much easier task.
+"""

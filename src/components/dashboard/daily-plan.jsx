@@ -11,6 +11,9 @@
  * Each CBTBlock has: { category, title, description, duration_minutes, disclaimer }
  */
 
+import { useState } from "react";
+import { Loader2 } from "lucide-react";
+
 const CATEGORY_STYLE = {
   Focus:         { tag: "Cognitive",    dot: "bg-primary",       ring: "ring-primary/25" },
   Rest:          { tag: "Recovery",     dot: "bg-blue-500",      ring: "ring-blue-400/30" },
@@ -50,8 +53,52 @@ function SkeletonItem({ index, total }) {
 export function DailyPlan({ clinicalPlan, isLoading }) {
   const blocks = clinicalPlan?.blocks ?? [];
   const skeletonCount = 3;
+  const [overrideBlocks, setOverrideBlocks] = useState({});
+  const [replanLoading, setReplanLoading] = useState({});
 
-  const totalMinutes = blocks.reduce((acc, b) => acc + (b.duration_minutes ?? 0), 0);
+  const totalMinutes = blocks.reduce((acc, b, i) => {
+    const active = overrideBlocks[i] || b;
+    return acc + (active.duration_minutes ?? 0);
+  }, 0);
+
+  const handleReplan = async (index, block) => {
+    setReplanLoading(prev => ({ ...prev, [index]: true }));
+    try {
+      const res = await fetch("/api/agent/replan", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ block }),
+      });
+      
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+      
+      while (true) {
+        const { value, done } = await reader.read();
+        if (done) break;
+        
+        const chunk = decoder.decode(value);
+        const lines = chunk.split("\n");
+        let eventType = "";
+        
+        for (const line of lines) {
+          if (line.startsWith("event: ")) {
+            eventType = line.substring(7).trim();
+          } else if (line.startsWith("data: ")) {
+            const dataStr = line.substring(6).trim();
+            if (eventType === "replan_complete") {
+              const reframedBlock = JSON.parse(dataStr);
+              setOverrideBlocks(prev => ({ ...prev, [index]: reframedBlock }));
+            }
+          }
+        }
+      }
+    } catch (e) {
+      console.error("Replan failed:", e);
+    } finally {
+      setReplanLoading(prev => ({ ...prev, [index]: false }));
+    }
+  };
 
   return (
     <>
@@ -91,7 +138,9 @@ export function DailyPlan({ clinicalPlan, isLoading }) {
               </p>
 
               <div className="space-y-0">
-                {blocks.map((block, i, arr) => {
+                {blocks.map((originalBlock, i, arr) => {
+                  const block = overrideBlocks[i] || originalBlock;
+                  const isReplanLoading = replanLoading[i];
                   const style = CATEGORY_STYLE[block.category] ?? {
                     tag: block.category,
                     dot: "bg-primary",
@@ -124,14 +173,30 @@ export function DailyPlan({ clinicalPlan, isLoading }) {
                       </div>
 
                       {/* Content */}
-                      <div className="flex-1 pb-1">
+                      <div className={`flex-1 pb-1 transition-opacity duration-300 ${isReplanLoading ? "opacity-50 pointer-events-none" : "opacity-100"}`}>
                         <div className="flex items-center justify-between gap-2 flex-wrap">
                           <h4 className="font-celestial text-[17px] font-semibold text-foreground leading-tight">
                             {block.title}
                           </h4>
-                          <span className="rounded-full bg-muted/80 border border-border/60 px-2.5 py-0.5 text-[10px] font-medium tracking-wide text-muted-foreground">
-                            {style.tag}
-                          </span>
+                          <div className="flex items-center gap-2">
+                            {block.is_reframed ? (
+                              <span className="rounded-full bg-primary/20 border border-primary/50 px-2.5 py-0.5 text-[10px] font-medium tracking-wide text-primary shadow-[0_0_10px_rgba(212,175,55,0.4)] animate-pulse">
+                                ✨ Re-framed
+                              </span>
+                            ) : (
+                              <button
+                                onClick={() => handleReplan(i, block)}
+                                disabled={isReplanLoading}
+                                className="text-[10px] px-2 py-0.5 text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-md transition-colors"
+                              >
+                                {isReplanLoading ? <Loader2 className="w-3 h-3 animate-spin inline mr-1" /> : null}
+                                I'm Stuck
+                              </button>
+                            )}
+                            <span className="rounded-full bg-muted/80 border border-border/60 px-2.5 py-0.5 text-[10px] font-medium tracking-wide text-muted-foreground">
+                              {style.tag}
+                            </span>
+                          </div>
                         </div>
                         <p className="mt-1.5 text-sm text-muted-foreground leading-relaxed">
                           {block.description}

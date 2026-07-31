@@ -1,11 +1,9 @@
-import { NextRequest, NextResponse } from 'next/server';
-
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
 
 const PYTHON_API_URL = process.env.PYTHON_API_URL || 'http://127.0.0.1:8000';
 
-export async function POST(request: NextRequest) {
+export async function POST(request) {
   try {
     const body = await request.json();
 
@@ -16,7 +14,7 @@ export async function POST(request: NextRequest) {
         Accept: 'text/event-stream',
       },
       body: JSON.stringify(body),
-      // @ts-ignore — Node.js fetch supports duplex streaming
+      // Node.js fetch supports duplex streaming
       duplex: 'half',
     });
 
@@ -35,7 +33,7 @@ export async function POST(request: NextRequest) {
         'X-Accel-Buffering': 'no',
       },
     });
-  } catch (error: any) {
+  } catch (error) {
     return new Response(
       JSON.stringify({ error: `Failed to connect to Zorya chat agent: ${error.message}` }),
       { status: 503, headers: { 'Content-Type': 'application/json' } }

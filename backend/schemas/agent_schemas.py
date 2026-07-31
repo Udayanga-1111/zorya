@@ -71,6 +71,7 @@ class CBTBlock(BaseModel):
     title: str = Field(..., description="A short, actionable title for the block.")
     description: str = Field(..., description="Detailed instructions for this CBT block.")
     duration_minutes: int = Field(..., description="Recommended duration in minutes.")
+    is_reframed: Optional[bool] = Field(default=False, description="True if the block was dynamically reframed to lower friction.")
     disclaimer: str = Field(
         default=(
             "This suggestion is for self-improvement purposes only and does not "
@@ -82,6 +83,11 @@ class CBTBlock(BaseModel):
 class ClinicalAgentOutput(BaseModel):
     """Structured output expected from the Clinical CBT Agent node."""
     blocks: list[CBTBlock] = Field(..., description="List of recommended CBT blocks for the user's day.")
+
+class ReplanRequest(BaseModel):
+    """Validated input for the Adaptive Re-plan Loop endpoint."""
+    block: CBTBlock = Field(..., description="The original CBT block to be reframed.")
+    # Assuming user context can optionally be sent, but block is the primary requirement.
 
 class GuardrailResponse(BaseModel):
     is_safe: bool = Field(description="True if output is safe, non-deterministic, and non-diagnostic")
@@ -104,3 +110,9 @@ class SessionState(BaseModel):
 class NodeError(BaseModel):
     error: str = Field(description="Description of the error that occurred.")
     node_name: str = Field(description="Name of the node where the error occurred.")
+
+class ChatGuardrailEvaluation(BaseModel):
+    is_safe: bool = Field(description="True if the user's message is safe and does not violate guidelines.")
+    is_fatalistic: bool = Field(description="True if the user's message asks for fatalistic predictions (e.g., when they will die, predictive health outcomes, guaranteed financial loss/gain).")
+    is_crisis: bool = Field(description="True if the user's message indicates a severe mental health crisis, self-harm, or suicidal intent.")
+    reason: Optional[str] = Field(default=None, description="Explanation of why the message was flagged as fatalistic or crisis.")

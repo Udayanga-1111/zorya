@@ -5,29 +5,24 @@ export const runtime = 'nodejs';
 const PYTHON_API_URL = process.env.PYTHON_API_URL || 'http://127.0.0.1:8000';
 
 /**
- * POST /api/agent/stream
+ * POST /api/agent/replan
  *
  * Backend-for-Frontend (BFF) proxy that:
- * 1. Accepts a user_profile JSON body from the React client.
- * 2. Forwards the request to the Python FastAPI /stream endpoint.
+ * 1. Accepts a block JSON body from the React client.
+ * 2. Forwards the request to the Python FastAPI /replan endpoint.
  * 3. Pipes the SSE stream directly back to the browser.
- *
- * This pattern avoids CORS issues and keeps the Python server address
- * hidden from the browser. The frontend reads this with fetch() +
- * response.body.getReader() since native EventSource only supports GET.
  */
 export async function POST(request) {
   try {
     const body = await request.json();
 
-    const pythonResponse = await fetch(`${PYTHON_API_URL}/stream`, {
+    const pythonResponse = await fetch(`${PYTHON_API_URL}/replan`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         Accept: 'text/event-stream',
       },
       body: JSON.stringify(body),
-      // Node.js fetch supports duplex streaming
       duplex: 'half',
     });
 
