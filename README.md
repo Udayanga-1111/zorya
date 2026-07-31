@@ -41,3 +41,9 @@
     *   **Freemium Tier:** Basic interactive transit dashboard and manual personal habit logging.
     *   **Premium Tier ($4.99 / approx. LKR 1,500 per month):** Unlocks proactive multi-agent coaching messages, calendar syncing (Google/Outlook), and long-term behavioral pattern analytics.
 *   **The Global Wellness Boom:** Zorya acts at the vector of the global wellness economy, which surpassed a value of $6.8 trillion and sees mental wellness standing as one of the fastest-growing sectors at a 12.4% annual growth rate.
+
+## License
+
+Zorya is open-sourced under the [GNU General Public License v2.0 (GPLv2)](LICENSE). 
+
+This repository statically links to and wraps the `pyswisseph` Python extension (a port of the Swiss Ephemeris), which is licensed under the GPLv2. To ensure full compliance with the Swiss Ephemeris open-source licensing path for this evaluation build, the entirety of the Zorya project is released under the GPLv2.

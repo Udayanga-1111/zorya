@@ -22,6 +22,7 @@ export function DashboardSidebar() {
 
   return (
     <aside className="flex flex-col w-64 shrink-0 overflow-y-auto border-r border-border/60 relative"
+      data-lenis-prevent="true"
       style={{
         background: "linear-gradient(180deg, oklch(from var(--primary) l c h / 0.04) 0%, oklch(from var(--background) l c h) 40%)",
       }}

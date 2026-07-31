@@ -9,12 +9,14 @@ from langgraph.checkpoint.sqlite import SqliteSaver
 from langgraph.checkpoint.sqlite.aio import AsyncSqliteSaver
 from langgraph.checkpoint.memory import MemorySaver
 
+_DEFAULT_DB = os.getenv("ZORYA_DB_PATH", "zorya_state.db")
+
 def get_sqlite_saver(db_path: str = None) -> SqliteSaver:
     """
     Initializes a SqliteSaver configured for threaded/async execution safety.
     """
     if db_path is None:
-        db_path = os.getenv("CHECKPOINT_DB_PATH", "zorya_checkpoints.sqlite")
+        db_path = _DEFAULT_DB
     
     conn = sqlite3.connect(db_path, check_same_thread=False)
     return SqliteSaver(conn)
@@ -25,7 +27,7 @@ def get_async_sqlite_saver(db_path: str = None) -> AsyncSqliteSaver:
     Requires aiosqlite.
     """
     if db_path is None:
-        db_path = os.getenv("CHECKPOINT_DB_PATH", "zorya_checkpoints.sqlite")
+        db_path = _DEFAULT_DB
     
     # from_conn_string handles the async connection
     return AsyncSqliteSaver.from_conn_string(db_path)

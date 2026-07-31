@@ -32,6 +32,8 @@ class ZoryaAgentState(TypedDict, total=False):
 
     # Error handling state
     error: Optional[str]
+    parsing_error: Optional[str]
+    clinical_error: Optional[str]
     
     # PDPA Consent state
     session_state: Optional[Dict[str, Any]]

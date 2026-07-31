@@ -1,8 +1,6 @@
 import prisma from '../db/prisma';
-import { SignupInput, UserWithoutPassword } from '../types/user';
-import { User } from '../generated/prisma/client';
 
-export async function registerUser(input: SignupInput & { password_hash: string }): Promise<UserWithoutPassword> {
+export async function registerUser(input) {
   const user = await prisma.user.create({
     data: {
       name: input.name,
@@ -16,13 +14,13 @@ export async function registerUser(input: SignupInput & { password_hash: string 
   return userWithoutPassword;
 }
 
-export async function getUserByEmail(email: string): Promise<User | null> {
+export async function getUserByEmail(email) {
   return prisma.user.findUnique({
     where: { email },
   });
 }
 
-export async function getUserById(id: string): Promise<UserWithoutPassword | null> {
+export async function getUserById(id) {
   if (id === "hardcoded-admin") {
     return {
       id: "hardcoded-admin",
@@ -38,7 +36,7 @@ export async function getUserById(id: string): Promise<UserWithoutPassword | nul
       moon_sign: null,
       rising_sign: null,
       onboarded: true,
-    } as any;
+    };
   }
 
   const user = await prisma.user.findUnique({
@@ -50,17 +48,7 @@ export async function getUserById(id: string): Promise<UserWithoutPassword | nul
   return userWithoutPassword;
 }
 
-export async function updateUserOnboarding(
-  id: string,
-  data: {
-    birth_date: Date;
-    birth_time: string;
-    birth_city: string;
-    is_approximate_time: boolean;
-    latitude: number;
-    longitude: number;
-  }
-): Promise<UserWithoutPassword> {
+export async function updateUserOnboarding(id, data) {
   if (id === "hardcoded-admin") {
     return {
       id: "hardcoded-admin",
@@ -75,7 +63,7 @@ export async function updateUserOnboarding(
       is_approximate_time: data.is_approximate_time,
       latitude: data.latitude,
       longitude: data.longitude,
-    } as any;
+    };
   }
 
   const user = await prisma.user.update({

@@ -1,5 +1,3 @@
-import { NextRequest } from 'next/server';
-
 // Force dynamic execution — prevents Next.js from caching this SSE connection
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
@@ -18,7 +16,7 @@ const PYTHON_API_URL = process.env.PYTHON_API_URL || 'http://127.0.0.1:8000';
  * hidden from the browser. The frontend reads this with fetch() +
  * response.body.getReader() since native EventSource only supports GET.
  */
-export async function POST(request: NextRequest) {
+export async function POST(request) {
   try {
     const body = await request.json();
 
@@ -29,7 +27,7 @@ export async function POST(request: NextRequest) {
         Accept: 'text/event-stream',
       },
       body: JSON.stringify(body),
-      // @ts-ignore — Node.js fetch supports duplex streaming
+      // Node.js fetch supports duplex streaming
       duplex: 'half',
     });
 
@@ -49,7 +47,7 @@ export async function POST(request: NextRequest) {
         'X-Accel-Buffering': 'no', // Disables Nginx buffering if deployed
       },
     });
-  } catch (error: any) {
+  } catch (error) {
     return new Response(
       JSON.stringify({ error: `Failed to connect to Zorya agent: ${error.message}` }),
       { status: 503, headers: { 'Content-Type': 'application/json' } }

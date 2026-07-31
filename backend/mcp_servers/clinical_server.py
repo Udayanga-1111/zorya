@@ -21,7 +21,9 @@ from enum import Enum
 from typing import Dict
 from fastmcp import FastMCP
 from pydantic import BaseModel, Field
+from schemas.agent_schemas import CBTBlock
 import operator
+import random
 
 # ── Server Initialization ──────────────────────────────────────────────────────
 mcp = FastMCP("Zorya-Clinical-Server")
@@ -40,18 +42,7 @@ class ClinicalRequest(BaseModel):
         max_length=500,
     )
 
-class CBTBlock(BaseModel):
-    """A single recommended CBT habit block for a time window."""
-
-    category: str = Field(..., description="One of: Focus, Rest, Communication, Grounding, Reflection")
-    title: str
-    description: str
-    duration_minutes: int
-    disclaimer: str = (
-        "This suggestion is for self-improvement purposes only and does not "
-        "constitute medical or clinical advice. Please consult a licensed "
-        "mental health professional for clinical support."
-    )
+# CBTBlock is imported from schemas.agent_schemas — single source of truth.
 
 class ClinicalResponse(BaseModel):
     """Validated output: a prioritized list of CBT blocks for the day."""
@@ -145,57 +136,167 @@ def score_cbt_plan(moon_sign: str, sun_sign: str, active_dasha: str) -> Dict[str
 
 # ── Defaults ───────────────────────────────────────────────────────────────────
 
-_DEFAULT_BLOCKS = {
-    "Focus": CBTBlock(
-        category="Focus",
-        title="Deep Work Session",
-        description=(
-            "Allocate uninterrupted time for your highest-priority cognitive task. "
-            "Use the Pomodoro technique (25 min work / 5 min break) to sustain "
-            "concentration without burnout."
+_CBT_TEMPLATES = {
+    "Focus": [
+        CBTBlock(
+            category="Focus",
+            title="Deep Work Pomodoro",
+            description=(
+                "Allocate uninterrupted time for your highest-priority cognitive task. "
+                "Use the Pomodoro technique (25 min work / 5 min break) to sustain "
+                "concentration without burnout."
+            ),
+            duration_minutes=90,
         ),
-        duration_minutes=90,
-    ),
-    "Rest": CBTBlock(
-        category="Rest",
-        title="Mindful Recovery",
-        description=(
-            "Engage in a body-scan meditation or progressive muscle relaxation. "
-            "Limit screen exposure during this window to support nervous system "
-            "regulation."
+        CBTBlock(
+            category="Focus",
+            title="Cognitive Restructuring Sprint",
+            description=(
+                "Dedicate this session to tackling a complex problem. Catch any 'all-or-nothing' "
+                "or 'catastrophizing' thoughts as they arise during work, and reframe them to "
+                "maintain steady, analytical focus."
+            ),
+            duration_minutes=45,
         ),
-        duration_minutes=30,
-    ),
-    "Communication": CBTBlock(
-        category="Communication",
-        title="Intentional Connection",
-        description=(
-            "Reach out to one meaningful contact or journal your thoughts on a "
-            "recent interpersonal experience. Practicing active listening "
-            "strengthens social bonds and emotional regulation."
+        CBTBlock(
+            category="Focus",
+            title="Distraction Detox",
+            description=(
+                "Disable all notifications and place your phone in another room. "
+                "Practice single-tasking. If your mind wanders, gently label the distraction "
+                "and return your attention to the task at hand."
+            ),
+            duration_minutes=60,
+        )
+    ],
+    "Rest": [
+        CBTBlock(
+            category="Rest",
+            title="Mindful Recovery",
+            description=(
+                "Engage in a body-scan meditation or progressive muscle relaxation. "
+                "Limit screen exposure during this window to support nervous system "
+                "regulation."
+            ),
+            duration_minutes=30,
         ),
-        duration_minutes=45,
-    ),
-    "Grounding": CBTBlock(
-        category="Grounding",
-        title="Physical Anchoring",
-        description=(
-            "A 20–30 minute walk outdoors or a brief yoga flow to reconnect with "
-            "your physical environment. Grounding reduces cognitive overload and "
-            "supports mood stability."
+        CBTBlock(
+            category="Rest",
+            title="Sensory Decompression",
+            description=(
+                "Lie comfortably in a quiet, dimly lit room. Close your eyes and focus solely "
+                "on the physical sensation of your breath to reduce sensory overload and reset "
+                "cognitive fatigue."
+            ),
+            duration_minutes=20,
         ),
-        duration_minutes=30,
-    ),
-    "Reflection": CBTBlock(
-        category="Reflection",
-        title="CBT Journaling",
-        description=(
-            "Write down one automatic negative thought from today, identify the "
-            "cognitive distortion, and reframe it with a balanced, evidence-based "
-            "counter-thought. This is the core CBT thought-record exercise."
+        CBTBlock(
+            category="Rest",
+            title="Digital Sunset",
+            description=(
+                "Step away from all digital screens. Engage in a low-stimulation activity like "
+                "reading a physical book, stretching, or listening to calm music to signal "
+                "to your brain that it is time to down-regulate."
+            ),
+            duration_minutes=45,
+        )
+    ],
+    "Communication": [
+        CBTBlock(
+            category="Communication",
+            title="Intentional Connection",
+            description=(
+                "Reach out to one meaningful contact. Practice active listening by reflecting "
+                "back what they say without immediate judgment. This strengthens social bonds "
+                "and emotional regulation."
+            ),
+            duration_minutes=45,
         ),
-        duration_minutes=20,
-    ),
+        CBTBlock(
+            category="Communication",
+            title="Assertiveness Practice",
+            description=(
+                "Script a difficult conversation or boundary you need to set. Use 'I feel' "
+                "statements (e.g., 'I feel overwhelmed when X happens, and I need Y'). "
+                "This builds confidence in healthy expression."
+            ),
+            duration_minutes=30,
+        ),
+        CBTBlock(
+            category="Communication",
+            title="Gratitude Expression",
+            description=(
+                "Send a thoughtful message of appreciation to a friend, family member, or colleague. "
+                "Externalizing gratitude shifts cognitive focus away from internal stressors "
+                "and reinforces positive social loops."
+            ),
+            duration_minutes=15,
+        )
+    ],
+    "Grounding": [
+        CBTBlock(
+            category="Grounding",
+            title="Physical Anchoring",
+            description=(
+                "Take a brisk walk outdoors or complete a brief yoga flow. Reconnecting with "
+                "your physical environment reduces cognitive overload and "
+                "supports mood stability."
+            ),
+            duration_minutes=30,
+        ),
+        CBTBlock(
+            category="Grounding",
+            title="5-4-3-2-1 Sensory Grounding",
+            description=(
+                "Pause and identify: 5 things you can see, 4 things you can physically feel, "
+                "3 things you can hear, 2 things you can smell, and 1 thing you can taste. "
+                "This halts anxious rumination and anchors you in the present."
+            ),
+            duration_minutes=15,
+        ),
+        CBTBlock(
+            category="Grounding",
+            title="Box Breathing Anchor",
+            description=(
+                "Practice box breathing: Inhale for 4 seconds, hold for 4, exhale for 4, hold for 4. "
+                "Repeat for several cycles. This physiological intervention instantly lowers "
+                "cortisol levels and sympathetic nervous system arousal."
+            ),
+            duration_minutes=10,
+        )
+    ],
+    "Reflection": [
+        CBTBlock(
+            category="Reflection",
+            title="CBT Thought Record",
+            description=(
+                "Write down one automatic negative thought from today. Identify the cognitive distortion "
+                "(e.g., mind-reading, filtering), and reframe it with a balanced, evidence-based "
+                "counter-thought."
+            ),
+            duration_minutes=20,
+        ),
+        CBTBlock(
+            category="Reflection",
+            title="Values Alignment Check",
+            description=(
+                "Review today's actions. Did they align with your core personal values? "
+                "Identify one small adjustment you can make tomorrow to act more consistently "
+                "with the person you want to be."
+            ),
+            duration_minutes=15,
+        ),
+        CBTBlock(
+            category="Reflection",
+            title="Objective Review",
+            description=(
+                "Log three specific things that went well today and your exact role in making them happen. "
+                "This combats the 'negativity bias' distortion by forcing the brain to acknowledge "
+                "positive evidence."
+            ),
+            duration_minutes=15,
+        )
+    ],
 }
 
 # ── FastMCP Tool ───────────────────────────────────────────────────────────────
@@ -223,9 +324,9 @@ def get_cbt_day_plan(req: ClinicalRequest) -> ClinicalResponse:
     evening_cat = available.pop(0)
     
     return ClinicalResponse(
-        morning_block=_DEFAULT_BLOCKS[morning_cat.value],
-        afternoon_block=_DEFAULT_BLOCKS[afternoon_cat.value],
-        evening_block=_DEFAULT_BLOCKS[evening_cat.value],
+        morning_block=random.choice(_CBT_TEMPLATES[morning_cat.value]),
+        afternoon_block=random.choice(_CBT_TEMPLATES[afternoon_cat.value]),
+        evening_block=random.choice(_CBT_TEMPLATES[evening_cat.value]),
     )
 
 if __name__ == "__main__":

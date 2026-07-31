@@ -3,7 +3,7 @@ Zorya - Orchestrator Nodes
 ==========================
 Defines the stubs and wrappers for the LangGraph nodes.
 """
-import asyncio
+import logging
 from typing import Dict, Any
 
 from fastmcp import Client
@@ -12,6 +12,17 @@ from mcp_servers.celestial_server import mcp as celestial_mcp
 from schemas.agent_schemas import TransitRequest
 from agents.guardrail_agent import guardrail_node
 
+logger = logging.getLogger(__name__)
+
+DEFAULT_FALLBACK_CELESTIAL = {
+    "moon_sign": "Taurus",
+    "sun_sign": "Leo",
+    "dasha_lord": "Jupiter",
+    "natal_chart": {"sun": {"sign": "Leo"}},
+    "transit_chart": {"moon": {"sign": "Taurus"}},
+    "active_dasha": "Jupiter Mahadasha",
+    "fallback": True
+}
 
 async def _call_celestial_tool(req_dict: dict) -> dict:
     """
@@ -35,7 +46,7 @@ async def _call_celestial_tool(req_dict: dict) -> dict:
         return result.structured_content
 
 
-def parsing_node(state: ZoryaAgentState) -> Dict[str, Any]:
+async def parsing_node(state: ZoryaAgentState) -> Dict[str, Any]:
     """
     Parsing Agent Node (ZOR-12).
 
@@ -48,11 +59,11 @@ def parsing_node(state: ZoryaAgentState) -> Dict[str, Any]:
     """
     user_profile = state.get("user_profile", {})
 
-    # Extract expected keys, fail gracefully if missing
+    # Extract expected keys with dual-key fallback (lat/latitude, lon/longitude)
     birth_date = user_profile.get("birth_date")
     birth_time = user_profile.get("birth_time")
-    lat = user_profile.get("lat")
-    lon = user_profile.get("lon")
+    lat = user_profile.get("lat", user_profile.get("latitude"))
+    lon = user_profile.get("lon", user_profile.get("longitude"))
 
     if not all([birth_date, birth_time, lat is not None, lon is not None]):
         raise ValueError("Missing critical birth coordinates in user_profile for Parsing Agent.")
@@ -65,12 +76,18 @@ def parsing_node(state: ZoryaAgentState) -> Dict[str, Any]:
         longitude=float(lon),
     )
 
-    # Invoke the tool through the MCP client — this is the correct protocol path
-    celestial_data = asyncio.run(_call_celestial_tool(req.model_dump()))
-
-    return {
-        "celestial_context": celestial_data
-    }
+    try:
+        # Await the async MCP call directly — no asyncio.run() inside a live event loop
+        celestial_data = await _call_celestial_tool(req.model_dump())
+        return {
+            "celestial_context": celestial_data
+        }
+    except Exception as e:
+        logger.error(f"Celestial MCP execution failed: {e}")
+        return {
+            "celestial_context": DEFAULT_FALLBACK_CELESTIAL,
+            "parsing_error": str(e)
+        }
 
 
 

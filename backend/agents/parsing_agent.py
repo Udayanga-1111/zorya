@@ -1,11 +1,11 @@
 import logging
 from typing import Dict, Any
 
-from backend.orchestrator.state import ZoryaAgentState
-from backend.schemas.celestial_schemas import (
+from orchestrator.state import ZoryaAgentState
+from schemas.celestial_schemas import (
     NatalInputModel, CelestialContextModel, ElementEnum, GunaEnum
 )
-from backend.mcp_servers.celestial_server import calculate_sidereal_positions
+from mcp_servers.celestial_server import calculate_sidereal_positions
 
 logger = logging.getLogger(__name__)
 
@@ -88,8 +88,8 @@ def parsing_node(state: ZoryaAgentState) -> Dict[str, Any]:
         natal_input = NatalInputModel(
             birth_date=user_profile.get("birth_date", "2000-01-01"),
             birth_time=user_profile.get("birth_time", "12:00"),
-            latitude=float(user_profile.get("latitude", 7.2906)),  # Default Kandy, Sri Lanka
-            longitude=float(user_profile.get("longitude", 80.6337))
+            latitude=float(user_profile.get("latitude", user_profile.get("lat", 7.2906))),  # Default Kandy, Sri Lanka
+            longitude=float(user_profile.get("longitude", user_profile.get("lon", 80.6337)))
         )
 
         # 2. Invoke Celestial MCP Server / Function (Lahiri Sidereal)

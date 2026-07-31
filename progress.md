@@ -157,6 +157,7 @@ This document serves as the active memory log for Google Antigravity and team **
 - [x] ZOR-9:  Develop Clinical CBT Agent Prompt Layer (Dev 3) — 3 pts  ✅ DONE Session 4 & 16
 - [x] ZOR-12: Draft Ethical Guardrail Rulebook & Boundary Prompts (PM) — 3 pts ✅ DONE Session 11
 - [x] ZOR-12: Full Ethical Guardrail Node implementation completed (Dev 3) — 5 pts ✅ DONE Session 13
+- [x] ZOR-Z:  Draft standard CBT habit templates for the Clinical MCP mock data mappings — 2 pts ✅ DONE Session 17
 ```
 
 ### 🟠 Session 9 — July 26, 2026 (Streaming & LLM Stabilization)
@@ -269,3 +270,151 @@ This document serves as the active memory log for Google Antigravity and team **
   - Ran backend `pytest` suite ensuring all 12 LangGraph orchestration and guardrail checks still pass. ZOR-9 fully complete.
 - **Active Blockers / Risks:** None.
 - **Next Actions for Resuming Session:** ZOR-3 (Dynamic Calendar UI) or ZOR-1B (Mobile App Repo).
+
+---
+
+### 🔵 Session 17 — July 31, 2026 (ZOR-Z: CBT Habit Templates)
+
+- **Lead / Participants:** Google Antigravity
+- **Key Achievements:**
+  - Updated `_DEFAULT_BLOCKS` in `clinical_server.py` to `_CBT_TEMPLATES`, holding multiple diverse evidence-based CBT habit blocks per category (Focus, Rest, Communication, Grounding, Reflection).
+  - Modified `get_cbt_day_plan` to dynamically randomize selection from the available templates, creating a more realistic and non-repetitive mock data mapping.
+  - Refined the CBT exercises with exact durations and techniques (e.g., Box Breathing, Pomodoro, 5-4-3-2-1 Sensory Grounding).
+  - Successfully marked ZOR-Z as complete.
+- **Active Blockers / Risks:** None.
+- **Next Actions for Resuming Session:** ZOR-3 (Dynamic Calendar UI) or ZOR-1B (Mobile App Repo).
+
+---
+
+### 🟢 Session 18 — July 31, 2026 (ZOR-11: Open-Source Licensing Audit)
+
+- **Lead / Participants:** Google Antigravity
+- **Key Achievements:**
+  - Conducted the open-source licensing audit for `pyswisseph` and confirmed the GPLv2 compliance path for the Zorya project.
+  - Fetched and added the official `GPL-2.0-only.txt` as `LICENSE` to the root of the repository.
+  - Added a formal **License** section to the `README.md` explicitly declaring that Zorya is open-sourced under GPLv2 to fulfill the `pyswisseph` static linking requirements.
+  - Successfully marked ZOR-11 as complete in `task_plan.md`, eliminating Risk 1 (Licensing).
+- **Active Blockers / Risks:** Risk 1 (Licensing) resolved.
+- **Next Actions for Resuming Session:** ZOR-3 (Dynamic Calendar UI) or ZOR-1B (Mobile App Repo).
+
+---
+
+### 🟠 Session 19 — July 31, 2026 (Sprint 2 Epic 1: ZOR-13 Backend BFF Proxy)
+
+- **Lead / Participants:** Google Antigravity
+- **Key Achievements:**
+  - Verified `api_server.py` exposes `/stream` using FastAPI and streams LangGraph nodes via `astream(..., stream_mode="updates")`.
+  - Converted the existing Next.js proxy route `src/app/api/agent/stream/route.ts` into a standard JavaScript `route.js` file, ensuring strict compliance with the project's non-TypeScript rule.
+  - Ensured the `route.js` endpoint forces dynamic execution (`export const dynamic = 'force-dynamic'`) and pipes chunked `text/event-stream` SSE responses to avoid frontend CORS issues.
+  - Successfully marked ZOR-13 as complete.
+- **Active Blockers / Risks:** None.
+- **Next Actions for Resuming Session:** ZOR-14 (Dashboard Dynamic UI Hydration).
+
+---
+
+### 🟠 Session 20 — July 31, 2026 (Sprint 2 Epic 1: ZOR-14 Dashboard UI Hydration)
+
+- **Lead / Participants:** Google Antigravity
+- **Key Achievements:**
+  - Audited `dashboard-client.jsx`, `planetary-influences.jsx`, and `daily-plan.jsx`.
+  - Verified that `dashboard-client.jsx` is successfully managing `celestialContext`, `clinicalPlan`, and `isStreaming` state using the `response.body.getReader()` SSE stream chunks.
+  - Verified that `<PlanetaryInfluences/>` dynamically maps raw `transitChart` longitudes into badges using `getPlanetBadge` with no hardcoded fallback arrays.
+  - Verified that `<DailyPlan/>` dynamically renders the CBT blocks progressively via `clinicalPlan?.blocks` and displays elegant skeletons while the data is buffering.
+  - Marked ZOR-14 as complete as the codebase currently fulfills all acceptance criteria.
+- **Active Blockers / Risks:** None.
+- **Next Actions for Resuming Session:** ZOR-15 (Database Schema & Onboarding API Integration) or ZOR-16.
+
+---
+
+### 🟠 Session 21 — July 31, 2026 (Sprint 2 Epic 2: Onboarding Data Flow & Empty State)
+
+- **Lead / Participants:** Google Antigravity
+- **Key Achievements:**
+  - Audited `prisma/schema.prisma` and verified that the `User` model contains all necessary celestial fields (`birth_date`, `birth_time`, `latitude`, `longitude`, `onboarded`, `is_approximate_time`).
+  - Confirmed DB migrations are in sync via `npx prisma db push`.
+  - Converted `src/app/api/onboarding/route.ts` and `src/lib/services/user.service.ts` to `.js` files and stripped TypeScript typings to enforce project standards.
+  - Verified `src/app/onboarding/page.jsx` is correctly integrating with Nominatim for geocoding and pushing to `/dashboard` upon successful onboard state update.
+  - Verified `src/components/dashboard/dashboard-client.jsx` correctly implements the glassmorphism CTA Empty State for non-onboarded users, redirecting them to `/onboarding`.
+  - Marked ZOR-15 and ZOR-16 as complete.
+- **Active Blockers / Risks:** None.
+- **Next Actions for Resuming Session:** ZOR-17 (Conversational Agent Node) or ZOR-18 (Token Streaming UI).
+
+---
+
+### 🟠 Session 22 — July 31, 2026 (Sprint 2 Epic 3: ZOR-17 Conversational Agent Node)
+
+- **Lead / Participants:** Google Antigravity
+- **Key Achievements:**
+  - Audited `backend/agents/chat_agent.py` and `backend/orchestrator/chat_graph.py`.
+  - Verified the `chat_node` is correctly configured to use `ChatGroq(model="llama-3.3-70b-versatile")` and reads both `celestial_context` and `clinical_plan` from the state.
+  - Updated the `CHAT_SYSTEM_PROMPT` in `chat_agent.py` to strictly enforce concise micro-coaching (under 3 sentences per turn) and active CBT reframing, as requested by the acceptance criteria.
+  - Confirmed the `compile_chat_graph()` integrates perfectly with LangGraph's SqliteSaver using `thread_id` to persist multi-turn conversation memory.
+  - Marked ZOR-17 as complete in the task plan.
+- **Active Blockers / Risks:** None.
+- **Next Actions for Resuming Session:** ZOR-18 (Token-by-Token Streaming Chat UI).
+
+---
+
+### 🟠 Session 23 — July 31, 2026 (Sprint 2 Epic 3: ZOR-18 Chat UI & Token Streaming)
+
+- **Lead / Participants:** Google Antigravity
+- **Key Achievements:**
+  - Audited `src/app/(dashboard)/chat/page.jsx` and `src/components/chat/chat-client.jsx`.
+  - Verified the `ChatClient` cleanly parses `POST /api/agent/chat` responses chunk-by-chunk using `response.body.getReader()`, matching the `eventName === "token"` chunks to create a fluid, real-time typing animation for the AI Companion.
+  - Confirmed the "AI Companion" link is already present in `src/components/dashboard-sidebar.jsx` and routes successfully to `/chat`.
+  - Refactored `src/app/api/agent/chat/route.ts` to `route.js`, stripping the TypeScript typings to maintain strict compliance with project rules.
+  - Marked ZOR-18 as complete, officially finishing Epic 3.
+- **Active Blockers / Risks:** None.
+- **Next Actions for Resuming Session:** Epic 4: ZOR-19 (Guardrail Interception UI) or ZOR-20 (LangSmith Tracing).
+
+---
+
+### 🟠 Session 24 — July 31, 2026 (Sprint 2 Epic 4: ZOR-19 Guardrail Interception)
+
+- **Lead / Participants:** Google Antigravity
+- **Key Achievements:**
+  - Added `ChatGuardrailEvaluation` schema to `agent_schemas.py` for structured LLM safety evaluation.
+  - Implemented `chat_guardrail_node` in `backend/agents/guardrail_agent.py` to evaluate chat messages against fatalistic predictions or severe crisis intents using a zero-cost semantic LLM call (ChatGroq).
+  - Wired `chat_guardrail_node` into `backend/orchestrator/chat_graph.py` with a conditional edge routing to `END` if a violation is detected.
+  - Updated `_stream_chat` in `api_server.py` to yield a `guardrail_block` SSE event with specific reasons (`fatalistic` or `crisis`) upon node interception.
+  - Revamped `chat-client.jsx` to parse the `guardrail_block` event:
+    - Renders an inline emergency crisis card containing verified Sri Lankan helplines (1926, 011 268 2535) for crisis queries.
+    - Triggers a dismissible Safety Modal for fatalistic queries that appends a CBT reframing message upon dismissal.
+  - Marked ZOR-19 as complete.
+- **Active Blockers / Risks:** None.
+- **Next Actions for Resuming Session:** Epic 4: ZOR-20 (LangSmith Observability Proof & Demo Video Prep).
+
+---
+
+### 🟢 Session 25 — July 31, 2026 (Backend Data Flow Audit & Bug Fixes)
+
+- **Lead / Participants:** Google Antigravity
+- **Key Achievements:**
+  - Conducted full backend audit across `nodes.py`, `parsing_agent.py`, `clinical_cbt_agent.py`, `guardrail_agent.py`, `celestial_server.py`, and `checkpointer.py`.
+  - Fixed 7 bugs:
+    1. **`clinical_cbt_agent.py`**: Reverted data extraction to `natal_chart.sun.sign` / `transit_chart.moon.sign` — matching the actual nested `TransitResponse` output of the live `nodes.py` parsing node.
+    2. **`nodes.py`**: Converted `parsing_node` from `sync def` + `asyncio.run()` to `async def` + `await` to prevent event-loop deadlock under uvicorn.
+    3. **`parsing_agent.py`**: Fixed broken `backend.x` import prefixes to match the rest of the codebase.
+    4. **`guardrail_agent.py`**: Replaced in-place `del` mutation of shared state dict with a safe dict-comprehension copy excluding GPS keys.
+    5. **`nodes.py`**: Added `lat`/`latitude` dual-key fallback lookup for robustness across callers.
+    6. **`clinical_cbt_agent.py`**: Added `.model_dump()` before `json.dumps()` on `scored_cbt_plan` to prevent `TypeError` on Pydantic objects.
+    7. **`checkpointer.py`**: Unified both savers to a single `ZORYA_DB_PATH` env var via `_DEFAULT_DB` constant, eliminating split-brain DB files.
+  - Wrote `backend/test_pipeline_integration.py` end-to-end integration test.
+  - **Pipeline test result: 12/12 assertions PASSED.** Real celestial values confirmed (Moon in Aquarius, Sun in Gemini, Jupiter Mahadasha for Colombo-born user).
+  - **Implemented robust error handling:**
+    - Updated `nodes.py` to wrap `_call_celestial_tool` and supply a generic fallback `DEFAULT_FALLBACK_CELESTIAL` on tool failure.
+    - Updated `clinical_cbt_agent.py` to wrap tool/LLM invocations and supply `DEFAULT_FALLBACK_CLINICAL_PLAN` ensuring valid day-habits on crash.
+    - Updated `chat_agent.py` to intercept LLM crashes and yield a polite connection-issue assistant message.
+    - Updated `state.py` with `parsing_error` and `clinical_error` fields.
+    - Added `traceback` logging to SSE handlers in `api_server.py`.
+    - Wrote `backend/test_fallback.py` to verify graceful degradation using an invalid API key, passing all assertions.
+  - **MCP Infrastructure Audit & Fixes:**
+    - Conducted a full audit of MCP server integration (`celestial_server.py` and `clinical_server.py`).
+    - **CRITICAL FIX**: Converted `guardrail_node` and `chat_guardrail_node` from `def` (sync) to `async def` to prevent blocking the event loop on LLM calls.
+    - **CRITICAL FIX**: Replaced all 6 synchronous `.invoke()` LLM calls inside guardrail nodes with `await .ainvoke()`.
+    - **HIGH FIX**: Fixed the outer `except` in `guardrail_node` which previously returned only `{"error": ...}` (missing `clinical_plan` and `guardrail_flagged` keys), causing silent frontend breakage. It now returns a safe pass-through with all required state keys.
+    - **MEDIUM FIX**: Removed duplicate `CBTBlock` class definition in `clinical_server.py`, importing it from `agent_schemas.py` to ensure a single source of truth and prevent schema drift.
+    - Verified all fixes with `test_pipeline_integration.py` (12/12 assertions passed).
+- **Active Blockers / Risks:** None.
+- **Next Actions for Resuming Session:** Epic 4: ZOR-20 (LangSmith Observability Proof & Demo Video Prep).
+
