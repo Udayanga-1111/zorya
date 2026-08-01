@@ -205,16 +205,27 @@ function SafetyModal({ onDismiss }) {
 
 // ─── Main ChatClient ───────────────────────────────────────────────────────────
 export function ChatClient({ firstName, userProfile }) {
-  const [messages, setMessages] = useState([
-    {
-      role: "assistant",
-      content: `Greetings, ${firstName}. I'm observing the transits and reading today's celestial climate. How are you feeling?`,
-    },
-  ]);
-  const [inputMessage, setInputMessage] = useState("");
-  const [isStreaming, setIsStreaming] = useState(false);
-  const [hasError, setHasError] = useState(false);
-  const [showSafetyModal, setShowSafetyModal] = useState(false);
+  const {
+    messages,
+    setMessages,
+    inputMessage,
+    setInputMessage,
+    isStreaming,
+    setIsStreaming,
+    showSafetyModal,
+    setShowSafetyModal,
+  } = useChat();
+
+  useEffect(() => {
+    if (messages.length === 0 && firstName) {
+      setMessages([
+        {
+          role: "assistant",
+          content: `Greetings, ${firstName}. I am observing the transits. How are you feeling today?`,
+        },
+      ]);
+    }
+  }, [firstName, messages.length, setMessages]);
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
 
