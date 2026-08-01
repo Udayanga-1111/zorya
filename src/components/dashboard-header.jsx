@@ -6,24 +6,8 @@ import { cookies } from "next/headers";
 import { verifyToken } from "@/lib/services/auth.service";
 import { getUserById } from "@/lib/services/user.service";
 
-export async function DashboardHeader() {
-  let firstName = "User";
-
-  try {
-    const cookieStore = await cookies();
-    const token = cookieStore.get("token")?.value;
-    if (token) {
-      const decoded = verifyToken(token);
-      if (decoded?.userId) {
-        const user = await getUserById(decoded.userId);
-        if (user?.name) {
-          firstName = decodeURIComponent(user.name).split(" ")[0];
-        }
-      }
-    }
-  } catch {
-    // silently fall back to default
-  }
+export async function DashboardHeader({ user }) {
+  const firstName = user?.name ? decodeURIComponent(user.name).split(" ")[0] : "User";
 
   return (
     <header

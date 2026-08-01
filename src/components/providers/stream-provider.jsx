@@ -11,7 +11,7 @@ import { createContext, useContext, useState, useEffect, useCallback } from "rea
  */
 const ZoryaStreamContext = createContext(null);
 
-export function StreamProvider({ userProfile, isOnboarded, children }) {
+export function StreamProvider({ userProfile, isOnboarded, user, children }) {
   const [celestialContext, setCelestialContext] = useState(null);
   const [clinicalPlan, setClinicalPlan] = useState(null);
   const [isStreaming, setIsStreaming] = useState(false);
@@ -125,6 +125,7 @@ export function StreamProvider({ userProfile, isOnboarded, children }) {
         hasLoaded,
         runStream,
         isOnboarded,
+        user,
       }}
     >
       {children}

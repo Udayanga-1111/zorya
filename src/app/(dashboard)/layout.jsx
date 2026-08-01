@@ -9,6 +9,7 @@ export default async function DashboardLayout({ children }) {
   // Fetch the user once here so all child pages share the same stream context
   let userProfile = null;
   let isOnboarded = false;
+  let fullUser = null;
 
   try {
     const cookieStore = await cookies();
@@ -18,6 +19,7 @@ export default async function DashboardLayout({ children }) {
       if (decoded?.userId) {
         const user = await getUserById(decoded.userId);
         if (user) {
+          fullUser = user;
           isOnboarded = user.onboarded ?? false;
           if (user.onboarded && user.latitude) {
             userProfile = {
@@ -37,12 +39,12 @@ export default async function DashboardLayout({ children }) {
   }
 
   return (
-    <StreamProvider userProfile={userProfile} isOnboarded={isOnboarded}>
+    <StreamProvider userProfile={userProfile} isOnboarded={isOnboarded} user={fullUser}>
       <div className="h-screen flex flex-col font-sans overflow-hidden">
-        <DashboardHeader />
+        <DashboardHeader user={fullUser} />
         <div className="flex flex-1 overflow-hidden">
           {/* Sidebar: hidden on mobile, visible from md breakpoint */}
-          <DashboardSidebar />
+          <DashboardSidebar user={fullUser} />
           <main className="flex-1 overflow-y-auto bg-background" data-lenis-prevent="true">
             {children}
           </main>

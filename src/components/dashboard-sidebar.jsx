@@ -51,7 +51,7 @@ function NavLink({ item, isActive, onClick }) {
 }
 
 // ─── Sidebar inner content (shared by desktop + mobile drawer) ────────────────
-function SidebarContent({ onNavClick }) {
+function SidebarContent({ onNavClick, user }) {
   const pathname = usePathname();
 
   return (
@@ -112,9 +112,11 @@ function SidebarContent({ onNavClick }) {
             className="absolute -top-4 -right-4 w-16 h-16 rounded-full pointer-events-none"
             style={{ background: "radial-gradient(circle, oklch(from var(--primary) l c h / 0.15) 0%, transparent 70%)" }}
           />
-          <div className="flex items-center gap-2 text-[11px] text-muted-foreground/70 mt-1">
+          <div className="flex items-center gap-2 text-foreground font-semibold text-sm">
             <span>☽</span>
-            <span>CBT · Vedic Astrology</span>
+            <span>{user?.name ? user.name.split(' ')[0] : 'User'}</span>
+          </div>
+          <div className="flex items-center gap-2 text-[11px] text-muted-foreground/70">
           </div>
           <div className="mt-1 flex flex-wrap gap-1.5">
             <div className="inline-flex items-center gap-1 rounded-full bg-primary/15 border border-primary/25 px-2.5 py-0.5 text-[10px] font-medium text-primary">
@@ -160,7 +162,7 @@ function MobileBottomNav() {
 }
 
 // ─── Main Export ──────────────────────────────────────────────────────────────
-export function DashboardSidebar() {
+export function DashboardSidebar({ user }) {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   // Close drawer on route change
@@ -187,7 +189,7 @@ export function DashboardSidebar() {
         data-lenis-prevent="true"
         style={{ background: "linear-gradient(180deg, oklch(from var(--primary) l c h / 0.04) 0%, oklch(from var(--background) l c h) 40%)" }}
       >
-        <SidebarContent onNavClick={() => {}} />
+        <SidebarContent onNavClick={() => {}} user={user} />
       </aside>
 
       {/* ── Mobile hamburger trigger (visible in header via slot, but also floating) ── */}
@@ -223,7 +225,7 @@ export function DashboardSidebar() {
           <X className="w-4 h-4" />
         </button>
 
-        <SidebarContent onNavClick={() => setMobileOpen(false)} />
+        <SidebarContent onNavClick={() => setMobileOpen(false)} user={user} />
       </aside>
 
       {/* ── Mobile bottom nav ── */}
