@@ -452,3 +452,24 @@ This document serves as the active memory log for Google Antigravity and team **
   - Marked **ZOR-3** and **ZOR-Y** as ✅ DONE. Resolved Risk 1 (Licensing) and Risk 2 (Mobile) in blockers.
 - **Active Blockers / Risks:** None.
 - **Next Actions for Resuming Session:** ZOR-20 (LangSmith Observability Proof & Demo Video Prep).
+
+---
+
+### 🟢 Session [Aug 1, 2026] — Chat-to-Plan Live Edit Feature (Bug Fix & Feature Implementation)
+
+- **Lead:** Google Antigravity (Autonomous)
+- **Issue Resolved:** AI companion was unable to actually modify the daily CBT plan when asked via chat. It would respond conversationally but leave the dashboard unchanged.
+- **Root Cause:** 4 cascading gaps — no plan-edit intent in the prompt, no routing branch, no `plan_update` SSE event, and no frontend path to write `clinicalPlan`.
+- **Key Changes:**
+  - **`backend/agents/prompts.py`**: Added `INTENT_CLASSIFIER_PROMPT` (zero-shot binary classifier) and `PLAN_EDIT_SYSTEM_PROMPT` (targeted block mutation agent with inline ethical guardrail).
+  - **`backend/schemas/agent_schemas.py`**: Added `IntentClassification` and `PlanEditOutput` Pydantic schemas.
+  - **`backend/agents/chat_agent.py`**: Added `intent_detection_node` (fast structured-output LLM call, temp=0) and `plan_edit_node` (partial block merge, inline guardrail, warm confirmation message).
+  - **`backend/orchestrator/state.py`**: Added `detected_intent` and `intent_target_categories` to `ZoryaAgentState`.
+  - **`backend/orchestrator/chat_graph.py`**: Rewired graph — `guardrail → intent_node → [plan_edit_node | chat_node]`. Full topology documented in file.
+  - **`backend/api_server.py`**: `_stream_chat` now listens for `plan_edit_node` `on_chain_end` event and emits `plan_update` SSE event carrying updated blocks array. Confirmation AIMessage streamed as tokens.
+  - **`src/components/providers/stream-provider.jsx`**: Exported `setClinicalPlan` setter from `ZoryaStreamContext`.
+  - **`src/components/chat/chat-client.jsx`**: Handles `plan_update` SSE event with category-keyed partial merge into live dashboard state. Added `PlanUpdateBadge` component and emerald-tinted `isPlanUpdate` bubble styling. Expanded `SUGGESTED_PROMPTS` with 2 plan-edit chips under a visual "Edit my plan" divider.
+- **Decisions Applied:** Partial block replacement (targeted mutation), inline guardrail (zero latency), prompt chips added immediately.
+- **Active Blockers / Risks:** None.
+- **Next Actions:** Manual end-to-end verification. Consider ZOR-20 (LangSmith observability) next.
+

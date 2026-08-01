@@ -116,3 +116,28 @@ class ChatGuardrailEvaluation(BaseModel):
     is_fatalistic: bool = Field(description="True if the user's message asks for fatalistic predictions (e.g., when they will die, predictive health outcomes, guaranteed financial loss/gain).")
     is_crisis: bool = Field(description="True if the user's message indicates a severe mental health crisis, self-harm, or suicidal intent.")
     reason: Optional[str] = Field(default=None, description="Explanation of why the message was flagged as fatalistic or crisis.")
+
+
+class IntentClassification(BaseModel):
+    """Structured output of the intent classifier node."""
+    intent: str = Field(
+        description="Exactly one of: 'update_plan' (user wants to change daily schedule blocks) or 'general_chat' (all other queries)."
+    )
+    target_categories: list[str] = Field(
+        default_factory=list,
+        description="List of CBT category names the user wants to modify (e.g., ['Focus', 'Rest']). Empty list for general_chat."
+    )
+    reasoning: Optional[str] = Field(
+        default=None,
+        description="Short explanation of why this intent was chosen."
+    )
+
+
+class PlanEditOutput(BaseModel):
+    """Structured output of the plan_edit_node: only the mutated blocks."""
+    modified_blocks: list[CBTBlock] = Field(
+        description="List of ONLY the CBTBlock objects that were changed by the user's request. Other blocks are untouched."
+    )
+    confirmation_message: str = Field(
+        description="A short, warm 1-2 sentence confirmation message to show the user in the chat explaining what was changed."
+    )

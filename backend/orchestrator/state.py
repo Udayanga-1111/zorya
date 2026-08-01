@@ -40,3 +40,7 @@ class ZoryaAgentState(TypedDict, total=False):
     
     # AGPLv3 Mitigation & source tracking
     source_metadata: Optional[Dict[str, Any]]
+
+    # Intent detection (Chat graph)
+    detected_intent: Optional[str]  # 'update_plan' | 'general_chat'
+    intent_target_categories: Optional[List[str]]  # CBT category names to modify

@@ -59,10 +59,12 @@ function ConnectionBanner({ isStreaming, hasError }) {
 
 // ─── Suggested Prompts (empty state) ─────────────────────────────────────────
 const SUGGESTED_PROMPTS = [
-  "What's my dominant energy today?",
-  "How can I use my current dasha to build focus?",
-  "Suggest a CBT grounding exercise for stress",
-  "Help me reframe negative thinking patterns",
+  { text: "What's my dominant energy today?", group: "insight" },
+  { text: "How can I use my current dasha to build focus?", group: "insight" },
+  { text: "Suggest a CBT grounding exercise for stress", group: "insight" },
+  { text: "Help me reframe negative thinking patterns", group: "insight" },
+  { text: "Replace my afternoon block with a breathing exercise", group: "edit" },
+  { text: "Swap my Focus block with a 10-min journaling session", group: "edit" },
 ];
 
 function SuggestedPrompts({ onSelect }) {
@@ -72,14 +74,31 @@ function SuggestedPrompts({ onSelect }) {
         Start with a question
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-        {SUGGESTED_PROMPTS.map((p, i) => (
+        {SUGGESTED_PROMPTS.filter(p => p.group === "insight").map((p, i) => (
           <button
             key={i}
-            onClick={() => onSelect(p)}
+            onClick={() => onSelect(p.text)}
             className="text-left text-xs sm:text-sm p-3 sm:p-4 rounded-xl border border-border/60 bg-card/50 text-muted-foreground hover:bg-card/80 hover:text-foreground hover:border-primary/30 transition-all duration-200 group"
           >
             <span className="text-primary/50 mr-1.5 group-hover:text-primary/80 transition-colors">✦</span>
-            {p}
+            {p.text}
+          </button>
+        ))}
+      </div>
+      <div className="mt-3 mb-2 flex items-center gap-2">
+        <div className="flex-1 h-px bg-border/40" />
+        <span className="text-[10px] uppercase tracking-widest text-muted-foreground/50">Edit my plan</span>
+        <div className="flex-1 h-px bg-border/40" />
+      </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+        {SUGGESTED_PROMPTS.filter(p => p.group === "edit").map((p, i) => (
+          <button
+            key={i}
+            onClick={() => onSelect(p.text)}
+            className="text-left text-xs sm:text-sm p-3 sm:p-4 rounded-xl border border-emerald-500/20 bg-emerald-500/5 text-muted-foreground hover:bg-emerald-500/10 hover:text-foreground hover:border-emerald-500/40 transition-all duration-200 group"
+          >
+            <span className="text-emerald-500/60 mr-1.5 group-hover:text-emerald-500/90 transition-colors">✎</span>
+            {p.text}
           </button>
         ))}
       </div>
@@ -124,6 +143,15 @@ function CrisisCard() {
   );
 }
 
+// ─── Plan Update Confirmation Bubble ─────────────────────────────────────────
+function PlanUpdateBadge() {
+  return (
+    <div className="inline-flex items-center gap-1.5 text-[10px] font-medium text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 border border-emerald-500/25 rounded-full px-2.5 py-0.5 mb-1.5">
+      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+      Plan updated
+    </div>
+  );
+}
 // ─── Message Bubble ───────────────────────────────────────────────────────────
 function MessageBubble({ msg, idx, messagesLength, isStreaming, firstName }) {
   if (msg.isCrisisCard) return <CrisisCard key={idx} />;
@@ -149,16 +177,20 @@ function MessageBubble({ msg, idx, messagesLength, isStreaming, firstName }) {
       {/* Bubble */}
       <div
         className={`max-w-[85%] sm:max-w-[78%] px-3.5 sm:px-4 py-2.5 sm:py-3 text-sm leading-relaxed shadow-sm
-          ${isUser
-            ? "bg-primary/10 text-foreground rounded-2xl rounded-tr-sm border border-primary/15"
-            : "bg-card border border-border/50 rounded-2xl rounded-tl-sm text-foreground/90"
+          ${
+            isUser
+              ? "bg-primary/10 text-foreground rounded-2xl rounded-tr-sm border border-primary/15"
+              : msg.isPlanUpdate
+              ? "bg-emerald-500/8 border border-emerald-500/25 rounded-2xl rounded-tl-sm text-foreground/90"
+              : "bg-card border border-border/50 rounded-2xl rounded-tl-sm text-foreground/90"
           }`}
       >
         {isEmpty ? (
           <TypingDots />
         ) : (
           <>
-            {msg.content}
+            {msg.isPlanUpdate && <PlanUpdateBadge />}
+            <div>{msg.content}</div>
             {isCurrentlyStreaming && !isEmpty && <StreamingCursor />}
           </>
         )}
@@ -166,6 +198,7 @@ function MessageBubble({ msg, idx, messagesLength, isStreaming, firstName }) {
     </div>
   );
 }
+
 
 // ─── Safety Modal ─────────────────────────────────────────────────────────────
 function SafetyModal({ onDismiss }) {
@@ -204,7 +237,11 @@ function SafetyModal({ onDismiss }) {
 }
 
 // ─── Main ChatClient ───────────────────────────────────────────────────────────
+import { useChat } from "@/components/providers/chat-provider";
+import { useStream } from "@/components/providers/stream-provider";
+
 export function ChatClient({ firstName, userProfile }) {
+  const [hasError, setHasError] = useState(false);
   const {
     messages,
     setMessages,
@@ -215,6 +252,9 @@ export function ChatClient({ firstName, userProfile }) {
     showSafetyModal,
     setShowSafetyModal,
   } = useChat();
+
+  // Access the shared dashboard plan state so chat can push live plan edits
+  const { setClinicalPlan } = useStream();
 
   useEffect(() => {
     if (messages.length === 0 && firstName) {
@@ -294,6 +334,32 @@ export function ChatClient({ firstName, userProfile }) {
               };
               return newMsgs;
             });
+          } else if (eventName === "plan_update") {
+            // Merge updated blocks into live dashboard state (partial replacement by category)
+            const updatedBlocks = payload.blocks;
+            if (updatedBlocks && Array.isArray(updatedBlocks)) {
+              setClinicalPlan((prev) => {
+                if (!prev) return { blocks: updatedBlocks };
+                const existingByCategory = Object.fromEntries(
+                  (prev.blocks || []).map((b) => [b.category, b])
+                );
+                const updatedByCategory = Object.fromEntries(
+                  updatedBlocks.map((b) => [b.category, b])
+                );
+                // Merge: updated blocks override, others stay unchanged
+                const mergedBlocks = (prev.blocks || []).map((b) =>
+                  updatedByCategory[b.category] ? updatedByCategory[b.category] : b
+                );
+                return { ...prev, blocks: mergedBlocks };
+              });
+              // Mark the pending assistant bubble as a plan-update confirmation
+              setMessages((prev) => {
+                const newMsgs = [...prev];
+                const lastIdx = newMsgs.length - 1;
+                newMsgs[lastIdx] = { ...newMsgs[lastIdx], isPlanUpdate: true };
+                return newMsgs;
+              });
+            }
           } else if (eventName === "guardrail_block") {
             setIsStreaming(false);
             if (payload.reason === "crisis") {
