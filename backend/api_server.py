@@ -147,40 +147,70 @@ async def _stream_chat(request: ChatRequest) -> AsyncGenerator[dict, None]:
     profile = request.user_profile
     thread_id = f"thread-{profile.user_id}"
     config = {"configurable": {"thread_id": thread_id}}
-    
+
     try:
-        # We don't need to pass the full initial state again because we assume 
-        # the dashboard pipeline already ran and saved celestial_context etc.
-        # But we do need to append the new message to state.
-        
-        # We just pass the new message, LangGraph's add_messages will append it.
+        # Append the new user message — LangGraph's add_messages reducer handles history.
         inputs = {"messages": [("user", request.message)]}
-        
+
         async with get_async_sqlite_saver(_db_path) as checkpointer:
             chat_graph = compile_chat_graph(checkpointer=checkpointer)
-            
-            # Use astream_events with version="v2" to get token-by-token stream
+
+            # Track whether a plan_update event was already emitted this turn
+            # so we don't double-emit if astream_events fires multiple end events.
+            plan_update_emitted = False
+
+            # Use astream_events v2 for token-by-token streaming
             async for event in chat_graph.astream_events(inputs, config=config, version="v2"):
                 kind = event["event"]
-                # Only yield chat model streaming tokens
+                node_name = event.get("name", "")
+
+                # ── Token streaming (chat_node only) ──────────────────────────
                 if kind == "on_chat_model_stream":
                     content = event["data"]["chunk"].content
                     if content:
                         yield {
                             "event": "token",
-                            "data": json.dumps({"token": content})
+                            "data": json.dumps({"token": content}),
                         }
-                        
-                elif kind == "on_chain_end" and event["name"] == "chat_guardrail_node":
-                    # Check if guardrail blocked the request
+
+                # ── Guardrail blocked the message ─────────────────────────────
+                elif kind == "on_chain_end" and node_name == "chat_guardrail_node":
                     node_output = event["data"].get("output", {})
                     if node_output and isinstance(node_output, dict) and node_output.get("guardrail_flagged"):
                         yield {
                             "event": "guardrail_block",
-                            "data": json.dumps({"reason": node_output.get("guardrail_reason", "unknown")})
+                            "data": json.dumps({"reason": node_output.get("guardrail_reason", "unknown")}),
                         }
-                        # Graph will terminate early since conditional edge routes to END
-            
+
+                # ── Plan edit completed: emit updated blocks + confirmation ───
+                elif kind == "on_chain_end" and node_name == "plan_edit_node" and not plan_update_emitted:
+                    node_output = event["data"].get("output", {})
+                    if node_output and isinstance(node_output, dict):
+                        updated_plan = node_output.get("clinical_plan")
+                        messages_out = node_output.get("messages", [])
+
+                        if updated_plan and updated_plan.get("blocks"):
+                            plan_update_emitted = True
+
+                            # Emit the new blocks so the frontend can update the dashboard
+                            yield {
+                                "event": "plan_update",
+                                "data": json.dumps({"blocks": updated_plan["blocks"]}),
+                            }
+
+                        # Stream the confirmation message as regular tokens
+                        for msg in messages_out:
+                            content = ""
+                            if hasattr(msg, "content"):
+                                content = msg.content
+                            elif isinstance(msg, dict):
+                                content = msg.get("content", "")
+                            if content:
+                                yield {
+                                    "event": "token",
+                                    "data": json.dumps({"token": content}),
+                                }
+
             yield {"event": "done", "data": json.dumps({"status": "chat_complete"})}
             
     except Exception as e:

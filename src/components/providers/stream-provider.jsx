@@ -119,6 +119,7 @@ export function StreamProvider({ userProfile, isOnboarded, user, children }) {
       value={{
         celestialContext,
         clinicalPlan,
+        setClinicalPlan,
         isStreaming,
         streamError,
         guardrailFlagged,

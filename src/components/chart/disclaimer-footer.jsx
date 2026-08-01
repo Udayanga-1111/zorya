@@ -1,11 +1,8 @@
 export function DisclaimerFooter() {
   return (
-    <div className="mt-8 text-center border-t border-border/40 pt-6">
-      <p className="text-[10px] text-muted-foreground/60 max-w-2xl mx-auto leading-relaxed">
-        <strong>Important Disclaimer:</strong> Zorya translates astronomical calculations into structural 
-        Cognitive Behavioral Therapy (CBT) habit frameworks. This platform is designed for self-improvement and mindfulness. 
-        It is not a substitute for professional clinical therapy, psychiatric evaluation, or medical diagnostics. 
-        Zorya does not make deterministic predictions about your future health, finances, or life events.
+    <div className="mt-8 text-center p-6 rounded-2xl border border-white/10 bg-slate-950/40 backdrop-blur-md shadow-lg">
+      <p className="text-[11px] sm:text-xs text-muted-foreground/80 max-w-3xl mx-auto leading-relaxed">
+        <strong className="text-white/90">🛡️ Transparency & Safety Note:</strong> Zorya utilizes planetary coordinates strictly as dynamic inputs for cognitive reframing and habit formation. Telemetry does not predict future events, dictate destiny, or provide clinical medical diagnostics. You maintain complete internal locus of control over your actions.
       </p>
     </div>
   );

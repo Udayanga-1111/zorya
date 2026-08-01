@@ -4,6 +4,7 @@ import { getUserById } from "@/lib/services/user.service";
 import { DashboardHeader } from "@/components/dashboard-header";
 import { DashboardSidebar } from "@/components/dashboard-sidebar";
 import { StreamProvider } from "@/components/providers/stream-provider";
+import { ChatProvider } from "@/components/providers/chat-provider";
 
 export default async function DashboardLayout({ children }) {
   // Fetch the user once here so all child pages share the same stream context
@@ -40,16 +41,18 @@ export default async function DashboardLayout({ children }) {
 
   return (
     <StreamProvider userProfile={userProfile} isOnboarded={isOnboarded} user={fullUser}>
-      <div className="h-screen flex flex-col font-sans overflow-hidden">
-        <DashboardHeader user={fullUser} />
-        <div className="flex flex-1 overflow-hidden">
-          {/* Sidebar: hidden on mobile, visible from md breakpoint */}
-          <DashboardSidebar user={fullUser} />
-          <main className="flex-1 overflow-y-auto bg-background" data-lenis-prevent="true">
-            {children}
-          </main>
+      <ChatProvider>
+        <div className="h-screen flex flex-col font-sans overflow-hidden">
+          <DashboardHeader user={fullUser} />
+          <div className="flex flex-1 overflow-hidden">
+            {/* Sidebar: hidden on mobile, visible from md breakpoint */}
+            <DashboardSidebar user={fullUser} />
+            <main className="flex-1 overflow-y-auto bg-background" data-lenis-prevent="true">
+              {children}
+            </main>
+          </div>
         </div>
-      </div>
+      </ChatProvider>
     </StreamProvider>
   );
 }
