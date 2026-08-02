@@ -30,7 +30,7 @@ export function DangerZone() {
         
         <button 
           onClick={() => setShowModal(true)}
-          className="h-10 px-5 rounded-full bg-destructive/10 text-destructive border border-destructive/30 hover:bg-destructive/20 font-medium text-sm transition-all flex items-center gap-2"
+          className="h-10 px-5 rounded-full bg-destructive/10 text-destructive border border-destructive/30 hover:bg-destructive/20 font-sans text-button-text transition-all flex items-center gap-2"
         >
           <Trash2 className="w-4 h-4" />
           Erase Account & Data
@@ -47,7 +47,7 @@ export function DangerZone() {
             <div className="flex justify-end gap-3">
               <button 
                 onClick={() => setShowModal(false)}
-                className="px-4 py-2 text-sm font-medium rounded-full hover:bg-muted transition-colors"
+                className="px-4 py-2 font-sans text-button-text rounded-full hover:bg-muted transition-colors"
                 disabled={isDeleting}
               >
                 Cancel
@@ -55,7 +55,7 @@ export function DangerZone() {
               <button 
                 onClick={handleDelete}
                 disabled={isDeleting}
-                className="px-4 py-2 bg-destructive text-destructive-foreground text-sm font-medium rounded-full hover:bg-destructive/90 transition-colors flex items-center gap-2"
+                className="px-4 py-2 bg-destructive text-destructive-foreground font-sans text-button-text rounded-full hover:bg-destructive/90 transition-colors flex items-center gap-2"
               >
                 {isDeleting && <Loader2 className="w-4 h-4 animate-spin" />}
                 Yes, erase everything

@@ -23,7 +23,7 @@ const TRIGUNA_COLORS = {
 export function ActiveTelemetryCard({ activeDasha, isLoading }) {
   if (isLoading) {
     return (
-      <div className="p-6 rounded-3xl border border-white/10 bg-slate-950/40 backdrop-blur-md shadow-lg animate-pulse h-48" />
+      <div className="p-6 rounded-3xl border border-border bg-muted animate-pulse h-48" />
     );
   }
 
@@ -37,10 +37,10 @@ export function ActiveTelemetryCard({ activeDasha, isLoading }) {
   const frictionColor = triguna === "Tamas" ? "text-red-400" : (triguna === "Rajas" ? "text-orange-400" : "text-emerald-400");
 
   return (
-    <div className="flex flex-col p-6 sm:p-8 rounded-3xl border border-white/10 bg-slate-950/40 backdrop-blur-md shadow-lg relative overflow-hidden">
+    <div className="flex flex-col p-6 sm:p-8 rounded-3xl border border-border bg-card backdrop-blur-md shadow-lg relative overflow-hidden">
       <div className="absolute left-0 bottom-0 w-full h-1 bg-gradient-to-r from-primary/10 via-primary/50 to-primary/10 opacity-50" />
       
-      <div className="flex items-center gap-2 mb-6 text-white font-celestial text-xl z-10">
+      <div className="flex items-center gap-2 mb-6 font-serif text-section-heading text-primary-custom z-10">
         <Compass className="w-5 h-5 text-primary" />
         Active Telemetry States
       </div>
@@ -48,16 +48,16 @@ export function ActiveTelemetryCard({ activeDasha, isLoading }) {
       <div className="flex flex-col gap-6 z-10">
         <div className="grid grid-cols-2 gap-4">
           <div className="flex flex-col gap-1.5">
-            <span className="text-[10px] uppercase tracking-widest text-muted-foreground flex items-center gap-1 font-medium">
+            <span className="font-sans text-input-text uppercase tracking-wide text-secondary-custom flex items-center gap-1 font-medium">
               <Orbit className="w-3 h-3" /> Mahadasha Cycle
             </span>
-            <span className="text-xl font-medium text-white flex flex-wrap gap-2 items-center">
+            <span className="font-sans text-body-custom font-medium text-primary-custom flex flex-wrap gap-2 items-center">
               {dashaStr}
             </span>
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <span className="text-[10px] uppercase tracking-widest text-muted-foreground font-medium">
+            <span className="font-sans text-input-text uppercase tracking-wide text-secondary-custom font-medium">
               Triguna State
             </span>
             <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full border w-fit ${TRIGUNA_COLORS[triguna]}`}>
@@ -67,12 +67,12 @@ export function ActiveTelemetryCard({ activeDasha, isLoading }) {
           </div>
         </div>
 
-        <div className="flex flex-col gap-3 p-4 rounded-2xl bg-slate-900/50 border border-white/5">
+        <div className="flex flex-col gap-3 p-4 rounded-2xl bg-card border border-border">
           <div className="flex justify-between items-center text-sm">
-            <span className="text-muted-foreground">Cognitive Mode</span>
-            <span className="text-white/90 font-medium text-xs sm:text-sm text-right">{TRIGUNA_CBT_MODE[triguna]}</span>
+            <span className="font-sans text-input-text text-secondary-custom">Cognitive Mode</span>
+            <span className="font-sans text-body-custom text-primary-custom font-medium text-right">{TRIGUNA_CBT_MODE[triguna]}</span>
           </div>
-          <div className="h-px w-full bg-white/10" />
+          <div className="h-px w-full bg-border" />
           <div className="flex justify-between items-center text-sm">
             <span className="text-muted-foreground flex items-center gap-1.5">
               Cognitive Friction 

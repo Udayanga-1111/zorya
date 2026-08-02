@@ -78,9 +78,9 @@ function SuggestedPrompts({ onSelect }) {
           <button
             key={i}
             onClick={() => onSelect(p.text)}
-            className="text-left text-xs sm:text-sm p-3 sm:p-4 rounded-xl border border-border/60 bg-card/50 text-muted-foreground hover:bg-card/80 hover:text-foreground hover:border-primary/30 transition-all duration-200 group"
+            className="text-left font-sans text-button-text text-primary-custom p-3 sm:p-4 rounded-xl border border-border/60 bg-card/50 hover:bg-card/80 hover:text-primary-custom hover:border-primary/30 transition-all duration-200 group"
           >
-            <span className="text-primary/50 mr-1.5 group-hover:text-primary/80 transition-colors">✦</span>
+            <span className="text-primary-custom/50 mr-1.5 group-hover:text-primary-custom/80 transition-colors">✦</span>
             {p.text}
           </button>
         ))}
@@ -95,7 +95,7 @@ function SuggestedPrompts({ onSelect }) {
           <button
             key={i}
             onClick={() => onSelect(p.text)}
-            className="text-left text-xs sm:text-sm p-3 sm:p-4 rounded-xl border border-emerald-500/20 bg-emerald-500/5 text-muted-foreground hover:bg-emerald-500/10 hover:text-foreground hover:border-emerald-500/40 transition-all duration-200 group"
+            className="text-left font-sans text-button-text text-primary-custom p-3 sm:p-4 rounded-xl border border-emerald-500/20 bg-emerald-500/5 hover:bg-emerald-500/10 hover:text-primary-custom hover:border-emerald-500/40 transition-all duration-200 group"
           >
             <span className="text-emerald-500/60 mr-1.5 group-hover:text-emerald-500/90 transition-colors">✎</span>
             {p.text}
@@ -176,13 +176,13 @@ function MessageBubble({ msg, idx, messagesLength, isStreaming, firstName }) {
 
       {/* Bubble */}
       <div
-        className={`max-w-[85%] sm:max-w-[78%] px-3.5 sm:px-4 py-2.5 sm:py-3 text-sm leading-relaxed shadow-sm
+        className={`max-w-[85%] sm:max-w-[78%] px-3.5 sm:px-4 py-2.5 sm:py-3 font-sans text-body-custom text-primary-custom leading-relaxed shadow-sm
           ${
-            isUser
-              ? "bg-primary/10 text-foreground rounded-2xl rounded-tr-sm border border-primary/15"
+            msg.role === "user"
+              ? "bg-primary/10 rounded-2xl rounded-tr-sm border border-primary/15"
               : msg.isPlanUpdate
-              ? "bg-emerald-500/8 border border-emerald-500/25 rounded-2xl rounded-tl-sm text-foreground/90"
-              : "bg-card border border-border/50 rounded-2xl rounded-tl-sm text-foreground/90"
+              ? "bg-emerald-500/8 border border-emerald-500/25 rounded-2xl rounded-tl-sm"
+              : "bg-card border border-border/50 rounded-2xl rounded-tl-sm"
           }`}
       >
         {isEmpty ? (
@@ -474,7 +474,7 @@ export function ChatClient({ firstName, userProfile }) {
                 onChange={(e) => setInputMessage(e.target.value)}
                 disabled={isStreaming || showSafetyModal}
                 placeholder={isStreaming ? "Zorya is responding…" : "Ask about your dashas or CBT routines…"}
-                className="w-full h-11 sm:h-12 bg-card border border-border/60 rounded-full pl-5 pr-4 text-sm focus:outline-none focus:ring-1 focus:ring-primary/40 transition-all shadow-inner disabled:opacity-50 placeholder:text-muted-foreground/60"
+                className="w-full h-11 sm:h-12 bg-card border border-border/60 rounded-full pl-5 pr-4 font-sans text-input-text focus:outline-none focus:ring-1 focus:ring-primary/40 transition-all shadow-inner disabled:opacity-50 placeholder:text-muted-foreground/60"
               />
             </div>
             <button
