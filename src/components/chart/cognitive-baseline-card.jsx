@@ -33,7 +33,7 @@ const SUN_CBT = {
 export function CognitiveBaselineCard({ celestialContext, isLoading }) {
   if (isLoading) {
     return (
-      <div className="p-6 rounded-3xl border border-white/10 bg-slate-950/40 backdrop-blur-md shadow-lg animate-pulse h-48" />
+      <div className="p-6 rounded-3xl border border-border bg-muted animate-pulse h-48" />
     );
   }
 
@@ -51,44 +51,44 @@ export function CognitiveBaselineCard({ celestialContext, isLoading }) {
   const sunElem = SIGN_ELEMENTS[sunData.sign] || "Earth";
 
   return (
-    <div className="flex flex-col p-6 rounded-3xl border border-white/10 bg-slate-950/40 backdrop-blur-md shadow-lg relative overflow-hidden group">
+    <div className="flex flex-col p-6 rounded-3xl border border-border bg-card backdrop-blur-md shadow-lg relative overflow-hidden group">
       <div className="absolute -right-10 -top-10 w-40 h-40 bg-primary/5 rounded-full blur-3xl group-hover:bg-primary/10 transition-colors pointer-events-none" />
       
-      <div className="flex items-center gap-2 mb-6 text-white font-celestial text-xl z-10">
+      <div className="flex items-center gap-2 mb-6 font-serif text-section-heading text-primary-custom z-10">
         <Brain className="w-5 h-5 text-primary" />
         Cognitive Baseline
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 z-10">
         {/* Moon Translation */}
-        <div className="flex flex-col gap-3 p-5 rounded-2xl bg-slate-900/60 border border-white/5 hover:border-primary/30 transition-colors shadow-inner relative overflow-hidden">
+        <div className="flex flex-col gap-3 p-5 rounded-2xl bg-card border border-border hover:border-primary/30 transition-colors shadow-inner relative overflow-hidden">
           <div className="absolute top-0 left-0 w-1 h-full bg-blue-500/50" />
           <div className="flex items-center justify-between text-sm">
-            <span className="flex items-center gap-1.5 text-muted-foreground font-medium">
+            <span className="flex items-center gap-1.5 font-sans text-input-text text-secondary-custom font-medium">
               <Moon className="w-4 h-4 text-blue-400" /> Manas (Mind)
             </span>
-            <span className="font-semibold text-white bg-white/5 px-2 py-0.5 rounded-md flex items-center gap-1.5">
+            <span className="font-sans text-body-custom font-semibold text-primary-custom bg-muted px-2 py-0.5 rounded-md flex items-center gap-1.5">
               {ELEMENT_ICONS[moonElem]} {moonData.sign} ({moonElem})
             </span>
           </div>
-          <p className="text-xs text-muted-foreground/90 leading-relaxed">
-            <strong className="text-white/80 font-medium">Emotional Drive:</strong> {MOON_CBT[moonElem]}
+          <p className="font-sans text-input-text text-secondary-custom leading-relaxed">
+            <strong className="text-foreground/80 font-medium">Emotional Drive:</strong> {MOON_CBT[moonElem]}
           </p>
         </div>
 
         {/* Sun Translation */}
-        <div className="flex flex-col gap-3 p-5 rounded-2xl bg-slate-900/60 border border-white/5 hover:border-primary/30 transition-colors shadow-inner relative overflow-hidden">
+        <div className="flex flex-col gap-3 p-5 rounded-2xl bg-card border border-border hover:border-primary/30 transition-colors shadow-inner relative overflow-hidden">
           <div className="absolute top-0 left-0 w-1 h-full bg-orange-500/50" />
           <div className="flex items-center justify-between text-sm">
-            <span className="flex items-center gap-1.5 text-muted-foreground font-medium">
+            <span className="flex items-center gap-1.5 font-sans text-input-text text-secondary-custom font-medium">
               <Sun className="w-4 h-4 text-orange-400" /> Atman (Self)
             </span>
-            <span className="font-semibold text-white bg-white/5 px-2 py-0.5 rounded-md flex items-center gap-1.5">
+            <span className="font-sans text-body-custom font-semibold text-primary-custom bg-muted px-2 py-0.5 rounded-md flex items-center gap-1.5">
               {ELEMENT_ICONS[sunElem]} {sunData.sign} ({sunElem})
             </span>
           </div>
-          <p className="text-xs text-muted-foreground/90 leading-relaxed">
-            <strong className="text-white/80 font-medium">Executive Function:</strong> {SUN_CBT[sunElem]}
+          <p className="font-sans text-input-text text-secondary-custom leading-relaxed">
+            <strong className="text-foreground/80 font-medium">Executive Function:</strong> {SUN_CBT[sunElem]}
           </p>
         </div>
       </div>

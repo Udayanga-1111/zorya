@@ -49,7 +49,7 @@ export function PlanetaryInfluences({ transitChart, activeDasha, isLoading }) {
   return (
     <>
       <div className="mb-3 flex items-center gap-3">
-        <span className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+        <span className="text-[10px] uppercase tracking-[0.08em] text-muted-foreground">
           Planetary Influences
         </span>
         <div className="flex-1 h-px bg-border" />
@@ -82,14 +82,14 @@ export function PlanetaryInfluences({ transitChart, activeDasha, isLoading }) {
                     </div>
                     <div className="min-w-0">
                       <div className="flex items-center gap-2 flex-wrap mb-1">
-                        <h4 className="font-celestial text-[17px] font-semibold text-foreground leading-tight">
+                        <h4 className="font-sans text-card-title text-primary-custom">
                           {planet.name.charAt(0).toUpperCase() + planet.name.slice(1)} in {planet.sign}
                         </h4>
-                        <span className={`rounded-full px-2 py-0.5 text-[9px] font-bold uppercase tracking-widest ${badge.color}`}>
+                        <span className={`rounded-full px-2 py-0.5 text-[9px] font-bold uppercase tracking-[0.08em] ${badge.color}`}>
                           {badge.label}
                         </span>
                       </div>
-                      <p className="text-sm text-muted-foreground">
+                      <p className="font-sans text-small-desc text-secondary-custom">
                         {planet.sign_degree.toFixed(1)}° {planet.sign}
                       </p>
                     </div>

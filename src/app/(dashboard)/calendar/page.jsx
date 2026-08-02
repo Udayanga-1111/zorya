@@ -104,7 +104,7 @@ function HabitBlockCard({ block, timeSlot, index, total, isChecked, onToggle }) 
     <div className={`flex gap-3 sm:gap-5 group ${!isLast ? "pb-6 sm:pb-8" : ""}`}>
       {/* Time column */}
       <div className="w-14 sm:w-20 shrink-0 text-right mt-1">
-        <div className="text-[11px] sm:text-xs font-semibold text-foreground/70 font-celestial">{timeSlot}</div>
+        <div className="font-sans text-input-text text-primary-custom/70">{timeSlot}</div>
         <div className="text-[10px] text-muted-foreground flex items-center justify-end gap-0.5 mt-0.5">
           <Clock className="w-2.5 h-2.5" />
           <span>{block.duration_minutes}m</span>
@@ -149,14 +149,14 @@ function HabitBlockCard({ block, timeSlot, index, total, isChecked, onToggle }) 
 
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 flex-wrap mb-1">
-                <h4 className={`font-celestial text-sm sm:text-base font-semibold leading-tight ${isChecked ? "line-through text-muted-foreground" : "text-foreground"}`}>
+                <h4 className={`font-sans text-card-title ${isChecked ? "line-through text-muted-foreground" : "text-primary-custom"}`}>
                   {block.title}
                 </h4>
                 <span className="text-[9px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full bg-muted/70 text-muted-foreground border border-border/60">
                   {cfg.label}
                 </span>
               </div>
-              <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
+              <p className="font-sans text-body-custom text-secondary-custom leading-relaxed">
                 {block.description}
               </p>
             </div>
@@ -286,7 +286,7 @@ export default function CalendarPage() {
         {/* ── Page header ── */}
         <div className="mb-6 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3">
           <div>
-            <h1 className="font-celestial text-3xl sm:text-4xl font-semibold text-foreground flex items-center gap-2.5">
+            <h1 className="font-serif text-page-title text-primary-custom flex items-center gap-2.5">
               <CalendarIcon className="w-6 h-6 sm:w-7 sm:h-7 text-primary" />
               Habit Schedule
             </h1>

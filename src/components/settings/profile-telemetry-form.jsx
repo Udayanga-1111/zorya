@@ -31,45 +31,45 @@ export function ProfileTelemetryForm({ user }) {
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-1.5">
-            <label className="text-sm font-medium text-muted-foreground">Full Name</label>
+            <label className="font-sans text-input-text font-medium text-secondary-custom">Full Name</label>
             <input 
               type="text" 
-              className="w-full bg-background/50 border border-border/60 rounded-xl px-4 py-2 focus:ring-1 focus:ring-primary outline-none text-sm" 
+              className="w-full bg-background/50 border border-border/60 rounded-xl px-4 py-2 focus:ring-1 focus:ring-primary outline-none font-sans text-body-custom text-primary-custom" 
               placeholder="Your Name"
               defaultValue={user?.name || ""}
             />
           </div>
           <div className="space-y-1.5">
-            <label className="text-sm font-medium text-muted-foreground">Birth City / Coordinates</label>
+            <label className="font-sans text-input-text font-medium text-secondary-custom">Birth City / Coordinates</label>
             <div className="relative">
               <MapPin className="absolute left-3 top-2.5 w-4 h-4 text-muted-foreground" />
               <input 
                 type="text" 
-                className="w-full bg-background/50 border border-border/60 rounded-xl pl-9 pr-4 py-2 focus:ring-1 focus:ring-primary outline-none text-sm" 
+                className="w-full bg-background/50 border border-border/60 rounded-xl pl-9 pr-4 py-2 focus:ring-1 focus:ring-primary outline-none font-sans text-body-custom text-primary-custom" 
                 placeholder="City, Country or Lat, Long"
                 defaultValue={user?.birth_city || ""}
               />
             </div>
           </div>
           <div className="space-y-1.5">
-            <label className="text-sm font-medium text-muted-foreground">Date of Birth</label>
+            <label className="font-sans text-input-text font-medium text-secondary-custom">Date of Birth</label>
             <div className="relative">
               <Calendar className="absolute left-3 top-2.5 w-4 h-4 text-muted-foreground" />
               <input 
                 type="date" 
-                className="w-full bg-background/50 border border-border/60 rounded-xl pl-9 pr-4 py-2 focus:ring-1 focus:ring-primary outline-none text-sm" 
+                className="w-full bg-background/50 border border-border/60 rounded-xl pl-9 pr-4 py-2 focus:ring-1 focus:ring-primary outline-none font-sans text-body-custom text-primary-custom" 
                 defaultValue={user?.birth_date ? new Date(user.birth_date).toISOString().split('T')[0] : ""}
               />
             </div>
           </div>
           <div className="space-y-1.5">
-            <label className="text-sm font-medium text-muted-foreground">Time of Birth</label>
+            <label className="font-sans text-input-text font-medium text-secondary-custom">Time of Birth</label>
             <div className="relative">
               <Clock className="absolute left-3 top-2.5 w-4 h-4 text-muted-foreground" />
               <input 
                 type="time" 
                 disabled={unknownTime}
-                className={`w-full bg-background/50 border border-border/60 rounded-xl pl-9 pr-4 py-2 focus:ring-1 focus:ring-primary outline-none text-sm transition-opacity ${unknownTime ? 'opacity-50 cursor-not-allowed' : ''}`} 
+                className={`w-full bg-background/50 border border-border/60 rounded-xl pl-9 pr-4 py-2 focus:ring-1 focus:ring-primary outline-none font-sans text-body-custom text-primary-custom transition-opacity ${unknownTime ? 'opacity-50 cursor-not-allowed' : ''}`} 
                 defaultValue={user?.birth_time || ""}
               />
             </div>
@@ -95,7 +95,7 @@ export function ProfileTelemetryForm({ user }) {
           <button 
             type="submit" 
             disabled={isSubmitting}
-            className="h-10 px-6 rounded-full bg-primary text-primary-foreground font-medium text-sm transition-all hover:bg-primary/90 flex items-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
+            className="h-10 px-6 rounded-full bg-primary text-primary-foreground font-sans text-button-text transition-all hover:bg-primary/90 flex items-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
           >
             {isSubmitting && <Loader2 className="w-4 h-4 animate-spin" />}
             Save Changes

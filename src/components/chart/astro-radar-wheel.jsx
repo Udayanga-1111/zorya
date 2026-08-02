@@ -36,7 +36,7 @@ export function AstroRadarWheel({ celestialContext, isLoading }) {
 
   if (isLoading) {
     return (
-      <div className="flex flex-col items-center justify-center h-[520px] rounded-3xl border border-white/10 bg-slate-950/40 backdrop-blur-md shadow-lg animate-pulse">
+      <div className="flex flex-col items-center justify-center h-[520px] rounded-3xl border border-border bg-muted animate-pulse">
         <div className="w-48 h-48 rounded-full border-4 border-primary/20 border-t-primary/50 animate-spin" />
       </div>
     );
@@ -60,13 +60,13 @@ export function AstroRadarWheel({ celestialContext, isLoading }) {
   const CENTER_R = 7;  // Center glow node
 
   return (
-    <div className="flex flex-col rounded-3xl border border-white/10 bg-slate-950/40 backdrop-blur-md shadow-2xl overflow-hidden">
+    <div className="flex flex-col rounded-3xl border border-border bg-card backdrop-blur-md shadow-2xl overflow-hidden">
       {/* Background radial glow */}
       <div className="absolute inset-0 opacity-30 pointer-events-none bg-[radial-gradient(circle_at_50%_40%,_oklch(from_var(--primary)_l_c_h_/_0.2)_0%,_transparent_65%)]" />
 
       {/* Header */}
       <div className="flex items-center justify-between px-8 pt-8 pb-4 z-20">
-        <h3 className="text-xl font-celestial font-semibold flex items-center gap-2 text-white">
+        <h3 className="text-xl font-celestial font-semibold flex items-center gap-2 text-primary-custom">
           <Sparkles className="w-5 h-5 text-primary" />
           Live Transit Radar
         </h3>
@@ -192,7 +192,7 @@ export function AstroRadarWheel({ celestialContext, isLoading }) {
       </div>
 
       {/* Tooltip Panel */}
-      <div className="mx-6 mb-6 h-20 bg-slate-900/50 rounded-2xl border border-white/5 px-4 flex items-center justify-center text-center">
+      <div className="mx-6 mb-6 h-20 bg-muted rounded-2xl border border-border px-4 flex items-center justify-center text-center">
         {hoveredPlanet ? (
           <motion.div
             key={hoveredPlanet.name}
@@ -201,10 +201,10 @@ export function AstroRadarWheel({ celestialContext, isLoading }) {
             className="flex flex-col gap-1 items-center"
           >
             <div className="flex items-center gap-2">
-              <span className={`text-[10px] uppercase tracking-widest font-bold px-2 py-0.5 rounded-sm ${hoveredPlanet.type === "Natal" ? "bg-primary/20 text-primary" : "bg-white/10 text-white"}`}>
+              <span className={`text-[10px] uppercase tracking-widest font-bold px-2 py-0.5 rounded-sm ${hoveredPlanet.type === "Natal" ? "bg-primary/20 text-primary" : "bg-foreground/10 text-foreground"}`}>
                 {hoveredPlanet.type} Node
               </span>
-              <span className="font-medium text-white text-sm">{hoveredPlanet.name} in {hoveredPlanet.sign}</span>
+              <span className="font-medium text-foreground text-sm">{hoveredPlanet.name} in {hoveredPlanet.sign}</span>
             </div>
             <p className="text-xs text-muted-foreground max-w-sm">
               {PLANETARY_BEHAVIOR[hoveredPlanet.name] || "General behavioral influence factor."}

@@ -48,7 +48,7 @@ const CATEGORY_COLORS = {
 export function CBTScoreBreakdown({ celestialContext, isLoading }) {
   if (isLoading) {
     return (
-      <div className="p-6 rounded-3xl border border-white/10 bg-slate-950/40 backdrop-blur-md shadow-lg animate-pulse h-64" />
+      <div className="p-6 rounded-3xl border border-border bg-muted animate-pulse h-64" />
     );
   }
 
@@ -93,18 +93,18 @@ export function CBTScoreBreakdown({ celestialContext, isLoading }) {
   const maxScore = Math.max(...Object.values(scores), 1); // Avoid div by 0
 
   return (
-    <div className="flex flex-col p-6 sm:p-8 rounded-3xl border border-white/10 bg-slate-950/40 backdrop-blur-md shadow-lg relative overflow-hidden">
+    <div className="flex flex-col p-6 sm:p-8 rounded-3xl border border-border bg-card backdrop-blur-md shadow-lg relative overflow-hidden">
       {/* Background Glow */}
       <div className="absolute -left-10 -top-10 w-40 h-40 bg-primary/5 rounded-full blur-3xl pointer-events-none" />
       
       <div className="flex items-center justify-between mb-6 z-10">
-        <h3 className="text-xl font-celestial font-semibold flex items-center gap-2 text-white">
+        <h3 className="text-xl font-celestial font-semibold flex items-center gap-2 text-primary-custom">
           <ActivitySquare className="w-5 h-5 text-primary" />
           CBT Category Scoring Map
         </h3>
         <div className="group relative flex items-center cursor-help">
           <Info className="w-4 h-4 text-muted-foreground hover:text-primary transition-colors" />
-          <div className="absolute right-0 top-6 w-56 p-3 rounded-xl bg-slate-900 border border-white/10 text-[10px] text-muted-foreground shadow-xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50">
+          <div className="absolute right-0 top-6 w-56 p-3 rounded-xl bg-card border border-border text-[10px] text-muted-foreground shadow-xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50">
             <strong>Scoring Formula:</strong><br/>
             Transit Moon Element (2x Weight) +<br/>
             Natal Sun Element (1x Weight) +<br/>
@@ -121,10 +121,10 @@ export function CBTScoreBreakdown({ celestialContext, isLoading }) {
           return (
             <div key={category} className="flex flex-col gap-1.5">
               <div className="flex justify-between items-end">
-                <span className="text-sm font-medium text-white/90">{category}</span>
+                <span className="text-sm font-medium text-foreground/90">{category}</span>
                 <span className="text-xs text-muted-foreground font-mono">{score} pts</span>
               </div>
-              <div className="h-3 w-full bg-slate-900/50 rounded-full overflow-hidden border border-white/5">
+              <div className="h-3 w-full bg-muted rounded-full overflow-hidden border border-border">
                 <motion.div 
                   initial={{ width: 0 }}
                   animate={{ width: `${percentage}%` }}

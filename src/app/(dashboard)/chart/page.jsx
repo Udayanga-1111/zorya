@@ -15,9 +15,9 @@ export default function ChartPage() {
   if (!isOnboarded) {
     return (
       <div className="flex flex-col items-center justify-center h-full text-center p-8">
-        <div className="max-w-md w-full p-8 rounded-3xl border border-white/10 bg-slate-950/40 backdrop-blur-md shadow-2xl flex flex-col items-center">
+        <div className="max-w-md w-full p-8 rounded-3xl border border-border bg-card backdrop-blur-md shadow-2xl flex flex-col items-center">
           <span className="text-4xl mb-4 text-white">✧</span>
-          <h1 className="text-2xl font-celestial font-semibold mb-3 text-white">Chart Unavailable</h1>
+          <h1 className="font-serif text-section-heading text-primary-custom mb-3">Chart Unavailable</h1>
           <p className="text-muted-foreground mb-6 text-sm">
             Please complete your natal onboarding to unlock your personalized transit and dasha telemetry chart.
           </p>
@@ -41,7 +41,7 @@ export default function ChartPage() {
   const mahadashaLord = activeDasha.split(" ")[0];
 
   return (
-    <div className="min-h-full px-4 sm:px-8 py-8 relative bg-[#020617]">
+    <div className="min-h-full px-4 sm:px-8 py-8 relative bg-background">
       {/* Background ambient lighting */}
       <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-[100px] pointer-events-none" />
       <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-500/5 rounded-full blur-[100px] pointer-events-none" />
@@ -51,7 +51,7 @@ export default function ChartPage() {
         {/* Header & Quick Summary */}
         <div className="flex flex-col gap-4 mb-4">
           <div>
-            <h1 className="text-3xl md:text-4xl font-celestial font-semibold flex items-center gap-3 text-white drop-shadow-md">
+            <h1 className="font-serif text-page-title text-primary-custom flex items-center gap-3 drop-shadow-md">
               Cognitive Telemetry & Chart
             </h1>
             <p className="text-muted-foreground text-sm mt-2 max-w-2xl leading-relaxed">
@@ -74,16 +74,46 @@ export default function ChartPage() {
               </>
             ) : (
               <div className="flex gap-3">
-                <div className="w-24 h-8 rounded-full bg-slate-800/50 animate-pulse border border-white/5" />
-                <div className="w-24 h-8 rounded-full bg-slate-800/50 animate-pulse border border-white/5" />
-                <div className="w-32 h-8 rounded-full bg-slate-800/50 animate-pulse border border-white/5" />
+                <div className="w-24 h-8 rounded-full bg-muted animate-pulse border border-border" />
+                <div className="w-24 h-8 rounded-full bg-muted animate-pulse border border-border" />
+                <div className="w-32 h-8 rounded-full bg-muted animate-pulse border border-border" />
               </div>
             )}
           </div>
         </div>
 
+        {/* Personality & Astrological Profile */}
+        {!isStreaming && celestialContext ? (
+          <div className="p-6 rounded-3xl border border-border bg-card shadow-lg backdrop-blur-md mb-2 relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 rounded-full blur-3xl pointer-events-none" />
+            <h2 className="font-serif text-section-heading text-primary-custom mb-4">Astrological Personality Profile</h2>
+            
+            <div className="flex flex-col gap-5 relative z-10">
+              <div>
+                <h3 className="font-sans text-input-text font-medium text-primary-custom/90 mb-1.5 uppercase tracking-wider">Your Personality</h3>
+                <p className="font-sans text-body-custom text-secondary-custom leading-relaxed">
+                  Your core identity is driven by the dynamic energy of <strong className="text-primary-custom">{sunSign}</strong>, giving you a strong sense of purpose and executive function. This outward drive is balanced by your emotional foundation in <strong className="text-primary-custom">{moonSign}</strong>, which shapes how you process feelings and find inner stability. Right now, you are navigating the overarching themes of your <strong className="text-primary-custom">{mahadashaLord}</strong> period, heavily influencing your current life path and personal growth.
+                </p>
+              </div>
+
+              <div className="h-px w-full bg-white/10" />
+
+              <div>
+                <h3 className="font-sans text-input-text font-medium text-primary-custom/90 mb-2 uppercase tracking-wider">Astrological Terms Explained</h3>
+                <ul className="flex flex-col gap-2 font-sans text-body-custom text-secondary-custom leading-relaxed">
+                  <li><strong className="text-primary-custom">Sun Sign (Atman):</strong> Represents your core essence, conscious mind, and how you assert yourself in the world.</li>
+                  <li><strong className="text-primary-custom">Moon Sign (Manas):</strong> Represents your emotional landscape, subconscious reactions, and inner comfort zone.</li>
+                  <li><strong className="text-primary-custom">Mahadasha:</strong> A major planetary time cycle that dictates the dominant energies and life lessons you will encounter over several years.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div className="p-6 rounded-3xl border border-border bg-muted animate-pulse h-32 mb-2" />
+        )}
+
         {/* Main Dashboard Grid */}
-        <div className="grid lg:grid-cols-2 gap-6">
+        <div className="flex flex-col gap-6">
           <ActiveTelemetryCard 
             activeDasha={celestialContext?.active_dasha} 
             isLoading={isStreaming && !celestialContext} 

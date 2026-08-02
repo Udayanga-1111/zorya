@@ -473,3 +473,19 @@ This document serves as the active memory log for Google Antigravity and team **
 - **Active Blockers / Risks:** None.
 - **Next Actions:** Manual end-to-end verification. Consider ZOR-20 (LangSmith observability) next.
 
+---
+
+### 🟣 Session [Aug 2, 2026] — Typography, Accessibility & Dark Theme Overhaul
+
+- **Lead:** Google Antigravity (Autonomous)
+- **Issue Resolved:** Implemented a new typography system and dark theme overhaul as per user instructions.
+- **Key Changes:**
+  - **`src/app/layout.jsx`**: Updated Google Fonts configuration for `Cormorant_Garamond` and `Inter`.
+  - **`src/app/globals.css`**: Configured Tailwind v4 `@theme` with custom color palette (`--color-primary-custom`, etc.) and typography scale (`--text-hero`, `--text-greeting`, etc.). Overhauled `.dark` theme base background.
+  - **Dashboard (`/`)**: Refactored `greeting-banner.jsx` and `planetary-influences.jsx` to use new tokens.
+  - **Schedule (`/calendar`)**: Refactored `page.jsx` with new page-title and card-title tokens.
+  - **Chart (`/chart`)**: Updated `page.jsx`, `active-telemetry-card.jsx`, and `cognitive-baseline-card.jsx`.
+  - **Chat (`/chat`)**: Upgraded `chat-client.jsx` bubbles, input field, and suggested prompts.
+  - **Settings (`/settings`)**: Updated `profile-telemetry-form.jsx` and `danger-zone.jsx` to align with the new button and label tokens.
+- **Active Blockers / Risks:** None.
+- **Next Actions:** Await user verification of the new layout.

@@ -339,3 +339,10 @@ When beginning work, check off the relevant markdown box using an `x` (e.g., `- 
 - [x] Data Export handler
 - [x] Danger Zone (Account & Thread Erasure Modal)
 - [x] Timezone Override & Theme Switcher (Light / Dark)
+
+---
+
+## EPIC 4: UI/UX Typography & Accessibility Refactor
+- [x] Integrate `Cormorant_Garamond` and `Inter` via Next.js Google Fonts
+- [x] Add Tailwind v4 `@theme` variables for new color palette and typography scales
+- [x] Component Refactor (Dashboard, Schedule, Chart, Chat, Settings)
