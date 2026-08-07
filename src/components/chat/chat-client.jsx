@@ -57,24 +57,47 @@ function ConnectionBanner({ isStreaming, hasError }) {
   );
 }
 
-// ─── Suggested Prompts (empty state) ─────────────────────────────────────────
-const SUGGESTED_PROMPTS = [
+const BASE_INSIGHT_PROMPTS = [
   { text: "What's my dominant energy today?", group: "insight" },
   { text: "How can I use my current dasha to build focus?", group: "insight" },
   { text: "Suggest a CBT grounding exercise for stress", group: "insight" },
   { text: "Help me reframe negative thinking patterns", group: "insight" },
-  { text: "Replace my afternoon block with a breathing exercise", group: "edit" },
-  { text: "Swap my Focus block with a 10-min journaling session", group: "edit" },
 ];
 
-function SuggestedPrompts({ onSelect }) {
+function SuggestedPrompts({ onSelect, clinicalPlan }) {
+  const editPrompts = [];
+  
+  if (clinicalPlan?.blocks && clinicalPlan.blocks.length > 0) {
+    const categories = clinicalPlan.blocks.map(b => b.category);
+    const hasFocus = categories.includes("Focus");
+    const hasGrounding = categories.includes("Grounding");
+    
+    if (hasFocus) {
+      editPrompts.push({ text: "Swap my Focus block with a 10-min journaling session", group: "edit" });
+    } else {
+      editPrompts.push({ text: "Add a 15-min Focus block for deep work", group: "edit" });
+    }
+    
+    if (hasGrounding) {
+      editPrompts.push({ text: "Replace my Grounding block with a reflection exercise", group: "edit" });
+    } else {
+      editPrompts.push({ text: "Change my afternoon block to a breathing exercise", group: "edit" });
+    }
+  } else {
+    // Fallback if no plan is loaded yet
+    editPrompts.push({ text: "Replace my afternoon block with a breathing exercise", group: "edit" });
+    editPrompts.push({ text: "Swap my Focus block with a 10-min journaling session", group: "edit" });
+  }
+
+  const displayEditPrompts = editPrompts.slice(0, 2);
+
   return (
     <div className="max-w-xl mx-auto w-full px-4">
       <div className="mb-3 text-center text-[11px] text-muted-foreground/70 uppercase tracking-widest">
         Start with a question
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-        {SUGGESTED_PROMPTS.filter(p => p.group === "insight").map((p, i) => (
+        {BASE_INSIGHT_PROMPTS.map((p, i) => (
           <button
             key={i}
             onClick={() => onSelect(p.text)}
@@ -91,7 +114,7 @@ function SuggestedPrompts({ onSelect }) {
         <div className="flex-1 h-px bg-border/40" />
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-        {SUGGESTED_PROMPTS.filter(p => p.group === "edit").map((p, i) => (
+        {displayEditPrompts.map((p, i) => (
           <button
             key={i}
             onClick={() => onSelect(p.text)}
@@ -254,7 +277,7 @@ export function ChatClient({ firstName, userProfile }) {
   } = useChat();
 
   // Access the shared dashboard plan state so chat can push live plan edits
-  const { setClinicalPlan } = useStream();
+  const { setClinicalPlan, clinicalPlan } = useStream();
 
   useEffect(() => {
     if (messages.length === 0 && firstName) {
@@ -291,7 +314,12 @@ export function ChatClient({ firstName, userProfile }) {
       const response = await fetch("/api/agent/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ user_profile: userProfile, message: text }),
+        body: JSON.stringify({
+          user_profile: userProfile,
+          message: text,
+          // Pass the live plan so the backend can edit it even without shared checkpointer state
+          clinical_plan: clinicalPlan ?? null,
+        }),
       });
 
       if (!response.ok || !response.body) {
@@ -450,10 +478,10 @@ export function ChatClient({ firstName, userProfile }) {
           <div ref={messagesEndRef} />
         </div>
 
-        {/* Suggested prompts — only on welcome state */}
-        {isOnlyWelcome && !isStreaming && (
+        {/* Suggested prompts */}
+        {!isStreaming && (
           <div className="mt-6 sm:mt-8">
-            <SuggestedPrompts onSelect={handleSendMessage} />
+            <SuggestedPrompts onSelect={handleSendMessage} clinicalPlan={clinicalPlan} />
           </div>
         )}
       </div>

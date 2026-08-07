@@ -621,7 +621,12 @@ export const UserScalarFieldEnum = {
   moon_sign: 'moon_sign',
   rising_sign: 'rising_sign',
   is_approximate_time: 'is_approximate_time',
-  onboarded: 'onboarded'
+  onboarded: 'onboarded',
+  pdpa_consent: 'pdpa_consent',
+  consent_timestamp: 'consent_timestamp',
+  primaryGoal: 'primaryGoal',
+  focusAreas: 'focusAreas',
+  userNotes: 'userNotes'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]

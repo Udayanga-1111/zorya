@@ -63,6 +63,8 @@ export async function updateUserOnboarding(id, data) {
       is_approximate_time: data.is_approximate_time,
       latitude: data.latitude,
       longitude: data.longitude,
+      pdpa_consent: data.pdpa_consent,
+      consent_timestamp: data.pdpa_consent ? new Date() : null,
     };
   }
 
@@ -71,6 +73,10 @@ export async function updateUserOnboarding(id, data) {
     data: {
       ...data,
       onboarded: true,
+      ...(data.pdpa_consent && {
+        pdpa_consent: true,
+        consent_timestamp: new Date()
+      })
     },
   });
 

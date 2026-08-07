@@ -10,6 +10,10 @@ const onboardingSchema = z.object({
   is_approximate_time: z.boolean().default(false),
   latitude: z.number(),
   longitude: z.number(),
+  pdpa_consent: z.boolean(),
+  primaryGoal: z.string().optional(),
+  focusAreas: z.array(z.string()).optional(),
+  userNotes: z.string().optional(),
 });
 
 async function onboardingHandler(request) {
@@ -29,6 +33,10 @@ async function onboardingHandler(request) {
       is_approximate_time: validatedData.is_approximate_time,
       latitude: validatedData.latitude,
       longitude: validatedData.longitude,
+      pdpa_consent: validatedData.pdpa_consent,
+      primaryGoal: validatedData.primaryGoal,
+      focusAreas: validatedData.focusAreas,
+      userNotes: validatedData.userNotes,
     });
 
     return NextResponse.json({

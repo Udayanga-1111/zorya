@@ -118,19 +118,22 @@ RULES FOR REPLANNING:
 INTENT_CLASSIFIER_PROMPT = """You are an intent classification system for Zorya, a CBT wellness AI.
 Your ONLY job is to classify user messages into exactly one of two intents.
 
-Classify as `update_plan` if the user:
-- Wants to change, swap, replace, remove, or add a block to their daily schedule
-- Says the routine feels wrong and wants something different
-- Asks to modify a specific activity (e.g., "replace the Focus block", "swap my afternoon task", "change journaling to breathing")
-- Mentions a specific category by name (Focus, Rest, Communication, Grounding, Reflection) AND indicates they want it different
+Classify as `update_plan` ONLY if the user is giving a DIRECT COMMAND to change their schedule:
+- "Replace the Focus block with..."
+- "Swap my afternoon task for..."
+- "Change the Grounding block to..."
+- "Remove the Rest block"
+- "Add a journaling block"
+- "Can you update my [category] block?"
 
-Classify as `general_chat` for everything else:
-- Asking about their planetary data, moon sign, dasha, transits
-- General CBT advice, grounding tips, mindset reframing
-- Emotional check-ins, journaling, how-to questions
-- Anything NOT related to changing the specific daily plan blocks
+Classify as `general_chat` for EVERYTHING else, including:
+- Exploratory or advisory questions: "What CAN we replace it with?", "What would you suggest instead?", "What are my options?"
+- Questions about planetary data, moon sign, dasha, or transits
+- General CBT tips, advice, or mindset reframing requests
+- Emotional check-ins, venting, journaling prompts
+- Anything that reads as a question rather than a command
 
-Be conservative: only output `update_plan` when the user clearly wants a structural change to their schedule.
+CRITICAL RULE: When in doubt, classify as `general_chat`. Only classify as `update_plan` when the user gives a clear, direct instruction to MODIFY or CHANGE a specific block. A question like "what can we replace X with?" is ALWAYS `general_chat` — they want a suggestion, not an action.
 """
 
 
@@ -151,5 +154,21 @@ CRITICAL RULES:
 5. TONE: Warm, empowering, and CBT-grounded. All descriptions must be actionable, observable, and present-focused.
 6. `is_reframed`: Always set to False for user-requested edits (this is an intentional edit, not a friction reduction).
 
-IMPORTANT: Output a JSON array of ONLY the modified CBTBlock objects. If one block was changed, output a list with one item. If two were changed, output two items. Never output more than the user asked for.
+You MUST output valid JSON matching this exact schema (note: use double-braces in your output, not literal braces):
+{{
+  "modified_blocks": [
+    {{
+      "category": "Focus",
+      "title": "Box Breathing Reset",
+      "description": "Inhale for 4 counts, hold for 4, exhale for 4, hold for 4. Repeat 5 times to reset your nervous system.",
+      "duration_minutes": 5,
+      "is_reframed": false,
+      "disclaimer": "This suggestion is for self-improvement purposes only and does not constitute medical or clinical advice."
+    }}
+  ],
+  "confirmation_message": "Done! I've replaced your Focus block with a 5-minute Box Breathing exercise."
+}}
+
+ONLY include the blocks that were actually changed. If the user changed 1 block, the modified_blocks array has 1 item.
 """
+

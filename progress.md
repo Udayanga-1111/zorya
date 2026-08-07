@@ -489,3 +489,22 @@ This document serves as the active memory log for Google Antigravity and team **
   - **Settings (`/settings`)**: Updated `profile-telemetry-form.jsx` and `danger-zone.jsx` to align with the new button and label tokens.
 - **Active Blockers / Risks:** None.
 - **Next Actions:** Await user verification of the new layout.
+
+---
+
+### 🔴 Session [Aug 3, 2026] — Plan Edit Bug Fix: Fallback Error Loop
+
+- **Lead:** Google Antigravity (Autonomous)
+- **Issue Resolved:** AI was always returning the fallback error message when asked to update or enquire about daily routine changes.
+- **Root Causes Identified (3):**
+  1. **`clinical_plan` always empty in chat graph state** — The main pipeline graph and the chat graph are different compiled LangGraph instances with separate state namespaces in the SQLite checkpointer. The `clinical_plan` set by the pipeline was never visible to `plan_edit_node`. *Fix: pass `clinical_plan` from the frontend in the `ChatRequest` body and inject it into the initial graph state.*
+  2. **Intent classifier over-triggering** — Exploratory questions like "what can we replace it with?" were being classified as `update_plan` (a command), sending them to `plan_edit_node` which then failed without actual blocks to edit. *Fix: rewrote `INTENT_CLASSIFIER_PROMPT` to distinguish commands vs questions, with an explicit rule that advisory/exploratory queries are always `general_chat`.*
+  3. **`with_structured_output` fragility** — `PlanEditOutput` structured output on Llama 3.3 70B was failing silently with an exception, landing in the bare `except` fallback. *Fix: added dual-path execution — primary: `with_structured_output`, fallback: plain-text generation + regex JSON extraction from the raw LLM response.*
+- **Key Changes:**
+  - **`backend/api_server.py`**: Added `Optional` import; added `clinical_plan: Optional[dict]` field to `ChatRequest`; injects it into `inputs` in `_stream_chat`.
+  - **`backend/agents/prompts.py`**: Rewrote `INTENT_CLASSIFIER_PROMPT` (commands-only for `update_plan`, explicit examples for `general_chat`); added concrete JSON schema example to `PLAN_EDIT_SYSTEM_PROMPT`.
+  - **`backend/agents/chat_agent.py`**: Added `_extract_latest_user_text` helper; added `_parse_plan_edit_json` fallback parser; `plan_edit_node` now has (a) empty-plan guard, (b) primary structured-output path, (c) plain-text JSON fallback path; updated `CHAT_SYSTEM_PROMPT` to handle suggestion questions gracefully.
+  - **`src/components/chat/chat-client.jsx`**: Destructures `clinicalPlan` from `useStream`; passes it in the fetch body as `clinical_plan`.
+- **Active Blockers / Risks:** None.
+- **Next Actions:** Manual end-to-end verification. ZOR-20 (LangSmith observability).
+

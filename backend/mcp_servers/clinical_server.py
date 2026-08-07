@@ -36,9 +36,14 @@ class ClinicalRequest(BaseModel):
     sun_sign: str = Field(..., description="Current Sun zodiac sign (e.g., 'Leo')")
     moon_sign: str = Field(..., description="Current Moon zodiac sign (e.g., 'Scorpio')")
     active_dasha: str = Field(..., description="Active Dasha period label")
-    user_goal: str = Field(
-        ...,
-        description="User's stated self-improvement goal for the day (free text).",
+    primary_goal: str | None = Field(
+        default=None,
+        description="User's primary wellness goal.",
+        max_length=100,
+    )
+    user_notes: str | None = Field(
+        default=None,
+        description="User's custom context or challenge for the day.",
         max_length=500,
     )
 
@@ -109,7 +114,7 @@ EVENING_PRIORITY = {
     CBTCategory.COMMUNICATION: 2, CBTCategory.FOCUS: 1
 }
 
-def score_cbt_plan(moon_sign: str, sun_sign: str, active_dasha: str) -> Dict[str, float]:
+def score_cbt_plan(moon_sign: str, sun_sign: str, active_dasha: str, primary_goal: str | None = None) -> Dict[str, float]:
     scores = {cat.value: 0.0 for cat in CBTCategory}
     
     moon_elem = SIGN_ELEMENTS.get(moon_sign, "Earth")
@@ -130,6 +135,11 @@ def score_cbt_plan(moon_sign: str, sun_sign: str, active_dasha: str) -> Dict[str
     # Dasha Triguna (+2 Bonus Points)
     for cat in GUNA_MODIFIERS[guna]:
         scores[cat.value] += 2.0
+
+    # User Intent Modifier
+    if primary_goal and primary_goal.strip().lower() == "manage stress & overwhelm":
+        scores[CBTCategory.GROUNDING.value] += 2.0
+        scores[CBTCategory.REST.value] += 2.0
 
     return scores
 
@@ -307,7 +317,7 @@ def get_cbt_day_plan(req: ClinicalRequest) -> ClinicalResponse:
     Returns a dynamically scored CBT day plan based on the user's active 
     planetary transits and stated self-improvement goal.
     """
-    scores = score_cbt_plan(req.moon_sign, req.sun_sign, req.active_dasha)
+    scores = score_cbt_plan(req.moon_sign, req.sun_sign, req.active_dasha, req.primary_goal)
     
     available = list(CBTCategory)
     

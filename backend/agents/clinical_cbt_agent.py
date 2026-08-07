@@ -73,14 +73,16 @@ async def clinical_cbt_node(state: ZoryaAgentState) -> dict:
     active_dasha = celestial_data.get("active_dasha", "Jupiter Mahadasha")
     
     user_profile = state.get("user_profile", {})
-    user_goal = user_profile.get("goal", "Focus and personal growth.")
+    primary_goal = user_profile.get("primary_goal")
+    user_notes = user_profile.get("user_notes")
 
     # 1. Query the clinical server via FastMCP
     req_dict = {
         "sun_sign": sun_sign,
         "moon_sign": moon_sign,
         "active_dasha": active_dasha,
-        "user_goal": user_goal
+        "primary_goal": primary_goal,
+        "user_notes": user_notes
     }
     
     try:
@@ -89,7 +91,9 @@ async def clinical_cbt_node(state: ZoryaAgentState) -> dict:
         user_prompt = (
             f"Planetary Data: {json.dumps(celestial_data, default=str)}\n"
             f"Scored CBT Plan: {json.dumps(scored_cbt_plan.model_dump() if hasattr(scored_cbt_plan, 'model_dump') else scored_cbt_plan, default=str)}\n"
-            f"User Goal: {user_goal}"
+            f"User's Stated Intent: {primary_goal if primary_goal else 'Focus and personal growth'}. "
+            f"Tailor the micro-habit descriptions to address this specific context.\n"
+            f"Custom notes: {user_notes if user_notes else 'None'}"
         )
         
         messages = [

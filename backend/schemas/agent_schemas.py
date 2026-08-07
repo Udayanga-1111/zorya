@@ -37,6 +37,17 @@ class TransitRequest(BaseModel):
         pattern=r"^\d{2}:\d{2}$",
     )
 
+class UserProfileModel(BaseModel):
+    """User profile data including basic info and wellness goals."""
+    birth_date: str = Field(..., description="YYYY-MM-DD")
+    birth_time: str = Field(..., description="HH:MM (24h UTC)")
+    lat: float = Field(..., ge=-90.0, le=90.0)
+    lon: float = Field(..., ge=-180.0, le=180.0)
+    user_id: str = Field(default="anonymous")
+    primary_goal: Optional[str] = Field(default=None, description="Primary wellness goal")
+    focus_areas: Optional[list[str]] = Field(default_factory=list, description="Specific focus areas")
+    user_notes: Optional[str] = Field(default=None, description="Custom context or challenge for the day")
+
 class PlanetaryPosition(BaseModel):
     """Ecliptic longitude for a single celestial body (degrees, 0–360)."""
 

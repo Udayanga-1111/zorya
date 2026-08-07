@@ -31,6 +31,12 @@ model User {
   rising_sign    String?
   is_approximate_time Boolean @default(false)
   onboarded      Boolean   @default(false)
+  pdpa_consent   Boolean   @default(false)
+  consent_timestamp DateTime? @db.Timestamptz()
+  
+  primaryGoal    String?
+  focusAreas     String[]
+  userNotes      String?
 
   messages       Message[]
 

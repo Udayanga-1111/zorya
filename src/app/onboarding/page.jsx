@@ -20,7 +20,21 @@ const onboardingSchema = z.object({
   birth_city: z.string().min(2, "City is required"),
   latitude: z.number(),
   longitude: z.number(),
+  pdpa_consent: z.boolean().refine((val) => val === true, {
+    message: "You must consent to data processing to continue",
+  }),
+  primaryGoal: z.string().min(1, "Please select a primary goal"),
+  focusAreas: z.array(z.string()).default([]),
+  userNotes: z.string().optional(),
 });
+
+const GOAL_OPTIONS = [
+  "🧠 Deep Focus & Productivity",
+  "🧘 Manage Stress & Overwhelm",
+  "🌙 Sleep Quality & Evening Rest",
+  "💬 Clear Communication & Boundaries",
+  "🌿 Emotional Balance & Mindfulness",
+];
 
 export default function OnboardingPage() {
   const router = useRouter();
@@ -48,6 +62,10 @@ export default function OnboardingPage() {
       birth_city: "",
       latitude: undefined,
       longitude: undefined,
+      pdpa_consent: false,
+      primaryGoal: "",
+      focusAreas: [],
+      userNotes: "",
     },
   });
 
@@ -96,6 +114,9 @@ export default function OnboardingPage() {
     } else if (step === 2) {
       isValid = await trigger(["birth_date", "birth_time"]);
       if (isValid) setStep(3);
+    } else if (step === 3) {
+      isValid = await trigger("primaryGoal");
+      if (isValid) setStep(4);
     }
   };
 
@@ -169,10 +190,10 @@ export default function OnboardingPage() {
               Celestial Alignment
             </h1>
             <p className="text-muted-foreground text-sm">
-              Step {step} of 3
+              Step {step} of 4
             </p>
             <div className="flex justify-center gap-2 mt-4">
-              {[1, 2, 3].map((i) => (
+              {[1, 2, 3, 4].map((i) => (
                 <div
                   key={i}
                   className={`h-1.5 w-12 rounded-full transition-colors duration-500 ${
@@ -288,6 +309,58 @@ export default function OnboardingPage() {
                   transition={{ type: "spring", stiffness: 300, damping: 30 }}
                   className="w-full"
                 >
+                  <div className="space-y-6">
+                    <div>
+                      <Label className="text-base text-primary/80 block mb-1">What is your primary focus?</Label>
+                      <p className="text-sm text-muted-foreground mb-4">
+                        Zorya combines your intention with celestial telemetry to tailor your daily CBT micro-habits.
+                      </p>
+                      
+                      <div className="flex flex-wrap gap-3">
+                        {GOAL_OPTIONS.map((goal) => (
+                          <button
+                            key={goal}
+                            type="button"
+                            onClick={() => setValue("primaryGoal", goal, { shouldValidate: true })}
+                            className={`px-4 py-2 rounded-full text-sm font-medium border transition-colors ${
+                              formValues.primaryGoal === goal 
+                                ? "bg-primary text-primary-foreground border-primary" 
+                                : "bg-card/50 border-primary/20 text-foreground hover:border-primary/50"
+                            }`}
+                          >
+                            {goal}
+                          </button>
+                        ))}
+                      </div>
+                      {errors.primaryGoal && <p className="text-destructive text-sm mt-2">{errors.primaryGoal.message}</p>}
+                    </div>
+
+                    <div className="space-y-2 mt-6">
+                      <Label htmlFor="userNotes" className="text-sm text-primary/80">
+                        Any specific challenge you're navigating today? (Optional)
+                      </Label>
+                      <Input
+                        id="userNotes"
+                        placeholder="e.g., Big exam coming up, feeling fatigued..."
+                        className="bg-background/50 border-primary/20 focus-visible:ring-primary h-12 text-md"
+                        {...register("userNotes")}
+                      />
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+
+              {step === 4 && (
+                <motion.div
+                  key="step4"
+                  custom={1}
+                  variants={variants}
+                  initial="enter"
+                  animate="center"
+                  exit="exit"
+                  transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                  className="w-full"
+                >
                   <div className="space-y-4">
                     <div className="space-y-2 relative">
                       <Label htmlFor="citySearch" className="text-base text-primary/80">Where were you born?</Label>
@@ -348,6 +421,25 @@ export default function OnboardingPage() {
                         </div>
                       </motion.div>
                     )}
+
+                    <div className="mt-8 flex items-start gap-3 p-4 border border-border/50 rounded-lg bg-card/30">
+                      <input
+                        type="checkbox"
+                        id="pdpa_consent"
+                        className="mt-1 w-4 h-4 shrink-0 rounded border-primary/20 bg-background/50 text-primary focus:ring-primary"
+                        {...register("pdpa_consent")}
+                      />
+                      <div className="space-y-1 leading-none">
+                        <Label htmlFor="pdpa_consent" className="text-sm font-medium leading-normal text-foreground">
+                          Sri Lanka PDPA Consent
+                        </Label>
+                        <p className="text-xs text-muted-foreground leading-relaxed">
+                          I consent to my birth coordinates being used to calculate personal astrological transits for CBT habit planning. I understand this data is processed securely and can be deleted at any time via Settings.
+                        </p>
+                        {errors.pdpa_consent && <p className="text-destructive text-xs mt-1">{errors.pdpa_consent.message}</p>}
+                      </div>
+                    </div>
+
                   </div>
                 </motion.div>
               )}
@@ -366,18 +458,18 @@ export default function OnboardingPage() {
               Back
             </Button>
 
-            {step < 3 ? (
+            {step < 4 ? (
               <Button 
                 onClick={nextStep} 
                 className="bg-primary hover:bg-primary/90 text-primary-foreground min-w-[120px]"
-                disabled={(step === 1 && !formValues.name) || (step === 2 && (!formValues.birth_date || !formValues.birth_time))}
+                disabled={(step === 1 && !formValues.name) || (step === 2 && (!formValues.birth_date || !formValues.birth_time)) || (step === 3 && !formValues.primaryGoal)}
               >
                 Continue
               </Button>
             ) : (
               <Button 
                 onClick={handleSubmit(onSubmit)}
-                disabled={isSubmitting || !formValues.latitude}
+                disabled={isSubmitting || !formValues.latitude || !formValues.pdpa_consent}
                 className="bg-primary hover:bg-primary/90 text-primary-foreground min-w-[120px]"
               >
                 {isSubmitting ? (

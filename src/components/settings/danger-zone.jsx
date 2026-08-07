@@ -9,12 +9,25 @@ export function DangerZone() {
 
   const handleDelete = async () => {
     setIsDeleting(true);
-    // Simulate DELETE /api/settings/privacy/account
-    await new Promise((res) => setTimeout(res, 1500));
-    setIsDeleting(false);
-    setShowModal(false);
-    alert("Account and data completely erased. Redirecting...");
-    window.location.href = "/";
+    try {
+      const res = await fetch("/api/settings/privacy/account", {
+        method: "DELETE",
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.error || errorData.message || "Failed to delete account");
+      }
+
+      setIsDeleting(false);
+      setShowModal(false);
+      alert("Account and data completely erased. Redirecting...");
+      window.location.href = "/";
+    } catch (error) {
+      console.error("Account deletion failed:", error);
+      alert(error.message || "An error occurred while deleting your account.");
+      setIsDeleting(false);
+    }
   };
 
   return (

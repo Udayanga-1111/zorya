@@ -42,6 +42,59 @@
     *   **Premium Tier ($4.99 / approx. LKR 1,500 per month):** Unlocks proactive multi-agent coaching messages, calendar syncing (Google/Outlook), and long-term behavioral pattern analytics.
 *   **The Global Wellness Boom:** Zorya acts at the vector of the global wellness economy, which surpassed a value of $6.8 trillion and sees mental wellness standing as one of the fastest-growing sectors at a 12.4% annual growth rate.
 
+## Setup Instructions
+
+### Prerequisites
+
+*   **Node.js 18+** (for Next.js frontend)
+*   **Python 3.10+** (for FastMCP servers & LangGraph)
+*   **PostgreSQL or SQLite** (for agent state checkpointing)
+
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/yourusername/zorya.git
+cd zorya
+```
+
+### 2. Frontend Setup (Next.js)
+
+Install dependencies and start the development server:
+
+```bash
+npm install
+npm run dev
+```
+
+The web dashboard will be available at `http://localhost:3000`.
+
+### 3. Backend Setup (MCP & AI Agents)
+
+Set up a Python virtual environment and install the required dependencies:
+
+```bash
+python -m venv venv
+# On Windows
+venv\Scripts\activate
+# On macOS/Linux
+source venv/bin/activate
+
+pip install -r requirements.txt
+```
+
+### 4. Environment Variables
+
+Create a `.env` file in the root directory and configure your necessary API keys and database URIs:
+
+```env
+OPENAI_API_KEY=your_openai_api_key
+DATABASE_URL=your_database_url
+```
+
+### 5. Running the Backend Servers
+
+Start the FastMCP tools and LangGraph orchestration process (refer to backend documentation for specific execution commands).
+
 ## License
 
 Zorya is open-sourced under the [GNU General Public License v2.0 (GPLv2)](LICENSE). 

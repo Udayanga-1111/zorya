@@ -18,7 +18,7 @@ import os
 import asyncio
 import traceback
 import logging
-from typing import AsyncGenerator
+from typing import AsyncGenerator, Optional
 
 logger = logging.getLogger(__name__)
 
@@ -31,7 +31,7 @@ from sse_starlette.sse import EventSourceResponse
 from orchestrator.graph import compile_graph
 from orchestrator.chat_graph import compile_chat_graph
 from orchestrator.checkpointer import get_async_sqlite_saver
-from schemas.agent_schemas import ReplanRequest
+from schemas.agent_schemas import ReplanRequest, UserProfileModel
 from agents.replan_agent import replan_node
 
 load_dotenv()
@@ -56,22 +56,13 @@ app.add_middleware(
 
 # ── Request Schema ─────────────────────────────────────────────────────────────
 
-class UserProfile(BaseModel):
-    """Birth data required to calculate planetary transits."""
-    birth_date: str = Field(..., description="YYYY-MM-DD")
-    birth_time: str = Field(..., description="HH:MM (24h UTC)")
-    lat: float = Field(..., ge=-90.0, le=90.0)
-    lon: float = Field(..., ge=-180.0, le=180.0)
-    user_id: str = Field(default="anonymous")
-    goal: str = Field(default="I want to focus on personal growth today.")
-
-
 class StreamRequest(BaseModel):
-    user_profile: UserProfile
+    user_profile: UserProfileModel
 
 class ChatRequest(BaseModel):
-    user_profile: UserProfile
+    user_profile: UserProfileModel
     message: str
+    clinical_plan: Optional[dict] = Field(default=None, description="The current clinical plan from the frontend state, passed so the chat graph can access it regardless of graph namespace isolation.")
 
 _db_path = os.getenv("ZORYA_DB_PATH", "./zorya_state.db")
 
@@ -97,7 +88,9 @@ async def _stream_graph(request: StreamRequest) -> AsyncGenerator[dict, None]:
             "birth_time": profile.birth_time,
             "lat": profile.lat,
             "lon": profile.lon,
-            "goal": profile.goal,
+            "primary_goal": profile.primary_goal,
+            "focus_areas": profile.focus_areas,
+            "user_notes": profile.user_notes,
         },
     }
 
@@ -150,7 +143,11 @@ async def _stream_chat(request: ChatRequest) -> AsyncGenerator[dict, None]:
 
     try:
         # Append the new user message — LangGraph's add_messages reducer handles history.
-        inputs = {"messages": [("user", request.message)]}
+        # Also inject the current clinical_plan from the frontend so plan_edit_node always
+        # has blocks available (chat graph has a separate state namespace from the main pipeline graph).
+        inputs: dict = {"messages": [("user", request.message)]}
+        if request.clinical_plan:
+            inputs["clinical_plan"] = request.clinical_plan
 
         async with get_async_sqlite_saver(_db_path) as checkpointer:
             chat_graph = compile_chat_graph(checkpointer=checkpointer)
